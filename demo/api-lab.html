@@ -492,6 +492,7 @@
 <script src="../engine/gto-engine.js"></script>
 <script src="../server/validate.js"></script>
 <script src="../server/enrich.js"></script>
+<script src="../server/examples.js"></script>
 <script>
 (function () {
   'use strict';
@@ -784,8 +785,16 @@
         state.online = false;
         el.className = 'st off';
         el.textContent = '离线';
-        $('sendHint').innerHTML = '连不上服务，发送时会自动用浏览器内的引擎直算。'
-          + '要跑真实接口：<code>node server/gto-server.js</code>';
+        // GitHub Pages 是 https，浏览器会拦下对 http://127.0.0.1 的请求，
+        // 这不是 bug，得说清楚，否则用户会以为是页面坏了。
+        if (location.protocol === 'https:') {
+          $('sendHint').innerHTML = '线上页面无法访问本机的 http 服务 —— 浏览器会拦截 https 页面发往 '
+            + '<code>http://127.0.0.1</code> 的请求（混合内容限制）。发送时会直接调用浏览器内置的引擎计算。'
+            + '要测真实接口，请克隆仓库后在本地打开本页。';
+        } else {
+          $('sendHint').innerHTML = '连不上服务，发送时会自动用浏览器内的引擎直算。'
+            + '要跑真实接口：<code>node server/gto-server.js</code>';
+        }
       });
   }
 
@@ -1144,34 +1153,17 @@
 
   function loadPresets() {
     var sel = $('preset');
-    fetch($('baseUrl').value.replace(/\/+$/, '') + '/v1/examples')
-      .then(function (r) { return r.json(); })
-      .then(function (j) {
-        if (!j || !j.examples) throw new Error('no examples');
-        state.examples = j.examples;
-      })
-      .catch(function () {
-        // 离线时用内置的最小集合
-        state.examples = [
-          {
-            id: 'offline-preflop', name: '翻前 · BTN 开池（内置）',
-            state: { street: 'preflop', hero: { pos: 'BTN', cards: ['Ac', 'Kc'], stack: 100 }, pot: 1.5, toCall: 0, numPlayers: 6, villainPos: 'BB' }
-          },
-          {
-            id: 'offline-flop', name: '翻牌 · 顶对顶踢（内置）',
-            state: { street: 'flop', hero: { pos: 'BTN', cards: ['Ac', 'Kc'], stack: 97.7, invested: 2.3 }, board: ['As', '7d', '2c'], pot: 5.1, toCall: 0, numPlayers: 2, villainPos: 'BB' }
-          }
-        ];
-      })
-      .then(function () {
-        sel.innerHTML = '<option value="">— 载入预设局面 —</option>';
-        state.examples.forEach(function (ex) {
-          var o = document.createElement('option');
-          o.value = ex.id;
-          o.textContent = ex.name;
-          sel.appendChild(o);
-        });
-      });
+    // 样例和 service 用的是同一个文件（server/examples.js，UMD），
+    // 所以不需要再发一次请求，离线也拿得到全部预设。
+    state.examples = (window.GTOExamples && window.GTOExamples.EXAMPLES) || [];
+
+    sel.innerHTML = '<option value="">— 载入预设局面 —</option>';
+    state.examples.forEach(function (ex) {
+      var o = document.createElement('option');
+      o.value = ex.id;
+      o.textContent = ex.name;
+      sel.appendChild(o);
+    });
   }
 
   $('preset').addEventListener('change', function () {

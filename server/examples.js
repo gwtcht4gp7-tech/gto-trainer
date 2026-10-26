@@ -2,11 +2,18 @@
  * examples.js — 标准请求样例
  * ---------------------------------------------------------------
  * 既是 /v1/examples 的返回值，也是调试台的预设按钮来源。
+ * 浏览器里也能直接加载（UMD），所以调试台不用再发一次请求去拿它。
+ *
  * 每个例子内部数值自洽：能拿计算器核对（pot 含对手本次下注、
  * stack + invested ≈ 100bb）。
  * ---------------------------------------------------------------
  */
 'use strict';
+
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.GTOExamples = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
 
 const EXAMPLES = [
   {
@@ -132,4 +139,5 @@ const EXAMPLES = [
   }
 ];
 
-module.exports = { EXAMPLES };
+return { EXAMPLES };
+});

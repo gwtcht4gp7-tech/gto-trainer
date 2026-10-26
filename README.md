@@ -158,9 +158,10 @@ hand state 协议见 **[docs/hand-state.md](docs/hand-state.md)**。
 ## 自测
 
 ```bash
-node tools/test-engine.js          # 引擎，约 14 秒
+node tools/test-engine.js          # 引擎，约 15 秒
 node tools/test-engine.js --fast   # 引擎抽样，约 6 秒
-node tools/test-api.js             # 接口 + SDK + CLI，约 5 秒
+node tools/test-api.js             # 接口 + SDK + CLI，约 4 秒
+node tools/test-page.js            # 页面烟测，约 1 秒
 ```
 
 引擎侧覆盖五组：
@@ -174,6 +175,11 @@ node tools/test-api.js             # 接口 + SDK + CLI，约 5 秒
 接口侧覆盖 184 项：错误码逐个验证、seed 可复现、并发隔离、
 CORS 预检、体积上限、令牌鉴权、批量预算、静态托管、CLI 管道协议，
 以及一条关键断言——**本地直算与服务端在同一个 seed 下必须给出同一个数字**。
+
+页面侧用 vm + 最小 DOM 桩把脚本真的跑一遍（不引 jsdom）：
+加载 → 填表 → 点发送 → 检查渲染出的结论、理由、假设、错误码。
+桩只实现页面实际用到的 API，所以页面一旦用了新接口就会在这里报错，
+而不是等到用户浏览器里才炸。
 
 ---
 
@@ -202,7 +208,8 @@ CORS 预检、体积上限、令牌鉴权、批量预算、静态托管、CLI �
 │   └── api.md            接口文档
 ├── tools/
 │   ├── test-engine.js    引擎自测
-│   └── test-api.js       接口自测
+│   ├── test-api.js       接口自测
+│   └── test-page.js      页面烟测
 ├── LICENSE
 └── README.md
 ```
