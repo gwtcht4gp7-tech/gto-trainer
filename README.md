@@ -6,6 +6,9 @@
 
 **在线访问：<https://gwtcht4gp7-tech.github.io/gto-trainer/>**
 
+> **接手开发请先读 [HANDOFF.md](HANDOFF.md)** —— 一份文档覆盖：怎么跑、每层职责、
+> 接口契约、7 个已经踩过的静默算错 bug、验证方法论、已知边界、下一步候选任务。
+
 ```
 知识库（为什么）  →  工具台（怎么算）  →  接口（怎么接）
    index.html          lab.html          server/gto-server.js
