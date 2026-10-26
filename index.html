@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GTO 完整策略体系 · NLHE 训练手册</title>
+<style>
+  :root{
+    --bg:#0a0d12;
+    --bg2:#0f141b;
+    --panel:#131a23;
+    --panel2:#182029;
+    --line:#232e3b;
+    --line2:#2e3c4c;
+    --text:#e8eef6;
+    --text2:#b6c3d2;
+    --muted:#7d8ea3;
+    --gold:#d9a94a;
+    --gold2:#f0c774;
+    --teal:#3fbfa8;
+    --teal2:#63d9c2;
+    --red:#e0605e;
+    --blue:#5a9de0;
+    --violet:#9b7bd4;
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      radial-gradient(1200px 600px at 78% -8%, rgba(217,169,74,.09), transparent 60%),
+      radial-gradient(900px 500px at 8% 10%, rgba(63,191,168,.06), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    font-size:15.5px;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:rgba(217,169,74,.28)}
+
+  /* scroll progress */
+  #prog{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--gold),var(--teal));z-index:99;transition:width .1s linear}
+
+  .wrap{display:grid;grid-template-columns:250px minmax(0,1fr);max-width:1400px;margin:0 auto;gap:0}
+
+  /* ---------- sidebar ---------- */
+  aside{
+    position:sticky;top:0;height:100vh;padding:34px 18px 34px 26px;
+    border-right:1px solid var(--line);
+    overflow-y:auto;scrollbar-width:thin;
+  }
+  aside::-webkit-scrollbar{width:5px}
+  aside::-webkit-scrollbar-thumb{background:var(--line2);border-radius:4px}
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .brand .dot{width:9px;height:9px;border-radius:2px;background:var(--gold);box-shadow:0 0 12px rgba(217,169,74,.8)}
+  .brand b{font-size:14px;letter-spacing:.14em;font-weight:700}
+  .brand-sub{font-size:10.5px;color:var(--muted);letter-spacing:.22em;margin-left:19px;margin-bottom:26px}
+  nav a{
+    display:block;color:var(--text2);text-decoration:none;font-size:13px;
+    padding:6px 10px;border-left:2px solid transparent;border-radius:0 5px 5px 0;
+    transition:.16s;line-height:1.5;
+  }
+  nav a:hover{color:var(--text);background:rgba(255,255,255,.03)}
+  nav a.on{color:var(--gold2);border-left-color:var(--gold);background:rgba(217,169,74,.07)}
+  nav a .n{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-right:7px}
+  nav a.on .n{color:var(--gold)}
+  nav .grp{font-size:10px;letter-spacing:.2em;color:var(--muted);margin:20px 0 8px 10px;opacity:.75}
+
+  /* ---------- main ---------- */
+  main{padding:0 clamp(20px,4vw,64px) 120px;min-width:0}
+
+  header.hero{padding:78px 0 54px;border-bottom:1px solid var(--line)}
+  .kicker{font-size:11px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:18px}
+  h1{
+    font-size:clamp(30px,4.6vw,52px);line-height:1.18;font-weight:800;letter-spacing:-.02em;
+    background:linear-gradient(120deg,#fff 20%,var(--gold2) 62%,var(--teal2) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .lede{margin-top:20px;font-size:16.5px;color:var(--text2);max-width:62ch}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+  .chip{font-size:11.5px;letter-spacing:.06em;padding:4px 11px;border:1px solid var(--line2);border-radius:999px;color:var(--text2);background:rgba(255,255,255,.02)}
+  .chip.hi{border-color:rgba(217,169,74,.45);color:var(--gold2);background:rgba(217,169,74,.08)}
+
+  section{padding:56px 0;border-bottom:1px solid var(--line)}
+  section:last-of-type{border-bottom:none}
+  h2{
+    font-size:26px;font-weight:750;letter-spacing:-.01em;margin-bottom:8px;
+    display:flex;align-items:baseline;gap:12px;
+  }
+  h2 .idx{font-family:var(--mono);font-size:12px;color:var(--gold);font-weight:600;letter-spacing:.1em}
+  h2+.sub{color:var(--muted);font-size:13.5px;margin-bottom:30px;letter-spacing:.02em}
+  h3{font-size:17px;font-weight:700;margin:38px 0 12px;color:#fff;letter-spacing:.01em}
+  h3::before{content:"";display:inline-block;width:14px;height:2px;background:var(--gold);vertical-align:middle;margin-right:10px;border-radius:2px;transform:translateY(-2px)}
+  h4{font-size:14px;font-weight:700;color:var(--gold2);margin:22px 0 8px;letter-spacing:.04em}
+  p{color:var(--text2);margin-bottom:14px}
+  p strong,li strong{color:#fff;font-weight:650}
+  em{color:var(--gold2);font-style:normal;font-weight:600}
+  code{font-family:var(--mono);font-size:.88em;background:rgba(90,157,224,.12);color:#9cc7ef;padding:1.5px 6px;border-radius:4px}
+  ul,ol{color:var(--text2);margin:0 0 16px 4px;padding-left:20px}
+  li{margin-bottom:7px}
+  li::marker{color:var(--gold)}
+  a.inl{color:var(--teal2);text-decoration:none;border-bottom:1px dashed rgba(63,191,168,.4)}
+
+  /* ---------- components ---------- */
+  .card{
+    background:linear-gradient(180deg,var(--panel),var(--bg2));
+    border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin:20px 0;
+  }
+  .card.tight{padding:16px 18px}
+
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:20px 0}
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:20px 0}
+
+  .mini{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:15px 16px}
+  .mini h5{font-size:12.5px;letter-spacing:.08em;color:var(--gold2);margin-bottom:7px;font-weight:700}
+  .mini p{font-size:13px;margin:0;color:var(--text2);line-height:1.7}
+
+  .formula{
+    font-family:var(--mono);font-size:14px;color:var(--gold2);
+    background:rgba(217,169,74,.06);border:1px solid rgba(217,169,74,.22);
+    border-left:3px solid var(--gold);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:14px 0;overflow-x:auto;letter-spacing:.01em;
+  }
+  .formula .c{color:var(--muted)}
+
+  .note{
+    border-left:3px solid var(--blue);background:rgba(90,157,224,.06);
+    padding:13px 18px;border-radius:0 8px 8px 0;margin:18px 0;font-size:13.8px;color:var(--text2);
+  }
+  .note b{color:#9cc7ef}
+  .warn{border-left-color:var(--red);background:rgba(224,96,94,.06)}
+  .warn b{color:#f09b9a}
+  .good{border-left-color:var(--teal);background:rgba(63,191,168,.06)}
+  .good b{color:var(--teal2)}
+
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:13.2px}
+  th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line)}
+  th{font-size:11px;letter-spacing:.12em;color:var(--muted);font-weight:600;text-transform:uppercase;background:rgba(255,255,255,.02)}
+  td{color:var(--text2)}
+  td.num,th.num{text-align:right;font-family:var(--mono);font-size:12.6px;color:var(--text)}
+  tbody tr:hover{background:rgba(255,255,255,.02)}
+  .up{color:var(--red)}   /* 中式：涨=红 */
+  .down{color:var(--teal)}
+
+  /* ---------- range grid ---------- */
+  .ranges{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:20px;margin:22px 0}
+  .rg{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px}
+  .rg .hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px;padding:0 2px}
+  .rg .hd b{font-size:13px;letter-spacing:.06em;color:#fff}
+  .rg .hd span{font-family:var(--mono);font-size:11px;color:var(--gold)}
+  .cells{display:grid;grid-template-columns:repeat(13,1fr);gap:2px}
+  .c{
+    aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:8.2px;color:#5d6f83;border-radius:2.5px;
+    background:rgba(255,255,255,.028);user-select:none;letter-spacing:-.02em;
+  }
+  .c.r{background:linear-gradient(160deg,#3fbfa8,#2e9b8a);color:#04211c;font-weight:700}
+  .c.m{background:repeating-linear-gradient(45deg,#7a6a3e,#7a6a3e 2px,#3a3324 2px,#3a3324 4px);color:#f0d79b;font-weight:700}
+  .c.r:hover,.c.m:hover,.c:hover{outline:1.5px solid var(--gold2);outline-offset:-1px}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:14px}
+  .legend i{display:inline-block;width:11px;height:11px;border-radius:2.5px;margin-right:6px;vertical-align:-1px}
+  .lg-r{background:linear-gradient(160deg,#3fbfa8,#2e9b8a)}
+  .lg-m{background:repeating-linear-gradient(45deg,#7a6a3e,#7a6a3e 2px,#3a3324 2px,#3a3324 4px)}
+
+  /* ---------- matrix ---------- */
+  .mtx{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .mtx .q{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+  .mtx .q .t{font-size:11px;letter-spacing:.14em;color:var(--muted);margin-bottom:6px}
+  .mtx .q .v{font-size:14.5px;color:#fff;font-weight:700;line-height:1.5}
+  .mtx .q .d{font-size:12.5px;color:var(--text2);margin-top:6px;line-height:1.65}
+  .q.a{border-color:rgba(63,191,168,.35);background:linear-gradient(180deg,rgba(63,191,168,.09),var(--panel))}
+  .q.b{border-color:rgba(90,157,224,.35);background:linear-gradient(180deg,rgba(90,157,224,.09),var(--panel))}
+  .q.c{border-color:rgba(217,169,74,.35);background:linear-gradient(180deg,rgba(217,169,74,.09),var(--panel))}
+  .q.d{border-color:rgba(224,96,94,.35);background:linear-gradient(180deg,rgba(224,96,94,.09),var(--panel))}
+
+  /* flow */
+  .flow{margin:22px 0;display:flex;flex-direction:column;gap:0}
+  .step{display:grid;grid-template-columns:44px 1fr;gap:16px;position:relative;padding-bottom:22px}
+  .step:last-child{padding-bottom:0}
+  .step .n{
+    width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:14px;font-weight:700;color:var(--gold2);
+    border:1px solid rgba(217,169,74,.4);background:rgba(217,169,74,.08);position:relative;z-index:1;
+  }
+  .step:not(:last-child)::before{content:"";position:absolute;left:21.5px;top:44px;bottom:0;width:1px;background:linear-gradient(180deg,rgba(217,169,74,.4),rgba(217,169,74,.05))}
+  .step .b b{display:block;font-size:14.5px;color:#fff;margin-bottom:4px}
+  .step .b p{font-size:13.2px;margin:0;line-height:1.7}
+
+  .term{display:grid;grid-template-columns:150px 1fr;gap:6px 18px;font-size:13.2px;margin:18px 0}
+  .term dt{font-family:var(--mono);font-size:12.4px;color:var(--gold2);letter-spacing:.02em}
+  .term dd{color:var(--text2);margin:0}
+
+  footer{padding:48px 0 0;color:var(--muted);font-size:12px;border-top:1px solid var(--line);margin-top:20px}
+
+  @media(max-width:720px){
+    .mtx{grid-template-columns:1fr}
+    table{font-size:12.2px}
+    th,td{padding:7px 7px}
+    .term{grid-template-columns:1fr;gap:2px}
+    .term dd{margin-bottom:12px}
+  }
+  @media(max-width:1000px){
+    .wrap{grid-template-columns:1fr}
+    aside{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);padding:22px}
+    nav{display:flex;flex-wrap:wrap;gap:4px}
+    nav .grp{display:none}
+    nav a{padding:4px 9px;border-left:none;border:1px solid var(--line);border-radius:6px;font-size:12px}
+    nav a.on{border-color:rgba(217,169,74,.5)}
+    main{padding:0 22px 80px}
+    header.hero{padding:44px 0 36px}
+  }
+
+  /* ---- 三件套入口卡片 ---- */
+  .toolsec{margin:30px 0 8px}
+  a.tcard{display:block;text-decoration:none;color:inherit;transition:.18s;border:1px solid var(--line)}
+  a.tcard:hover{border-color:var(--gold);transform:translateY(-2px)}
+  a.tcard h5{color:var(--gold2)}
+  a.tcard .go{display:inline-block;margin-top:9px;font-size:11.5px;color:var(--teal2);letter-spacing:.04em}
+  a.tcard:hover .go{color:var(--gold2)}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<div class="wrap">
+
+<aside>
+  <div class="brand"><span class="dot"></span><b>GTO SYSTEM</b></div>
+  <div class="brand-sub">NLHE · 6-MAX · 100BB</div>
+  <nav id="nav">
+    <div class="grp">第一部分 · 认知</div>
+    <a href="#s1"><span class="n">01</span>GTO 到底是什么</a>
+    <a href="#s2"><span class="n">02</span>数学地基</a>
+    <div class="grp">第二部分 · 翻前</div>
+    <a href="#s3"><span class="n">03</span>位置与开局范围</a>
+    <a href="#s4"><span class="n">04</span>3bet / 4bet 体系</a>
+    <a href="#s5"><span class="n">05</span>盲注攻防</a>
+    <div class="grp">第三部分 · 翻后</div>
+    <a href="#s6"><span class="n">06</span>牌面与范围优势</a>
+    <a href="#s7"><span class="n">07</span>下注尺度理论</a>
+    <a href="#s8"><span class="n">08</span>价值/诈唬配比</a>
+    <a href="#s9"><span class="n">09</span>转牌与河牌</a>
+    <a href="#s10"><span class="n">10</span>多人池</a>
+    <div class="grp">第四部分 · 实战</div>
+    <a href="#s11"><span class="n">11</span>GTO → 剥削</a>
+    <a href="#s12"><span class="n">12</span>学习系统</a>
+    <a href="#s13"><span class="n">13</span>术语速查</a>
+  </nav>
+</aside>
+
+<main>
+
+<header class="hero">
+  <div class="kicker">Complete Framework · 2026</div>
+  <h1>GTO 完整策略体系</h1>
+  <p class="lede">
+    从纳什均衡的定义出发，一路推到翻前的每一张范围表、翻后的每一个下注尺度，
+    再到如何用 solver 训练自己、以及在真实牌桌上如何从 GTO 偏离去剥削对手。
+    这是一份可以反复回来查的操作手册，不是一篇读完就忘的文章。
+  </p>
+  <div class="chips">
+    <span class="chip hi">6-Max 现金局</span>
+    <span class="chip">100bb 有效筹码</span>
+    <span class="chip">无 ante</span>
+    <span class="chip">单挑底池 + 3bet 底池</span>
+    <span class="chip">含锦标赛调整</span>
+  </div>
+</header>
+
+<section class="toolsec">
+  <div class="grid3">
+    <a class="tcard mini" href="#s1">
+      <h5>① 读知识库</h5>
+      <p>你现在看的这份。13 章，从纳什均衡的定义推到转河极化，每个结论都给了推导而不是只给答案。</p>
+      <span class="go">从头读起 ↓</span>
+    </a>
+    <a class="tcard mini" href="lab.html">
+      <h5>② 用分析台</h5>
+      <p>范围权益计算、底池数学、牌面诊断、翻前训练。具体局面里算一遍，比记表格有用得多。</p>
+      <span class="go">打开 GTO Lab →</span>
+    </a>
+    <a class="tcard mini" href="demo/engine-demo.html">
+      <h5>③ 查决策引擎</h5>
+      <p>填一个 hand state，看引擎给出的动作、尺度、频率和完整推理链。也能直接读原始 JSON 输出。</p>
+      <span class="go">打开调试台 →</span>
+    </a>
+  </div>
+</section>
+
+<section id="s1">
+  <h2><span class="idx">01</span>GTO 到底是什么</h2>
+  <div class="sub">先把概念钉死，否则后面所有的计算都会被误用</div>
+
+  <p>
+    GTO 的全称是 <strong>Game Theory Optimal</strong>，中文常译"博弈论最优"。它对应的数学对象是
+    <em>纳什均衡（Nash Equilibrium）</em>：在一个双人零和博弈里，如果双方都采取某个策略组合，
+    任何一方单独改变策略都无法提高自己的期望收益 —— 这个组合就是纳什均衡。
+  </p>
+  <p>
+    德州扑克是<strong>不完全信息零和博弈</strong>，纳什均衡存在（这是纳什定理保证的），
+    而且因为零和，均衡策略一定是<em>不可被剥削的（unexploitable）</em>：
+    对手无论怎么打，你的期望收益都不会低于均衡值。这就是 GTO 最核心的价值主张。
+  </p>
+
+  <div class="grid3">
+    <div class="mini"><h5>GTO 是下限，不是上限</h5><p>GTO 保证你<strong>不会输给任何策略</strong>超过均衡值。但如果对手有明显漏洞，纯粹打 GTO 反而是在浪费钱。上限来自剥削。</p></div>
+    <div class="mini"><h5>GTO 是混合策略</h5><p>均衡里大量节点是<strong>概率混合</strong>（同一手牌 60% 下注 40% 过牌）。这不是 solver 的噪声，这是均衡本身的性质。</p></div>
+    <div class="mini"><h5>GTO 不是"紧"</h5><p>很多人以为 GTO = 保守。实际上 GTO 在按钮位会打 43% 的手牌，在干燥面会用 33% 底池连续下注 80% 的范围。它既不紧也不松，它只是<strong>平衡</strong>。</p></div>
+  </div>
+
+  <h3>三个必须澄清的误解</h3>
+
+  <h4>误解一：GTO 会弃掉强牌</h4>
+  <p>
+    会。在 <code>K♠Q♦7♥</code> 这种对方范围极度占优的牌面，你拿着 <code>AK</code> 过牌甚至弃牌给大额下注，
+    完全可能是均衡打法 —— 因为你没有坚果优势，而对方的 <code>KK/QQ/77/KQ</code> 全在范围里。
+    GTO 判断的不是"我这手牌强不强"，而是<strong>"我这手牌在我的整个范围里排第几，以及对手的范围长什么样"</strong>。
+  </p>
+
+  <h4>误解二：GTO 就是"平衡到随机"</h4>
+  <p>
+    混合不等于随机。均衡里的混合频率是精确计算出来的：某一手牌在某个节点下注 73% 而不是 50%，
+    因为它在阻断牌结构上有特定的价值。这些频率不能拍脑袋，只能来自求解器。
+  </p>
+
+  <h4>误解三：学会 GTO 就能赢</h4>
+  <p>
+    GTO 的对手是"完美对手"，而你的对手不是。真实牌桌上，<strong>对手的漏洞比均衡更值钱</strong>。
+    正确定位是：GTO 给你一个<em>基准坐标系</em>，让你能精确说出"对手在这个节点比均衡多弃了 20%"，
+    然后你才知道该往哪个方向偏离、偏离多少。
+  </p>
+
+  <div class="note">
+    <b>核心心法：</b>GTO 是用来"定位"的，不是用来"执行"的。先用 GTO 建立基准，再用对手数据做偏移。
+    没有基准的偏离叫乱打，没有偏离的 GTO 叫浪费。
+  </div>
+</section>
+
+<section id="s2">
+  <h2><span class="idx">02</span>数学地基</h2>
+  <div class="sub">这七个量撑起了全部翻后决策，必须能心算</div>
+
+  <h3>2.1 期望值 EV</h3>
+  <p>所有策略选择的唯一标准：<strong>选 EV 最高的那条线</strong>。翻后每个决策的本质是同一个问题的变形 ——</p>
+  <div class="formula">EV(跟注) = 权益 × (底池 + 对手下注) − (1 − 权益) × 跟注额</div>
+  <p>
+    举例：底池 100，对手下注 50，你的跟注额 50。<br>
+    如果你有 30% 权益 → <code>0.30 × 150 − 0.70 × 50 = 45 − 35 = +10</code>，跟注是对的。<br>
+    如果你只有 20% 权益 → <code>0.20 × 150 − 0.80 × 50 = 30 − 40 = −10</code>，该弃牌。
+  </p>
+
+  <h3>2.2 跟注需要的权益（Pot Odds）</h3>
+  <div class="formula">所需权益 = 跟注额 / (底池 + 下注额 + 跟注额)</div>
+  <p>上例：<code>50 / (100 + 50 + 50) = 25%</code>。这就是你的"盈亏平衡权益"，超过就能跟。</p>
+  <table>
+    <thead><tr><th>对手下注（占底池）</th><th class="num">你需要权益</th><th class="num">MDF（你必须防守）</th></tr></thead>
+    <tbody>
+      <tr><td>1/3 池</td><td class="num">20.0%</td><td class="num">75%</td></tr>
+      <tr><td>1/2 池</td><td class="num">25.0%</td><td class="num">67%</td></tr>
+      <tr><td>3/4 池</td><td class="num">30.0%</td><td class="num">57%</td></tr>
+      <tr><td>1 池</td><td class="num">33.3%</td><td class="num">50%</td></tr>
+      <tr><td>1.5 池</td><td class="num">37.5%</td><td class="num">40%</td></tr>
+      <tr><td>2 池（超池）</td><td class="num">40.0%</td><td class="num">33%</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2.3 MDF 与 Alpha —— 一组对偶量</h3>
+  <p>
+    <strong>Alpha</strong> 是下注者需要的弃牌率：对手弃得够多，我用任意两张牌诈唬就赚。
+    <strong>MDF</strong>（Minimum Defense Frequency）是防守方必须继续的频率，低于它，对手用任意两张诈唬就能盈利。
+    两者加起来正好 100%。
+  </p>
+  <div class="formula">
+    Alpha = 下注额 / (底池 + 下注额) <span class="c">  // 对手需要弃牌的比例</span><br>
+    MDF  = 底池 / (底池 + 下注额) <span class="c">  // = 1 − Alpha，你必须继续的比例</span>
+  </div>
+  <div class="note">
+    <b>怎么用：</b>对手下注半个池，MDF = 67%。意思是你的<em>整个范围</em>里应该有 67% 的牌继续（跟注 + 加注），
+    而不是"67% 的手牌都能赢"。MDF 是用强牌和听牌去撑起来的，中等牌该弃就弃。
+  </div>
+  <div class="warn note">
+    <b>MDF 的边界：</b>MDF 只在<strong>对手的诈唬是"零权益空气"</strong>时严格成立。
+    如果对手的诈唬牌有 25% 权益（比如带后门花的 A 高），MDF 会显著下降 ——
+    因为你不跟注时，他的诈唬也还有权益。所以在湿润牌面，不要机械套用 MDF。
+  </div>
+
+  <h3>2.4 组合数学（这才是范围思维的语言）</h3>
+  <div class="grid3">
+    <div class="mini"><h5>1,326</h5><p>翻前所有起手牌组合数。</p></div>
+    <div class="mini"><h5>6 / 4 / 12</h5><p>对子 6 组、同花 4 组、非同花 12 组。这是把"手牌"翻译成"范围权重"的汇率。</p></div>
+    <div class="mini"><h5>Blocker 效应</h5><p>你手上有一张 A，对手的 AA 组合从 6 组掉到 3 组，AK 从 16 组掉到 12 组。</p></div>
+  </div>
+  <p>
+    这个换算在河牌极其关键。假设你在 <code>A♠K♦7♣ 2♥ 9♠</code> 上想诈唬，对手的跟注范围是
+    <code>AQ/AJ/AT</code>。你手上有一张 A → 对手的 <code>AQ</code> 从 12 组变 8 组，整个跟注范围直接缩水 30%。
+    这就是<strong>阻断牌诈唬</strong>的数学来源：不是"我手上这张牌感觉好"，而是"我这张牌砍掉了对手 X% 的跟注组合"。
+  </p>
+
+  <h3>2.5 权益实现率（Equity Realization）</h3>
+  <p>
+    你的牌有 40% 的"原始权益"，不代表你能拿到 40% 的底池。位置差、牌力不易实现（比如 <code>K5o</code> 中了顶对却怕踢脚），
+    实际只能兑现 70%；位置好、有坚果潜力（<code>76s</code>），可能实现 115%。
+  </p>
+  <div class="formula">实际 EV ≈ 原始权益 × 实现率 <span class="c">// 位置 OOP 约 0.85，IP 约 1.10，同花连张在深筹码可 &gt;1.2</span></div>
+  <p>
+    这解释了为什么 GTO 的开局范围里，<strong>同花牌权重远高于非同花</strong>：同花多 3-4% 的原始权益，
+    但更重要的是它能把权益<em>实现得更充分</em> —— 能追同花、能诈唬、被加注时更好放弃。
+  </p>
+
+  <h3>2.6 SPR：筹码深度决定一切</h3>
+  <div class="formula">SPR = 有效筹码 / 翻牌后底池</div>
+  <p>
+    单次加注底池（2.5bb open + 跟注 → 约 5.5bb 底池，100bb 筹码）→ <strong>SPR ≈ 18</strong>，深筹码，坚果价值极高。<br>
+    3bet 底池（9bb → 约 20bb 底池）→ <strong>SPR ≈ 4</strong>，顶对即接近坚果。<br>
+    4bet 底池 → <strong>SPR ≈ 1.5</strong>，翻牌基本就是全下或弃牌。
+  </p>
+  <p>SPR 直接改写手牌价值排序：SPR 高时 <code>76s</code> &gt; <code>AJo</code>；SPR 低时反过来。<strong>永远先算 SPR，再谈策略。</strong></p>
+
+  <h3>2.7 几何增长下注（Geometric Sizing）</h3>
+  <p>如果计划在剩余 n 条街把底池做到全下，最优点（让对手每条街的赔率压力均匀）是：</p>
+  <div class="formula">r = (目标底池 / 当前底池)<sup>1/n</sup> − 1</div>
+  <p>
+    例：翻牌底池 20，有效筹码 90，想在河牌全下。剩 3 条街 → 每条街下注约 <code>( (20+180)/20 )^(1/3) −1 ≈ 115%</code> 底池。
+    这就是为什么 solver 在深筹码会用超池下注 —— 不是因为它凶，而是<strong>数学上必须这样才能在三条街把筹码打光</strong>。
+  </p>
+</section>
+
+<section id="s3">
+  <h2><span class="idx">03</span>位置与开局范围</h2>
+  <div class="sub">翻前的第一原则：位置就是信息，信息就是钱</div>
+
+  <p>
+    六个位置的本质区别只有一个：<strong>你身后还有几个人可能说话</strong>。
+    身后的人越多，你被更强范围支配的概率越高，能开的手牌就必须越紧。
+    而按钮位身后只有两个盲注，且翻后永远有位置 —— 这让它的可实现权益极高，所以能开 43% 的手牌。
+  </p>
+
+  <table>
+    <thead><tr><th>位置</th><th class="num">身后玩家</th><th class="num">RFI 频率</th><th>范围性格</th></tr></thead>
+    <tbody>
+      <tr><td><strong>UTG</strong>（枪口）</td><td class="num">5</td><td class="num up">17%</td><td>紧、线性。只在边缘处用少量同花连张做平衡。</td></tr>
+      <tr><td><strong>MP</strong>（中位）</td><td class="num">4</td><td class="num up">22%</td><td>开始纳入中等同花连张、少量 A2s-A5s。</td></tr>
+      <tr><td><strong>CO</strong>（劫位）</td><td class="num">3</td><td class="num up">28%</td><td>明显放宽，纳入 K7s+、Q8s+、小对子。</td></tr>
+      <tr><td><strong>BTN</strong>（按钮）</td><td class="num">2</td><td class="num up">43%</td><td>最宽。几乎任何对子、所有同花 A、大量同花连张与隔张。</td></tr>
+      <tr><td><strong>SB</strong>（小盲）</td><td class="num">1</td><td class="num">35%+25% 混合</td><td>特殊结构：加注 / 弃牌 / 平跟三种动作混合，见第 5 节。</td></tr>
+      <tr><td><strong>BB</strong>（大盲）</td><td class="num">0</td><td class="num">—</td><td>已投入 1bb，永远不"开局"，只做防守决策。</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.1 开局范围表（100bb 6-max 基线）</h3>
+  <p>
+    下面四张图是标准基线。绿色 = 加注（实心），斜纹 = 混合频率（有时加注有时弃牌，具体百分比由 solver 给出）。
+    这些数字会随 solver 版本、抽水、ante 变化，<strong>要看的是范围和频率的"形状"，不是死记某一张表</strong>。
+  </p>
+
+  <div class="ranges">
+    <div class="rg" data-label="UTG" data-pct="17%"
+         data-raise="55+,A2s+,KTs+,QTs+,JTs,T9s,98s,ATo+,KTo+,QJo"
+         data-mixed="44,K9s,Q9s,J9s,T8s,87s,76s,A9o,K9o,QTo,JTo"></div>
+    <div class="rg" data-label="MP (HJ)" data-pct="22%"
+         data-raise="44+,A2s+,K9s+,Q9s+,J9s+,T8s+,97s+,87s,76s,ATo+,KTo+,QTo+,JTo"
+         data-mixed="33,K8s,Q8s,T7s,96s,86s,65s,A8o,K8o,Q9o"></div>
+    <div class="rg" data-label="CO" data-pct="28%"
+         data-raise="22+,A2s+,K7s+,Q8s+,J8s+,T7s+,96s+,85s+,75s+,65s,54s,A8o+,KTo+,QTo+,JTo"
+         data-mixed="K6s,Q7s,J7s,T6s,74s,64s,A5o,A7o,K9o,Q8o,T9o"></div>
+    <div class="rg" data-label="BTN" data-pct="43%"
+         data-raise="22+,A2s+,K2s+,Q4s+,J6s+,T6s+,95s+,85s+,74s+,64s+,54s,A2o+,K8o+,Q9o+,J9o+,T9o"
+         data-mixed="Q3s,J5s,T5s,94s,84s,73s,63s,53s,K7o,Q8o,J8o,T8o,98o"></div>
+  </div>
+
+  <div class="legend">
+    <span><i class="lg-r"></i>加注（高频）</span>
+    <span><i class="lg-m"></i>混合（部分频率）</span>
+    <span><i style="background:rgba(255,255,255,.028)"></i>弃牌</span>
+  </div>
+
+  <h3>3.2 为什么范围长这个形状</h3>
+  <div class="grid2">
+    <div class="mini">
+      <h5>① 对子：全位置全打</h5>
+      <p>22 在任何位置都值得开。它翻中三条的概率约 12%，但一旦中就是<strong>坚果级</strong>，且对手看不到你来。小对子是"低成本买大奖"的典型。</p>
+    </div>
+    <div class="mini">
+      <h5>② 同花 A：从"全打"到"只打大"</h5>
+      <p>BTN 打 A2s+ 全部 12 个，UTG 也从 A2s+ 开始 —— 但 UTG 的 A2s 权重更低。原因是<strong>阻断效应</strong>：拿 A 让对手的 AA/AK 组合减少，同时你有坚果同花潜力。</p>
+    </div>
+    <div class="mini">
+      <h5>③ 同花连张：位置越好越多</h5>
+      <p>UTG 只打 T9s/98s；BTN 打到 54s。这类牌<strong>权益不高但可实现率高</strong>，需要位置才能兑现，且深筹码时才有坚果潜力。</p>
+    </div>
+    <div class="mini">
+      <h5>④ 非同花：越来越像"大牌限定"</h5>
+      <p>UTG 只打 ATo+/KTo+/QJo；BTN 打到 A2o+/K8o+。非同花牌不能追花、难诈唬，<strong>只能靠牌面本身的价值赢</strong>，所以要靠位置补偿。</p>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>快速记忆法：</b>把 169 个格子按"对角线辐射"来记 —— 从右上角的 AA 出发，
+    越往左下走牌越"结构性"（同花、连张），越往右下走越"高牌性"。
+    位置越好，结构性区域的边界越往左下扩展。
+  </div>
+
+  <h3>3.3 三个高频被问的问题</h3>
+  <h4>为什么 UTG 的 <code>K9o</code> 是混合而 <code>A9o</code> 是弃牌？</h4>
+  <p>
+    因为 <code>A9o</code> 中顶对时被支配的概率更高（对手的 <code>AK/AQ/AJ/AT</code> 都在范围里），
+    而 <code>K9o</code> 中顶对时，对手的 <code>KQ/KJ</code> 虽然也支配你，但数量和强度都低一档。
+    同时 A 的阻断效应让 <code>A9o</code> 少了一些诈唬价值。<strong>结论：A 高牌在对抗强范围时反而不如 K 高牌好用。</strong>
+  </p>
+  <h4>为什么 BTN 会打 <code>Q4s</code> 却不打 <code>Q9o</code>？</h4>
+  <p>同花价值远大于"高牌好一点"。<code>Q4s</code> 有 1.8% 的翻牌同花、还有后门花听牌可以持续诈唬；<code>Q9o</code> 只有牌力本身。</p>
+  <h4>抽水（rake）会怎么改这张表？</h4>
+  <p>
+    抽水越重，越要<em>放弃边缘的小牌</em>、越要<em>减少平跟</em>、越要<em>提高加注尺度</em>去抢死钱。
+    低级别现金局通常抽水 5% 封顶，这会让 BTN 的 43% 降到 38% 左右，小对子在 UTG 可能变成混合。
+  </p>
+</section>
+
+<section id="s4">
+  <h2><span class="idx">04</span>3bet / 4bet 体系</h2>
+  <div class="sub">线性还是极化，取决于你在位置内还是位置外</div>
+
+  <h3>4.1 两种 3bet 范围</h3>
+  <div class="mtx">
+    <div class="q a">
+      <div class="t">线性 LINEAR（OOP 用）</div>
+      <div class="v">强牌 + 次强牌，连续不断档</div>
+      <div class="d">
+        例：<code>TT+ / AQs+ / AKo / AJs / KQs</code><br>
+        为什么位置外用线性？因为翻后你要在<strong>没位置</strong>的情况下打一个大底池，
+        你需要牌力本身就够强、能自己撑起底池，而不需要靠诈唬去平衡。
+      </div>
+    </div>
+    <div class="q c">
+      <div class="t">极化 POLARIZED（IP 用）</div>
+      <div class="v">坚果 + 纯诈唬，中间层跟注</div>
+      <div class="d">
+        例：<code>QQ+ / AK</code> + <code>A5s-A2s / K9s / 76s</code><br>
+        为什么位置内能极化？因为你有位置优势，<strong>中等牌跟注就能实现权益</strong>，
+        不必浪费它们的摊牌价值去 3bet；而弱牌拿来 3bet 诈唬，还有阻断牌价值。
+      </div>
+    </div>
+  </div>
+
+  <h3>4.2 BB vs BTN 的 3bet（最常遇到的节点）</h3>
+  <p>BB 是位置外对抗按钮位的宽开局，范围要宽但必须线性偏极化混合：</p>
+  <div class="ranges">
+    <div class="rg" data-label="BB 3bet vs BTN" data-pct="11%"
+         data-raise="TT+,AQs+,AKo,A5s,A4s,KQs"
+         data-mixed="99,88,AJs,ATs,KJs,QJs,JTs,T9s,98s,76s,65s,AQo,AJo,KQo"></div>
+    <div class="rg" data-label="BTN 3bet vs CO" data-pct="8%"
+         data-raise="JJ+,AKs,AKo,AQs"
+         data-mixed="TT,99,AJs,ATs,KQs,K9s,Q9s,J9s,T8s,76s,AQo"></div>
+  </div>
+
+  <div class="note">
+    <b>关键洞察 —— 3bet 尺度和范围的联动：</b>3bet 越小（如 IP 用 2.8x），对手需要的跟注赔率越好，
+    你就<em>不能</em>用太宽的范围；3bet 越大（OOP 用 4x），对手弃牌率越高，你反而<em>可以</em>塞更多诈唬。
+    尺度和范围必须一起调整。
+  </div>
+
+  <h3>4.3 面对 3bet：4bet 与跟注的分工</h3>
+  <p>你 open，对手 3bet。你手上有三类牌，需要三条不同的处理路径：</p>
+  <table>
+    <thead><tr><th>类别</th><th>典型手牌</th><th>处理</th><th>逻辑</th></tr></thead>
+    <tbody>
+      <tr><td><strong>价值 4bet</strong></td><td>QQ+, AK</td><td>4bet 到 22-24bb</td><td>翻前就想把钱放进去</td></tr>
+      <tr><td><strong>诈唬 4bet</strong></td><td>A5s-A2s, KQs, AJo</td><td>4bet 到 22-24bb</td><td>阻断对手的 AA/KK/AK；被跟注还能翻中</td></tr>
+      <tr><td><strong>跟注防守</strong></td><td>99-JJ, AQs, AJs, KQs, 76s</td><td>跟注（IP）/ 部分跟注（OOP）</td><td>牌力不足以全下，但有实现价值</td></tr>
+    </tbody>
+  </table>
+  <div class="formula">4bet 尺度 ≈ 3 × 3bet 额 <span class="c">// 例：open 2.5 → 3bet 8 → 4bet 22~24</span></div>
+  <p>
+    为什么诈唬 4bet 偏爱 <code>A5s-A2s</code>？三个理由叠加：
+    <strong>① 阻断</strong>对手的 AA（组合 6→3）和 AK（16→12）；
+    <strong>② 被跟注后有 30%+ 的权益</strong>（能追同花、能中 A）；
+    <strong>③ 相比 AQo，它不会在翻后"中顶对却输给 AK"</strong>。
+  </p>
+
+  <h3>4.4 短筹码：20bb 以下的 push/fold</h3>
+  <p>
+    当有效筹码 ≤ 20bb，翻后策略基本消失，一切退化为<strong>全下或弃牌</strong>的纳什均衡推弃表（Nash push/fold charts）。
+    记住三个数量级即可：
+  </p>
+  <div class="grid3">
+    <div class="mini"><h5>15bb · BTN</h5><p>可用约 45% 范围全下。任何 A、任何对子、多数 K。</p></div>
+    <div class="mini"><h5>10bb · BTN</h5><p>可用约 60% 范围全下。几乎所有同花牌、多数非同花大牌。</p></div>
+    <div class="mini"><h5>10bb · UTG</h5><p>收窄到约 15%。位置越早，被身后强牌接住的概率越高。</p></div>
+  </div>
+</section>
+
+<section id="s5">
+  <h2><span class="idx">05</span>盲注攻防</h2>
+  <div class="sub">SB 是德州扑克里结构最复杂的座位</div>
+
+  <h3>5.1 小盲的特殊性：三种动作的混合</h3>
+  <p>
+    SB 已经投入 0.5bb，但翻后永远没位置。这两个矛盾让它的策略变成<strong>加注 / 平跟 / 弃牌的三向混合</strong>，
+    而不是像其他位置那样"加注或弃牌"。
+  </p>
+  <div class="grid2">
+    <div class="mini"><h5>加注（raise，约 35%）</h5><p>强牌 + 可以承受被 3bet 的结构性牌。尺度要小（2.5-3bb），因为你要用宽范围去争夺死钱。</p></div>
+    <div class="mini"><h5>平跟（limp，约 25%）</h5><p>中等同花连张、小对子。目的是<strong>便宜看翻牌</strong>，避免被 BB 3bet 打飞。这是 SB 独有的动作。</p></div>
+    <div class="mini"><h5>弃牌（约 40%）</h5><p>所有边缘非同花牌、弱同花隔张。SB 弃牌的成本只有 0.5bb，比 BTN 低，但位置劣势抵消了这个优势。</p></div>
+    <div class="mini"><h5>不平跟的例外</h5><p>抽水高的牌局，solver 会大幅减少 limp（因为平跟底池抽水占比高），趋向 raise-or-fold。</p></div>
+  </div>
+
+  <h3>5.2 大盲防守：赔率决定了你能有多宽</h3>
+  <p>
+    BB 面对 BTN 的 2.5bb 加注时，只需要再投 1.5bb 去赢 4bb 的底池 ——
+    所需权益仅 <code>1.5/(4+1.5) ≈ 27%</code>。这个赔率极好，所以 BB 要防守<strong>约 50-60% 的范围</strong>。
+  </p>
+  <div class="formula">BB 防守权益门槛 = 跟注额 / (底池 + 跟注额) <span class="c">// 2.5bb open → 27%；3bb open → 31%</span></div>
+  <p>但"能防守"不等于"该跟注"。BB 的防守范围大致这样分配：</p>
+  <table>
+    <thead><tr><th>动作</th><th class="num">频率</th><th>手牌类型</th></tr></thead>
+    <tbody>
+      <tr><td>3bet</td><td class="num">11-15%</td><td>强牌 + 阻断牌诈唬（见 4.2）</td></tr>
+      <tr><td>跟注</td><td class="num">35-45%</td><td>大部分同花牌、连张、中等对子、强非同花高牌</td></tr>
+      <tr><td>弃牌</td><td class="num">40-50%</td><td>弱非同花（<code>J4o / 93o / T2o</code> 这类）</td></tr>
+    </tbody>
+  </table>
+
+  <div class="warn note">
+    <b>最常被忽视的一点：</b>BB 防守范围的价值不在于"这手牌能不能赢"，
+    而在于<strong>组合数够不够让对手的诈唬无利可图</strong>。
+    MDF 要求你保住 67% 的继续频率，如果你只防守 45%，对手用任意两张加注就自动盈利 ——
+    哪怕你每次跟注都打得完美。
+  </div>
+</section>
+
+<section id="s6">
+  <h2><span class="idx">06</span>牌面与范围优势</h2>
+  <div class="sub">翻后所有决策的第一个问题：这张牌面，谁的范围更强？</div>
+
+  <p>
+    翻前你只能看到 "范围 vs 范围"。翻牌一落地，双方的范围立刻被<strong>牌面本身</strong>重新切分：
+    有些牌面把你的范围整体削掉一半，有些牌面让对方的中等牌全部变成垃圾。
+    这个"切分结果"决定了后续三条街的一切。
+  </p>
+
+  <h3>6.1 牌面的四个维度</h3>
+  <div class="grid2">
+    <div class="mini"><h5>① 高度（High-card rank）</h5><p>A 高 / K 高 / 中 / 低。牌面越高，<strong>加注者</strong>越占优 —— 因为他的开局范围里塞满了大牌。</p></div>
+    <div class="mini"><h5>② 连接性（Connectedness）</h5><p><code>7-6-5</code> 这种连张面，给了大盲大量顺子、两对、三条。<strong>越低越连，跟注者越占优。</strong></p></div>
+    <div class="mini"><h5>③ 同花性（Flush texture）</h5><p>rainbow / two-tone / monotone。双色面给了同花听牌，让弱牌的权益上升，<strong>降低持续下注的收益</strong>。</p></div>
+    <div class="mini"><h5>④ 对子面（Paired）</h5><p><code>K-K-7</code> 这种面让人很难中牌，双方都只能靠"我有没有 K"。整体权益被压缩，<strong>更适合小尺度高频</strong>。</p></div>
+  </div>
+
+  <h3>6.2 两个不同的优势：范围优势 vs 坚果优势</h3>
+  <div class="mtx">
+    <div class="q a">
+      <div class="t">范围优势 RANGE ADVANTAGE</div>
+      <div class="v">我的整体权益更高</div>
+      <div class="d">看的是<strong>平均</strong>：把双方所有组合的权益平均一下，谁高。<br>它决定 → <em>下注频率</em>（越高越该频繁下注）</div>
+    </div>
+    <div class="q c">
+      <div class="t">坚果优势 NUT ADVANTAGE</div>
+      <div class="v">我最强的牌比你的最强更强</div>
+      <div class="d">看的是<strong>尾部</strong>：谁拥有更多三条、顺子、同花。<br>它决定 → <em>下注尺度</em>（越大越能压榨）</div>
+    </div>
+  </div>
+  <p>
+    这两个优势<strong>经常不同步</strong>，这就是为什么不能"看到牌面就机械 cbet"。
+    最典型的错配是：<code>7♥6♦5♣</code> —— 加注者的整体范围仍然更强（大牌多），
+    但坚果全在跟注者手里（<code>98s/85s/76s/65s/55/66/77</code>）。
+    这时加注者必须<strong>大幅 check</strong>，因为一 bet 就会被 check-raise 打爆。
+  </p>
+
+  <h3>6.3 四象限决策图</h3>
+  <div class="mtx">
+    <div class="q a">
+      <div class="t">范围优势 ✔ · 坚果优势 ✔</div>
+      <div class="v">高频 · 中小尺度</div>
+      <div class="d">
+        <strong>牌面：</strong><code>A♠7♦2♣</code>、<code>K♠7♦3♣</code>、<code>A♦Q♠5♥</code><br>
+        <strong>打法：</strong>用近乎整个范围下注 25-33%，把决策压力丢给对手。
+        你的范围里全是顶对以上，对手只能用中等牌和听牌硬撑。
+      </div>
+    </div>
+    <div class="q b">
+      <div class="t">范围优势 ✔ · 坚果优势 ✘</div>
+      <div class="v">高频 · 极小尺度</div>
+      <div class="d">
+        <strong>牌面：</strong><code>K♠K♦7♣</code>（对子面）、<code>J♦J♠5♥</code><br>
+        <strong>打法：</strong>仍可高频下注，但必须是小尺度。因为没人有三条，都在同一层级竞争，
+        大注只会让自己被少量坚果反杀。
+      </div>
+    </div>
+    <div class="q d">
+      <div class="t">范围优势 ✘ · 坚果优势 ✔</div>
+      <div class="v">低频 · 大尺度</div>
+      <div class="d">
+        <strong>牌面：</strong><code>7♥6♦5♣</code>、<code>8♠7♠6♦</code><br>
+        <strong>打法：</strong>大部分过牌，只在拿到真坚果（顺子/三条）时用大尺度下注。
+        诈唬要极度谨慎 —— 你的中间牌没资格代表坚果。
+      </div>
+    </div>
+    <div class="q d">
+      <div class="t">范围优势 ✘ · 坚果优势 ✘</div>
+      <div class="v">几乎全 check</div>
+      <div class="d">
+        <strong>牌面：</strong><code>9♠8♠6♦</code> 对 UTG 开局者、多数低连双色面<br>
+        <strong>打法：</strong>放弃 cbet，进入防守模式。等转牌出现高牌（A/K/Q）再重新争夺。
+      </div>
+    </div>
+  </div>
+
+  <h3>6.4 常见牌面的 cbet 基线（BTN vs BB，单次加注底池）</h3>
+  <p>下表是近似值，用于建立直觉，<strong>不是要背的数字</strong>。看的是"频率和尺度如何随牌面联动"。</p>
+  <table>
+    <thead><tr><th>牌面</th><th>类型</th><th class="num">cbet 频率</th><th class="num">尺度</th><th>核心原因</th></tr></thead>
+    <tbody>
+      <tr><td><code>A♠7♦2♣</code></td><td>高、干燥、彩虹</td><td class="num up">~70%</td><td class="num">25%</td><td>范围优势巨大，对手大量弃牌</td></tr>
+      <tr><td><code>K♠7♦3♣</code></td><td>高、干燥、彩虹</td><td class="num up">~75%</td><td class="num">33%</td><td>同上，K 高略优于 A 高（对手更难中）</td></tr>
+      <tr><td><code>K♠K♦7♣</code></td><td>高、对子面</td><td class="num">~55%</td><td class="num">25%</td><td>无人有三条，全靠"有没有 K"</td></tr>
+      <tr><td><code>T♠9♠4♦</code></td><td>中、双色、半连接</td><td class="num">~45%</td><td class="num">66%</td><td>对手有大量强听牌，需要大尺度剥夺</td></tr>
+      <tr><td><code>7♥6♦5♣</code></td><td>低、连接、彩虹</td><td class="num down">~30%</td><td class="num">75%</td><td>坚果优势在对手，诈唬性价比极低</td></tr>
+      <tr><td><code>9♠8♠6♦</code></td><td>中、连接、双色</td><td class="num down">~28%</td><td class="num">75%</td><td>对手顺子+同花双听牌，强牌密度最高</td></tr>
+    </tbody>
+  </table>
+  <div class="note">
+    <b>注意规律：</b>频率高的牌面，尺度都小；尺度大的牌面，频率都低。
+    这不是巧合 —— 高频意味着你用的是<strong>整个范围</strong>，只能用能让弱牌也跟得上的小尺度；
+    低频意味着你只拿<strong>极化范围</strong>在打，就该用大尺度榨取。
+    <em>频率和尺度成反比</em>，这是翻后最重要的单一规律。
+  </div>
+</section>
+
+<section id="s7">
+  <h2><span class="idx">07</span>下注尺度理论</h2>
+  <div class="sub">为什么 solver 总是用 33%，而不是"看心情"</div>
+
+  <h3>7.1 小尺度的三个好处</h3>
+  <div class="flow">
+    <div class="step"><div class="n">1</div><div class="b"><b>让整个范围都能下注</b><p>25% 底池的下注只需要 20% 的弃牌率就自动盈利（Alpha = 0.25/1.25 = 20%）。这么低的门槛意味着你连 <code>K 高</code> 都可以下注，从而<strong>覆盖 100% 的范围</strong>，对手永远无法通过"猜你有没有牌"来打你。</p></div></div>
+    <div class="step"><div class="n">2</div><div class="b"><b>保护底池，便宜地买牌</b><p>你手上有 <code>QJ</code> 在这种面，下注 25% 既能让对手弃掉 <code>A 高</code>（拿到摊牌价值），又不用付出太大代价。这叫"用最小成本买最大信息"。</p></div></div>
+    <div class="step"><div class="n">3</div><div class="b"><b>让对手的加注变得无效</b><p>小尺度下注后，对手 check-raise 的成本相对于底池变得很高，他的诈唬加注需要更多频率才能平衡，实际操作中很难做到 —— 于是他的加注范围自然变诚实。</p></div></div>
+  </div>
+
+  <h3>7.2 大尺度的三个场景</h3>
+  <table>
+    <thead><tr><th>场景</th><th>为什么必须大</th><th>典型节点</th></tr></thead>
+    <tbody>
+      <tr><td><strong>坚果优势明显</strong></td><td>你有对手没有的强牌，可以无限压榨他的中等牌</td><td><code>765</code> 面你中顺子；3bet 底池你在 <code>A-K-5</code> 有 AK</td></tr>
+      <tr><td><strong>要剥夺对手权益</strong></td><td>对手有强听牌时，小尺度等于给他的听牌送便宜赔率</td><td>双色连张面，你有一对但对手有 12 张 outs</td></tr>
+      <tr><td><strong>河牌极化</strong></td><td>河牌不再有后续街，只有"值不值"；大尺度让对手的决策更贵</td><td>你手上只有坚果或空气的时候</td></tr>
+    </tbody>
+  </table>
+
+  <h3>7.3 超池下注（Overbet）</h3>
+  <p>
+    超池（1.2-2× 底池）在 solver 输出里非常常见，但在人类牌局里很少见，所以它<strong>本身就是一个巨大优势</strong>。
+    它成立的严格条件：
+  </p>
+  <ul>
+    <li><strong>坚果优势</strong>：你的范围里有对手完全没有的牌（比如你在 <code>A-K-5-2-9</code> 上持有 <code>AK</code>，对手没有）。</li>
+    <li><strong>对手范围被"封顶"</strong>：他不可能有最强牌，只能是抓鸡牌。</li>
+    <li><strong>你的诈唬牌有好的阻断</strong>：用来超池诈唬的牌应该阻断对手的跟注牌，而不是他自己的弃牌牌。</li>
+  </ul>
+  <div class="formula">超池 1.5× 底池 → 对手需弃 60%，只需防守 40% <span class="c">// 极高的杠杆</span></div>
+  <div class="warn note">
+    <b>不要滥用：</b>超池在<strong>没有坚果优势</strong>的牌面是自杀。
+    如果你用中间对子在 <code>765</code> 面超池，对手的三条和顺子会笑着跟注，你的价值下注变成送钱。
+  </div>
+
+  <h3>7.4 尺度选择的决策顺序</h3>
+  <div class="flow">
+    <div class="step"><div class="n">1</div><div class="b"><b>先问：谁有坚果优势？</b><p>没有 → 上限是小尺度；有 → 可以上大尺度。这一步直接砍掉一半的错误选项。</p></div></div>
+    <div class="step"><div class="n">2</div><div class="b"><b>再问：我的范围整体强不强？</b><p>强 → 提高频率（打更多组合）；弱 → 降低频率（只打坚果）。</p></div></div>
+    <div class="step"><div class="n">3</div><div class="b"><b>然后问：SPR 多少？</b><p>SPR 低（≤4）→ 直接在翻牌用 75%+ 往全下走；SPR 高（≥15）→ 用几何增长，分三条街打光。</p></div></div>
+    <div class="step"><div class="n">4</div><div class="b"><b>最后问：这个尺度和我的手牌故事一致吗？</b><p>我用这手牌在这条线上，能代表坚果吗？如果不能，就不要用这个尺度。<strong>一致性比正确性更重要</strong> —— 因为对手读的是你的范围。</p></div></div>
+  </div>
+</section>
+
+<section id="s8">
+  <h2><span class="idx">08</span>价值 / 诈唬配比</h2>
+  <div class="sub">河牌的下注范围里，诈唬该占多少？这个数字是算出来的，不是感觉出来的</div>
+
+  <p>
+    河牌之后没有更多牌了，所以下注范围的构成可以被精确计算：
+    对手面对一个下注时，他的抓鸡牌需要 <code>bet/(pot+bet+call)</code> 的权益才能不亏。
+    为了让他<strong>恰好无差异</strong>，你的下注范围里就必须有精确比例的诈唬。
+  </p>
+  <div class="formula">诈唬占比 = 下注额 / (底池 + 2 × 下注额)<br>价值 : 诈唬 = (底池 + 下注额) : 下注额</div>
+
+  <table>
+    <thead><tr><th>下注尺度</th><th class="num">Alpha（对手需弃）</th><th class="num">MDF（对手需守）</th><th class="num">诈唬占比</th><th class="num">价值 : 诈唬</th></tr></thead>
+    <tbody>
+      <tr><td>25% 池</td><td class="num">20%</td><td class="num">80%</td><td class="num">16.7%</td><td class="num">5 : 1</td></tr>
+      <tr><td>33% 池</td><td class="num">25%</td><td class="num">75%</td><td class="num">20.0%</td><td class="num">4 : 1</td></tr>
+      <tr><td>50% 池</td><td class="num">33%</td><td class="num">67%</td><td class="num">25.0%</td><td class="num">3 : 1</td></tr>
+      <tr><td>75% 池</td><td class="num">43%</td><td class="num">57%</td><td class="num">30.0%</td><td class="num">2.3 : 1</td></tr>
+      <tr><td>100% 池</td><td class="num">50%</td><td class="num">50%</td><td class="num">33.3%</td><td class="num">2 : 1</td></tr>
+      <tr><td>150% 池</td><td class="num">60%</td><td class="num">40%</td><td class="num">37.5%</td><td class="num">1.67 : 1</td></tr>
+      <tr><td>200% 池（超池）</td><td class="num">67%</td><td class="num">33%</td><td class="num">40.0%</td><td class="num">1.5 : 1</td></tr>
+    </tbody>
+  </table>
+
+  <div class="good note">
+    <b>这张表怎么用：</b>下注越大，你可以塞进越多诈唬，而且仍然让对手无差异。
+    这就是为什么"大尺度 = 极化范围" —— 大尺度<em>允许</em>你用 40% 的空气，而小尺度只允许 17%。
+    反过来，如果你用大尺度却只在有牌时下注，聪明的对手会 100% 弃牌，你就在浪费价值。
+  </div>
+
+  <h3>8.1 为什么翻牌和转牌不需要这么精确</h3>
+  <p>
+    河牌的比例是<strong>硬约束</strong>（因为没有后续街了）。翻牌和转牌时，诈唬牌还有"权益"（听牌能中），
+    所以诈唬的比例可以<strong>远高于</strong>上表 —— solver 在翻牌的输出里经常看到 50%+ 的诈唬。
+    原因是：即使被跟注，诈唬牌也还有反超机会；这种"半诈唬"的期望值来自两条腿（弃牌率 + 权益）。
+  </p>
+  <div class="formula">
+    EV(半诈唬) = 弃牌率 × 底池 + 跟注率 × (权益 × 最终底池 − 投入)
+  </div>
+
+  <h3>8.2 河牌诈唬的选牌标准（按优先级）</h3>
+  <ol>
+    <li><strong>阻断对手的跟注牌</strong>：你拿 <code>A</code> 去诈唬，砍掉对手的 <code>AX</code> 跟注组合 —— 这是最强的一类。</li>
+    <li><strong>不阻断对手的弃牌牌</strong>：你的牌不该是"对手本来就要弃的牌"，因为那样等于白拿。</li>
+    <li><strong>自身没有摊牌价值</strong>：如果你有摊牌价值（如一对），把它当诈唬是在销毁价值 —— 它应该 check 去看摊牌。</li>
+    <li><strong>能代表坚果</strong>：你的这手牌在这条线上，必须能合理地走到"我有坚果"这个结论。</li>
+  </ol>
+  <div class="note">
+    <b>反向思维：</b>当你选择<em>抓鸡</em>（bluff catch）时，用完全镜像的逻辑 ——
+    选那些<strong>阻断对手价值牌、不阻断对手诈唬牌</strong>的手牌。
+    比如河牌 <code>A♠K♦7♣2♥9♠</code>，你拿 <code>AT</code> 抓鸡，比拿 <code>88</code> 好，因为 <code>AT</code> 砍掉了对手的 <code>AK/AQ</code> 价值组合。
+  </div>
+</section>
+
+<section id="s9">
+  <h2><span class="idx">09</span>转牌与河牌</h2>
+  <div class="sub">每条街都是对"范围故事"的重新赋值</div>
+
+  <h3>9.1 转牌：判断这张牌"谁受益"</h3>
+  <p>转牌落地后，第一个动作不是看自己的牌，而是问：<strong>这张牌更常命中谁的范围？</strong></p>
+  <div class="grid2">
+    <div class="mini"><h5>对加注者有利（好牌）</h5><p><code>A / K / Q</code> 这类高牌。因为加注者的开局范围里塞满大牌。<br><strong>打法：</strong>继续高频下注，可以加大尺度。</p></div>
+    <div class="mini"><h5>对跟注者有利（坏牌）</h5><p>完成顺子/同花的牌（<code>9</code> 在 <code>765</code> 面）、低连张。<br><strong>打法：</strong>大幅过牌，进入防守；被下注时收窄继续范围。</p></div>
+    <div class="mini"><h5>中性牌（blank）</h5><p><code>2 / 3</code> 这种完全不搭的牌。<br><strong>打法：</strong>维持翻牌的策略结构，但可以略微提高尺度（因为对手的听牌没中）。</p></div>
+    <div class="mini"><h5>对子化牌（pairing card）</h5><p>牌面成对。<br><strong>打法：</strong>大幅降低下注频率 —— 因为"是否击中"变成了二元问题，中等牌的价值被压缩。</p></div>
+  </div>
+
+  <h3>9.2 三个高频节点</h3>
+  <h4>Probe Bet（探查下注）</h4>
+  <p>
+    翻牌你过牌、对手也过牌（check back），转牌你<strong>主动下注</strong>。这是一个被严重低估的节点。
+    逻辑：对手的过牌说明他<strong>没有强牌</strong>（在多数牌面，强牌都会 cbet），
+    所以他的范围被"封顶"了。你可以用很宽的范围去抢这个底池。
+  </p>
+  <div class="formula">BB 在 BTN check back 后的 probe 频率可达 40-55% <span class="c">// 远高于正常 OOP 下注频率</span></div>
+
+  <h4>Delayed C-bet（延迟持续下注）</h4>
+  <p>
+    翻牌你过牌，转牌对手也过牌，河牌你再下注。这是"两次过牌后的一次性压力"。
+    在牌面对你有利、但翻牌不适合下注时，这是把范围优势兑现的最佳时机。
+  </p>
+
+  <h4>Check-raise（过牌加注）</h4>
+  <p>
+    位置外的核心武器。GTO 的 check-raise 范围永远是<strong>极化的</strong>：
+    三条、两对、强听牌（组合听牌）+ 少量纯诈唬。绝不包含"中等对子想保护"这类牌 ——
+    那些牌应该 check-call。<strong>用中等牌 check-raise，是翻后最贵的错误之一。</strong>
+  </p>
+
+  <h3>9.3 河牌：唯一一条"纯极化"的街</h3>
+  <p>
+    河牌没有后续了，所以牌力的排序变得绝对：<strong>要么你能赢摊牌，要么你不能</strong>。
+    于是河牌的策略只有两种合法动作：
+  </p>
+  <div class="mtx">
+    <div class="q a">
+      <div class="t">价值下注 VALUE BET</div>
+      <div class="v">对手会用更差的牌跟注</div>
+      <div class="d">关键判断：<strong>对手的跟注范围里，有多少我的手牌能打败？</strong>如果答案是"大部分"，就下注；如果只有"极少数"，check 更赚。</div>
+    </div>
+    <div class="q c">
+      <div class="t">抓鸡 BLUFF CATCH</div>
+      <div class="v">我不下注，我引诱你诈唬</div>
+      <div class="d">用中等牌 check，让对手的空气牌来诈唬。此时<strong>不要</strong>用这手牌去下注 —— 因为只有更差的牌会弃，更好的牌会跟，全是亏。</div>
+    </div>
+  </div>
+  <div class="warn note">
+    <b>河牌最多人犯的错：</b>用"中等牌"下注。
+    比如河牌你有一对 J，下注 50% —— 对手弃掉的都是比你弱的（你亏了价值），
+    跟注的都是比你强的（你亏了筹码）。<strong>中等牌在河牌的正确答案是 check。</strong>
+  </div>
+</section>
+
+<section id="s10">
+  <h2><span class="idx">10</span>多人池</h2>
+  <div class="sub">三个人进底池，GTO 的精度会崩塌，但方向不会</div>
+  <p>
+    严肃的 solver 对三人以上底池的求解非常困难（状态空间爆炸），所以多人池的建议是<strong>近似 + 经验法则</strong>，
+    但方向性结论非常可靠：<em>人数越多，下注频率越低、需要的牌力越强</em>。
+  </p>
+  <div class="grid3">
+    <div class="mini"><h5>频率骤降</h5><p>单挑时 BTN 在 <code>A72</code> 面 cbet 70%；三人池降到约 <strong>35-45%</strong>，四人池更低。</p></div>
+    <div class="mini"><h5>诈唬近乎消失</h5><p>多人池纯诈唬的收益极低（要穿过两道防线）。诈唬应该换成<strong>强听牌</strong>，靠权益而非弃牌率盈利。</p></div>
+    <div class="mini"><h5>强牌更值钱</h5><p>三条、两对的价值暴涨 —— 因为更可能有人"中了但不够大"，会跟注你。薄价值反而要减少。</p></div>
+  </div>
+  <div class="note">
+    <b>位置在多人池被放大：</b>你能"最后行动"意味着你可以看过所有人的反应再决定。
+    在多人池里，<strong>位置的价值比牌力更大</strong> —— 这也是为什么多人池里 CO/BTN 的平跟范围反而会变宽（用位置博取便宜的看牌机会）。
+  </div>
+</section>
+
+<section id="s11">
+  <h2><span class="idx">11</span>从 GTO 到剥削</h2>
+  <div class="sub">真正的钱不在均衡里，在对手偏离均衡的地方</div>
+
+  <p>
+    GTO 给的是"不被剥削"的下限。但扑克的利润来自<strong>剥削（exploitation）</strong>：
+    找到对手偏离均衡的方向，然后朝相反方向偏移。
+    关键纪律是：<em>偏离的幅度必须与漏洞的大小成正比</em>。对手只多弃了 3%，你就只该多诈唬一点点。
+  </p>
+
+  <h3>11.1 漏洞识别与偏离方向对照表</h3>
+  <table>
+    <thead><tr><th>对手漏洞</th><th>识别信号</th><th>正确偏离</th></tr></thead>
+    <tbody>
+      <tr><td>对 cbet 弃牌过多</td><td>fold to cbet ≥ 55%</td><td>用<strong>整个范围</strong>高频 cbet，尺度降到 25-33% 提高命中率</td></tr>
+      <tr><td>对 cbet 跟注过多</td><td>call cbet ≥ 60%</td><td>停止诈唬，只打价值；尺度<strong>加大</strong>（他在为你的大注付费）</td></tr>
+      <tr><td>从不 check-raise</td><td>CR ≤ 5%</td><td>高频小尺度 cbet，几乎零风险地拿死钱</td></tr>
+      <tr><td>过度 check-raise</td><td>CR ≥ 20%</td><td>收紧 cbet 范围，只用能承受加注的牌；用强牌引诱</td></tr>
+      <tr><td>河牌从不诈唬</td><td>river bet 时 strength 明显</td><td>大幅弃掉中等牌，<strong>不做抓鸡</strong>；他的下注就是价值</td></tr>
+      <tr><td>河牌过度诈唬</td><td>river bluff 频率高</td><td>用更宽的范围抓鸡，包括弱顶对</td></tr>
+      <tr><td>3bet 太少</td><td>3bet ≤ 5%</td><td>大幅扩大偷盲范围；小尺度加注抢盲</td></tr>
+      <tr><td>3bet 太多</td><td>3bet ≥ 15%</td><td>收紧开局范围，增加 4bet 诈唬，用位置平跟诱捕</td></tr>
+      <tr><td>尺度泄露牌力</td><td>大注=强、小注=弱</td><td>他小注时加注/放弃，他大注时<strong>只留坚果</strong></td></tr>
+      <tr><td>只用坚果付大注</td><td>从不跟大注</td><td>对他只做价值超池，不做任何诈唬</td></tr>
+    </tbody>
+  </table>
+
+  <h3>11.2 剥削的代价</h3>
+  <div class="warn note">
+    <b>任何偏离都是一次双向交易：</b>你从对手的漏洞里赚 X，同时自己露出一个 Y 的漏洞。
+    所以剥削只在 <code>X &gt; Y</code> 时成立，而且<strong>对手必须不会反过来调整</strong>。
+    如果对手会调整（比如你连续三次用任意两张 cbet 后他开始 check-raise 你），
+    你就必须回到平衡。<em>剥削的保质期，等于对手的反应速度。</em>
+  </div>
+
+  <h3>11.3 玩家池的通用倾向（低中级别现金局）</h3>
+  <div class="grid2">
+    <div class="mini"><h5>整体倾向 ①：跟注过多</h5><p>人类天生爱看牌。结果是<strong>诈唬收益低、薄价值收益高</strong>。基础调整：少诈唬，多做薄价值下注，尺度可以偏大。</p></div>
+    <div class="mini"><h5>整体倾向 ②：被动（下注不足）</h5><p>大多数玩家在该下注的时候过牌。结果是<strong>他们过牌 = 范围弱</strong>。基础调整：对手过牌就大胆进攻。</p></div>
+    <div class="mini"><h5>整体倾向 ③：被加注就弃</h5><p>对 check-raise 的弃牌率远高于均衡。基础调整：提高 check-raise 诈唬频率。</p></div>
+    <div class="mini"><h5>整体倾向 ④：尺度诚实</h5><p>大注 = 强牌，小注 = 弱牌或听牌。基础调整：<strong>按尺度读牌</strong>，而不是按牌面读牌。</p></div>
+  </div>
+  <div class="good note">
+    <b>最重要的一条实战建议：</b>在低中级别，"<strong>少诈唬、多薄价值、按尺度读牌</strong>"这三件事的收益，
+    远超你把 GTO 频率精确到 ±5% 的收益。先做对方向，再谈精度。
+  </div>
+</section>
+
+<section id="s12">
+  <h2><span class="idx">12</span>学习系统</h2>
+  <div class="sub">把知识变成反射，需要一个可执行的训练循环</div>
+
+  <h3>12.1 工具链</h3>
+  <table>
+    <thead><tr><th>工具</th><th>定位</th><th>适合谁</th></tr></thead>
+    <tbody>
+      <tr><td><strong>GTO Wizard</strong></td><td>云端 solver + 训练器，有现成解和 drill 模式</td><td>绝大多数人（性价比最高）</td></tr>
+      <tr><td><strong>PioSOLVER</strong></td><td>本地高精度求解，可自定义树与 nodelock</td><td>进阶、需要做剥削研究</td></tr>
+      <tr><td><strong>GTO+</strong></td><td>轻量本地求解器，界面友好</td><td>入门到进阶</td></tr>
+      <tr><td><strong>MonkerWare / Simple 3-way</strong></td><td>支持三人以上底池求解</td><td>专攻多人池</td></tr>
+      <tr><td><strong>Range trainer</strong></td><td>纯翻前范围记忆训练</td><td>所有人，每天 10 分钟</td></tr>
+    </tbody>
+  </table>
+
+  <h3>12.2 六阶段学习路径</h3>
+  <div class="flow">
+    <div class="step"><div class="n">1</div><div class="b"><b>翻前范围（2-3 周）</b><p>目标：不看表能在 2 秒内说出任意位置、任意手牌的动作。用 trainer 每天 10 分钟。范围包括 RFI、BB 防守、3bet。<strong>这是唯一需要"死记"的部分。</strong></p></div></div>
+    <div class="step"><div class="n">2</div><div class="b"><b>单次加注底池 · 有位置（4 周）</b><p>核心节点：BTN vs BB 的 flop cbet。选 20 个代表性牌面（高/中/低 × 干/湿 × 单色/双色/彩虹），对比自己的选择和 solver。<strong>理解每个频率差异的原因。</strong></p></div></div>
+    <div class="step"><div class="n">3</div><div class="b"><b>转牌与河牌（4 周）</b><p>重点：range shift 判断、极化下注、blocker 选牌、抓鸡逻辑。这是 EV 差距最大的地方，也是最多人跳过的地方。</p></div></div>
+    <div class="step"><div class="n">4</div><div class="b"><b>无位置节点（3 周）</b><p>BB 的防守、check-raise 构造、probe bet。OOP 的错误代价是 IP 的两倍以上，必须单独练。</p></div></div>
+    <div class="step"><div class="n">5</div><div class="b"><b>3bet / 4bet 底池（3 周）</b><p>SPR 4 的局面和 SRP 完全不同：顶对就是坚果，翻牌就要决定是否全下。这是很多"会打 SRP 但打不好 3bet 池"的人的瓶颈。</p></div></div>
+    <div class="step"><div class="n">6</div><div class="b"><b>剥削与池子动态（持续）</b><p>用 nodelock 模拟对手漏洞，量化"如果对手 fold 60%，我该多打多少"。这一步才把 GTO 变成钱。</p></div></div>
+  </div>
+
+  <h3>12.3 读 solver 输出的正确姿势</h3>
+  <ul>
+    <li><strong>先看 EV 差，再看频率。</strong>如果两个动作的 EV 差 &lt; 1% 底池，那它们几乎等价，不要纠结。solver 里 60/40 的混合，人类随便选一个都行。</li>
+    <li><strong>不要过度拟合。</strong>输入 8 种尺度会让 solver 输出极碎的混合策略，人类无法执行。限制到 2-3 种尺度，结论更稳健。</li>
+    <li><strong>输入要真实。</strong>忘了设抽水、忘了设 ante、忘了设对手的实际加注尺度 —— 输出的所有数字都会偏。GTO Wizard 的默认值通常可用，但要核对。</li>
+    <li><strong>提取原则，不背图表。</strong>问自己："solver 为什么在 A 高面用 25%，在 765 面用 75%？" 答案（范围优势 vs 坚果优势）能迁移到所有牌面；具体牌面记不住。</li>
+  </ul>
+
+  <h3>12.4 复盘的正确方式</h3>
+  <div class="note">
+    每次复盘只选 <strong>3 手牌</strong>，每手牌问三个问题：<br>
+    <b>①</b> 我在这个节点的范围是什么？对手的范围是什么？<br>
+    <b>②</b> 我的动作在这两个范围的对比下，EV 是多少？solver 的答案差多少？<br>
+    <b>③</b> 这个差异背后是哪条原则？把它写成一句话记下来。<br>
+    <em>复盘的质量取决于第 ③ 步，前两步只是准备工作。</em>
+  </div>
+
+  <h3>12.5 五个常见学习误区</h3>
+  <table>
+    <thead><tr><th>误区</th><th>为什么错</th><th>怎么改</th></tr></thead>
+    <tbody>
+      <tr><td>追求 100% 精确频率</td><td>人类无法执行，且 EV 损失极小</td><td>只追求"方向正确 + 量级正确"</td></tr>
+      <tr><td>只学 SRP，跳过 3bet 池</td><td>3bet 池的底池更大、错误更贵</td><td>单独花 3 周专门练</td></tr>
+      <tr><td>只学翻前，翻后靠感觉</td><td>翻前只决定 30% 的 EV</td><td>把 70% 的训练时间给翻后</td></tr>
+      <tr><td>在低级别打纯 GTO</td><td>对手漏洞比均衡更值钱</td><td>GTO 打底 + 系统性剥削</td></tr>
+      <tr><td>忽视牌桌选择与心理</td><td>选桌的收益可能大于技术提升</td><td>把选桌、资金管理当成技术的一部分</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s13">
+  <h2><span class="idx">13</span>术语速查</h2>
+  <div class="sub">按字母序，遇到不熟的随时回来看</div>
+  <dl class="term">
+    <dt>Alpha</dt><dd>下注者需要对手弃牌才能自动盈利的频率 = bet/(pot+bet)。</dd>
+    <dt>Blocker</dt><dd>你手上持有的牌，减少了对手拥有某类组合的数量。河牌诈唬与抓鸡的核心工具。</dd>
+    <dt>Bluff Catch</dt><dd>抓鸡：用中等牌过牌/跟注，目的是抓到对手的诈唬，而不是为了价值下注。</dd>
+    <dt>Capped Range</dt><dd>被封顶的范围：因为之前的动作（如过牌），可以确定对手没有最强牌。</dd>
+    <dt>C-bet</dt><dd>Continuation bet，翻前加注者在翻牌的持续下注。</dd>
+    <dt>Delayed C-bet</dt><dd>翻牌过牌、转牌对手也过牌后，在转牌或河牌才下注。</dd>
+    <dt>Equity Realization</dt><dd>权益实现率：原始权益中实际能兑现的比例，受位置与牌型结构影响。</dd>
+    <dt>EV</dt><dd>Expected Value，期望值。所有决策的唯一标准。</dd>
+    <dt>Geometric Sizing</dt><dd>几何增长下注：让每条街的下注按固定比例增长，使筹码在预定街数内刚好打光。</dd>
+    <dt>GTO</dt><dd>Game Theory Optimal，博弈论最优策略，对应纳什均衡。</dd>
+    <dt>ICM</dt><dd>锦标赛中筹码的"真实货币价值"，用于调整全下与跟注范围。</dd>
+    <dt>MDF</dt><dd>Minimum Defense Frequency，最低防守频率 = pot/(pot+bet)，低于它对手的任意诈唬即盈利。</dd>
+    <dt>Merged Range</dt><dd>合并范围：把强牌和中等偏上一起下注，不含纯诈唬，用于薄价值与保护。</dd>
+    <dt>Nodelock</dt><dd>在 solver 中强制指定某节点的动作，用于研究剥削偏离。</dd>
+    <dt>Nut Advantage</dt><dd>坚果优势：范围中最强牌（三条/顺子/同花）的密度优势，决定下注尺度。</dd>
+    <dt>Polarized</dt><dd>极化范围：只含坚果和纯诈唬，不含中间层。大尺度下注的标准结构。</dd>
+    <dt>Probe Bet</dt><dd>探查下注：对手在上一街过牌后，你在下一街主动下注。</dd>
+    <dt>Range Advantage</dt><dd>范围优势：整体平均权益更高，决定下注频率。</dd>
+    <dt>RFI</dt><dd>Raise First In，前面无人入池时的首个加注。</dd>
+    <dt>Solver</dt><dd>求解器：通过迭代计算逼近纳什均衡策略的软件。</dd>
+    <dt>SPR</dt><dd>Stack-to-Pot Ratio，有效筹码与底池之比，决定手牌价值排序与下注路线。</dd>
+    <dt>Thin Value</dt><dd>薄价值：对手跟注范围里只有略差于你的牌，仍然值得下注的边缘价值。</dd>
+  </dl>
+</section>
+
+<footer>
+  <p>
+    <strong>使用说明：</strong>本文档中的范围表、cbet 频率与尺度均为 <em>100bb 6-max 无 ante 现金局</em> 的近似基线，
+    用于建立直觉与框架。真实决策请以你自己设定的 solver 参数（抽水、ante、对手尺度）为准。
+    抽水越重、人数越多、筹码越短，所有范围都要相应收紧。
+  </p>
+  <p style="margin-top:12px;color:var(--muted)">
+    GTO 是坐标系，剥削是刀。先有坐标系，刀才砍得准。
+  </p>
+  <p style="margin-top:18px">
+    <a class="inl" href="lab.html" style="font-size:13.5px">→ GTO Lab：权益计算器 · 底池数学 · 牌面诊断 · 翻前训练</a>
+  
+    <br><a class="inl" href="demo/engine-demo.html" style="font-size:13.5px">→ 决策引擎调试台：输入 hand state，查看完整推理链</a></p>
+</footer>
+
+</main>
+</div>
+
+<script>
+/* ===== 进度条 ===== */
+const prog = document.getElementById('prog');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const p = h.scrollTop / (h.scrollHeight - h.clientHeight);
+  prog.style.width = (p * 100) + '%';
+}, {passive:true});
+
+/* ===== 目录高亮 ===== */
+const links = [...document.querySelectorAll('#nav a')];
+const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.toggle('on', l.getAttribute('href') === '#' + e.target.id));
+    }
+  });
+}, {rootMargin:'-15% 0px -70% 0px'});
+sections.forEach(s => obs.observe(s));
+
+/* ===== 范围图渲染 ===== */
+const RANKS = ['A','K','Q','J','T','9','8','7','6','5','4','3','2'];
+
+function expandRange(str){
+  const set = new Set();
+  if (!str) return set;
+  str.split(',').forEach(raw => {
+    const tok = raw.trim();
+    if (!tok) return;
+    const m = tok.match(/^([AKQJT2-9])([AKQJT2-9])([so])?(\+)?$/);
+    if (!m) { console.warn('bad token', tok); return; }
+    const [, r1, r2, suit, plus] = m;
+    const i1 = RANKS.indexOf(r1), i2 = RANKS.indexOf(r2);
+    if (i1 < 0 || i2 < 0) return;
+
+    if (r1 === r2) {                       // 对子
+      if (plus) {
+        for (let k = 0; k <= i1; k++) set.add(RANKS[k] + RANKS[k]);
+      } else set.add(r1 + r2);
+      return;
+    }
+    if (plus) {
+      // 首字母固定，次字母从给定值一路走到紧邻首字母
+      for (let k = i2; k > i1; k--) set.add(r1 + RANKS[k] + (suit || ''));
+    } else {
+      set.add(r1 + r2 + (suit || ''));
+    }
+  });
+  return set;
+}
+
+function cellHand(i, j){
+  if (i === j) return RANKS[i] + RANKS[i];
+  return i < j ? RANKS[i] + RANKS[j] + 's' : RANKS[j] + RANKS[i] + 'o';
+}
+
+document.querySelectorAll('.rg').forEach(box => {
+  const raise = expandRange(box.dataset.raise);
+  const mixed = expandRange(box.dataset.mixed);
+  const label = box.dataset.label || '';
+  const pct = box.dataset.pct || '';
+
+  const hd = document.createElement('div');
+  hd.className = 'hd';
+  hd.innerHTML = '<b>' + label + '</b><span>' + pct + '</span>';
+  box.appendChild(hd);
+
+  const cells = document.createElement('div');
+  cells.className = 'cells';
+  for (let i = 0; i < 13; i++){
+    for (let j = 0; j < 13; j++){
+      const hand = cellHand(i, j);
+      const d = document.createElement('div');
+      d.className = 'c';
+      if (raise.has(hand)) d.classList.add('r');
+      else if (mixed.has(hand)) d.classList.add('m');
+      d.textContent = hand;
+      d.title = hand + (raise.has(hand) ? ' — 加注' : mixed.has(hand) ? ' — 混合' : ' — 弃牌');
+      cells.appendChild(d);
+    }
+  }
+  box.appendChild(cells);
+});
+</script>
+</body>
+</html>

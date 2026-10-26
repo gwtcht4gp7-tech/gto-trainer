@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GTO Lab · 离线分析与训练台</title>
+<style>
+  :root{
+    --bg:#0a0d12; --bg2:#0f141b; --panel:#131a23; --panel2:#19222d;
+    --line:#232e3b; --line2:#2e3c4c;
+    --text:#e8eef6; --text2:#b6c3d2; --muted:#7d8ea3;
+    --gold:#d9a94a; --gold2:#f0c774; --teal:#3fbfa8; --teal2:#63d9c2;
+    --red:#e0605e; --blue:#5a9de0; --violet:#9b7bd4;
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:radial-gradient(1100px 520px at 82% -10%, rgba(217,169,74,.08), transparent 60%),
+               radial-gradient(900px 480px at 5% 6%, rgba(63,191,168,.055), transparent 55%), var(--bg);
+    color:var(--text); font-size:15px; line-height:1.7;
+    font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased; padding-bottom:80px;
+  }
+  ::selection{background:rgba(217,169,74,.28)}
+  .shell{max-width:1080px;margin:0 auto;padding:0 clamp(16px,3vw,32px)}
+  .mono{font-family:var(--mono)}
+
+  header{padding:54px 0 0}
+  .kicker{font-size:10.5px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:14px}
+  h1{font-size:clamp(26px,3.6vw,38px);font-weight:800;letter-spacing:-.02em;line-height:1.2;
+     background:linear-gradient(120deg,#fff 25%,var(--gold2) 65%,var(--teal2) 100%);
+     -webkit-background-clip:text;background-clip:text;color:transparent}
+  .lede{margin-top:14px;color:var(--text2);font-size:14.5px;max-width:66ch}
+
+  .banner{
+    display:flex;gap:12px;align-items:flex-start;margin:24px 0 0;
+    background:rgba(63,191,168,.06);border:1px solid rgba(63,191,168,.22);
+    border-left:3px solid var(--teal);border-radius:0 10px 10px 0;padding:14px 18px;
+  }
+  .banner .ic{flex:0 0 auto;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--teal);
+    display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--teal2);font-weight:700;margin-top:3px}
+  .banner p{margin:0;font-size:13px;color:var(--text2);line-height:1.7}
+  .banner b{color:var(--teal2)}
+
+  nav.tabs{display:flex;gap:6px;margin:34px 0 0;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:0}
+  nav.tabs button{
+    background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);
+    font-size:13.5px;font-family:inherit;padding:10px 16px 12px;cursor:pointer;transition:.16s;letter-spacing:.02em;
+  }
+  nav.tabs button:hover{color:var(--text2)}
+  nav.tabs button.on{color:var(--gold2);border-bottom-color:var(--gold)}
+  nav.tabs button .k{font-family:var(--mono);font-size:10.5px;margin-right:7px;opacity:.7}
+
+  .panel{display:none;padding:30px 0 0;animation:fade .28s ease}
+  .panel.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  h2{font-size:18px;font-weight:700;margin-bottom:6px}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:22px}
+  h3{font-size:14px;font-weight:700;color:var(--gold2);letter-spacing:.04em;margin:26px 0 10px}
+
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media(max-width:760px){ .row,.row3{grid-template-columns:1fr} }
+
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:11.5px;letter-spacing:.1em;color:var(--muted);margin-bottom:7px;text-transform:uppercase}
+  input[type=text],input[type=number],textarea,select{
+    width:100%;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;
+    color:var(--text);font-family:var(--mono);font-size:13.5px;padding:10px 13px;
+    transition:.15s;outline:none;resize:vertical;
+  }
+  input:focus,textarea:focus,select:focus{border-color:rgba(217,169,74,.55);box-shadow:0 0 0 3px rgba(217,169,74,.08)}
+  textarea{line-height:1.65;min-height:76px}
+  input::placeholder,textarea::placeholder{color:#4c5b6b}
+
+  button.go{
+    background:linear-gradient(180deg,rgba(217,169,74,.18),rgba(217,169,74,.08));
+    border:1px solid rgba(217,169,74,.5);color:var(--gold2);font-family:inherit;
+    font-size:13.5px;font-weight:600;letter-spacing:.06em;padding:10px 26px;border-radius:8px;
+    cursor:pointer;transition:.16s;
+  }
+  button.go:hover{background:rgba(217,169,74,.22);border-color:var(--gold)}
+  button.go:active{transform:translateY(1px)}
+  button.ghost{background:none;border:1px solid var(--line2);color:var(--text2);
+    font-family:inherit;font-size:12.5px;padding:7px 14px;border-radius:7px;cursor:pointer;transition:.15s}
+  button.ghost:hover{border-color:var(--line2);color:#fff;background:rgba(255,255,255,.03)}
+
+  .cards-in{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:34px}
+  .pc{width:34px;height:46px;border-radius:5px;background:#f4f1ea;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;
+      font-size:15px;line-height:1;color:#1a1a1a;border:1px solid #d8d2c4}
+  .pc .s{font-size:13px;margin-top:3px}
+  .pc.red{color:#c0392b}
+  .pc.empty{background:transparent;border:1px dashed var(--line2);color:var(--muted);font-size:18px}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:18px 0}
+  .stat{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);
+        border-radius:10px;padding:14px 16px}
+  .stat .l{font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:5px}
+  .stat .v{font-family:var(--mono);font-size:23px;font-weight:700;color:#fff;letter-spacing:-.01em}
+  .stat .v.teal{color:var(--teal2)} .stat .v.gold{color:var(--gold2)} .stat .v.red{color:var(--red)}
+  .stat .n{font-size:11.5px;color:var(--muted);margin-top:3px}
+
+  .bar{height:7px;border-radius:4px;background:rgba(255,255,255,.06);overflow:hidden;display:flex;margin:6px 0 18px}
+  .bar i{display:block;height:100%;transition:width .5s ease}
+  .b-win{background:var(--teal)} .b-tie{background:var(--gold)} .b-lose{background:var(--red)}
+
+  .out{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:18px 20px;margin-top:6px}
+  .out .line{display:flex;justify-content:space-between;gap:14px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13.5px}
+  .out .line:last-child{border-bottom:none}
+  .out .line span:first-child{color:var(--muted)}
+  .out .line span:last-child{font-family:var(--mono);color:#fff;font-weight:600}
+
+  .tag{display:inline-block;font-size:11.5px;padding:3px 10px;border-radius:999px;margin:0 6px 6px 0;
+       border:1px solid var(--line2);color:var(--text2);background:rgba(255,255,255,.02)}
+  .tag.g{border-color:rgba(63,191,168,.4);color:var(--teal2);background:rgba(63,191,168,.08)}
+  .tag.a{border-color:rgba(217,169,74,.4);color:var(--gold2);background:rgba(217,169,74,.08)}
+  .tag.r{border-color:rgba(224,96,94,.4);color:#f09b9a;background:rgba(224,96,94,.08)}
+
+  .note{border-left:3px solid var(--blue);background:rgba(90,157,224,.06);padding:12px 16px;
+        border-radius:0 8px 8px 0;margin:16px 0;font-size:13px;color:var(--text2)}
+  .note b{color:#9cc7ef}
+
+  .picks{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+  .picks button{
+    padding:16px 10px;border-radius:10px;border:1px solid var(--line2);background:var(--panel);
+    color:var(--text2);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:.16s;
+  }
+  .picks button:hover{border-color:var(--gold);color:#fff;background:rgba(217,169,74,.08)}
+  .picks button small{display:block;font-size:10.5px;font-weight:400;color:var(--muted);margin-top:4px;letter-spacing:.08em}
+  .picks button.right{border-color:var(--teal);background:rgba(63,191,168,.14);color:var(--teal2)}
+  .picks button.wrong{border-color:var(--red);background:rgba(224,96,94,.14);color:#f09b9a}
+  .picks button:disabled{cursor:default;opacity:.95}
+
+  .quiz-hand{
+    text-align:center;padding:26px 10px;border-radius:12px;border:1px solid var(--line);
+    background:linear-gradient(180deg,var(--panel2),var(--bg2));margin:16px 0;
+  }
+  .quiz-hand .pos{font-size:11px;letter-spacing:.24em;color:var(--gold);margin-bottom:10px}
+  .quiz-hand .hh{font-family:var(--mono);font-size:44px;font-weight:800;letter-spacing:.06em;color:#fff}
+  .quiz-hand .hint{font-size:12.5px;color:var(--muted);margin-top:8px;min-height:20px}
+
+  .mini-grid{display:grid;grid-template-columns:repeat(13,1fr);gap:2px;margin-top:12px}
+  .mg-c{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+        font-size:7.5px;color:#4c5b6b;border-radius:2px;background:rgba(255,255,255,.028)}
+  .mg-c.r{background:linear-gradient(160deg,#3fbfa8,#2e9b8a);color:#04211c;font-weight:700}
+  .mg-c.m{background:repeating-linear-gradient(45deg,#7a6a3e,#7a6a3e 2px,#3a3324 2px,#3a3324 4px);color:#f0d79b;font-weight:700}
+  .mg-c.hit{outline:2px solid var(--gold2);outline-offset:-1px}
+
+  footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;line-height:1.8}
+  .spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(217,169,74,.3);
+        border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:8px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+
+  a.inl{color:var(--gold2);text-decoration:none;border-bottom:1px dashed rgba(217,169,74,.45);padding-bottom:1px;transition:.15s}
+  a.inl:hover{color:var(--teal2);border-bottom-color:var(--teal2)}
+  .banner a.inl{border-bottom-color:rgba(63,191,168,.5);color:var(--teal2)}
+  .banner a.inl:hover{color:var(--gold2)}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header>
+  <div class="kicker">Offline toolkit · no client hook</div>
+  <h1>GTO Lab</h1>
+  <p class="lede">
+    一个完全离线的计算与训练台：算真实权益、算底池数学、诊断牌面结构、练翻前范围。
+    所有输入都是你手动敲进来的牌，它不读取、不连接、不注入任何游戏客户端。
+  </p>
+  <p style="margin-top:14px;font-size:13px">
+    <a class="inl" href="index.html">← 知识库</a>
+    &nbsp;·&nbsp;
+    <a class="inl" href="demo/engine-demo.html">决策引擎调试台 →</a>
+  </p>
+
+  <div class="banner" style="margin-top:22px">
+    <div class="ic">i</div>
+    <p>
+      <b>用途定位：</b>牌局结束后的复盘、开牌前的理论学习、日常范围训练。
+      刻意不提供"实时对局辅助"——那种功能在功能上等同于外挂，不在这个工具的范围内。
+      <b>练出来的判断力是带得走的，外挂带不走。</b>
+      如果你的游戏是自己写的，正确的接入方式是从状态层导出 hand state 交给引擎，而不是识别屏幕 ——
+      协议见 <a class="inl" href="docs/hand-state.md">docs/hand-state.md</a>。
+    </p>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button data-t="equity" class="on"><span class="k">01</span>权益计算器</button>
+  <button data-t="pot"><span class="k">02</span>底池数学</button>
+  <button data-t="board"><span class="k">03</span>牌面诊断</button>
+  <button data-t="train"><span class="k">04</span>翻前训练</button>
+</nav>
+
+<section class="panel on" id="p-equity">
+  <h2>范围 vs 范围 权益</h2>
+  <div class="sub">蒙特卡洛模拟，支持 169 格范围语法（<span class="mono">22+ / A2s+ / ATo+ / KQs</span>）与任意公共牌</div>
+
+  <div class="row">
+    <div class="field">
+      <label>范围 A（我方）</label>
+      <textarea id="rA">22+,A2s+,KTs+,QTs+,JTs,T9s,98s,ATo+,KTo+,QJo</textarea>
+    </div>
+    <div class="field">
+      <label>范围 B（对手）</label>
+      <textarea id="rB">22+,A2s+,K2s+,Q4s+,J6s+,T6s+,95s+,85s+,74s+,64s+,54s,A2o+,K8o+,Q9o+,J9o+,T9o</textarea>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>公共牌（可留空；格式 <span class="mono">As Kh 7d</span>，最多 5 张）</label>
+    <input type="text" id="board" placeholder="As Kh 7d">
+    <div class="cards-in" id="boardCards"></div>
+  </div>
+
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <button class="go" id="runEq">开始模拟</button>
+    <button class="ghost" id="preset1">预设：UTG vs BTN 开局</button>
+    <button class="ghost" id="preset2">预设：BB 防守 vs BTN</button>
+    <span id="eqStatus" style="font-size:12.5px;color:var(--muted)"></span>
+  </div>
+
+  <div id="eqResult" style="display:none;margin-top:22px">
+    <div class="stats">
+      <div class="stat"><div class="l">我方权益</div><div class="v teal" id="eqA">—</div><div class="n" id="eqAc"></div></div>
+      <div class="stat"><div class="l">对手权益</div><div class="v red" id="eqB">—</div><div class="n" id="eqBc"></div></div>
+      <div class="stat"><div class="l">平局</div><div class="v gold" id="eqT">—</div><div class="n" id="eqN"></div></div>
+    </div>
+    <div class="bar"><i class="b-win" id="barA" style="width:0"></i><i class="b-tie" id="barT" style="width:0"></i><i class="b-lose" id="barB" style="width:0"></i></div>
+    <div class="note" id="eqTip"></div>
+  </div>
+</section>
+
+<section class="panel" id="p-pot">
+  <h2>底池数学</h2>
+  <div class="sub">把翻后的核心公式一次算完：胜率门槛、MDF、Alpha、可容纳的诈唬比例</div>
+
+  <div class="row3">
+    <div class="field"><label>当前底池</label><input type="number" id="potSize" value="100" step="1"></div>
+    <div class="field"><label>对手下注</label><input type="number" id="betSize" value="50" step="1"></div>
+    <div class="field"><label>你的跟注</label><input type="number" id="callSize" value="50" step="1"></div>
+  </div>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:20px">
+    <button class="go" id="runPot">计算</button>
+    <button class="ghost" data-set="0.33">1/3 池</button>
+    <button class="ghost" data-set="0.5">1/2 池</button>
+    <button class="ghost" data-set="0.75">3/4 池</button>
+    <button class="ghost" data-set="1">满池</button>
+    <button class="ghost" data-set="2">超池 2x</button>
+  </div>
+
+  <div class="out" id="potOut">
+    <div class="line"><span>跟注所需权益（Pot Odds）</span><span id="o1">—</span></div>
+    <div class="line"><span>你的跟注额占最终底池</span><span id="o2">—</span></div>
+    <div class="line"><span>对手需要的弃牌率（Alpha）</span><span id="o3">—</span></div>
+    <div class="line"><span>你必须继续的频率（MDF）</span><span id="o4">—</span></div>
+    <div class="line"><span>若你在下注：下注范围里可含诈唬</span><span id="o5">—</span></div>
+    <div class="line"><span>若你在下注：价值 : 诈唬</span><span id="o6">—</span></div>
+    <div class="line"><span>下注额 / 底池</span><span id="o7">—</span></div>
+  </div>
+  <div class="note" id="potTip"></div>
+</section>
+
+<section class="panel" id="p-board">
+  <h2>牌面诊断</h2>
+  <div class="sub">输入翻牌（或翻牌+转牌），判断牌面结构、优势归属，并给出方向性的下注频率与尺度</div>
+
+  <div class="field">
+    <label>公共牌</label>
+    <input type="text" id="diagBoard" placeholder="7h 6d 5c">
+    <div class="cards-in" id="diagCards"></div>
+  </div>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px">
+    <button class="go" id="runDiag">诊断</button>
+    <button class="ghost" data-board="As 7d 2c">A 高干燥</button>
+    <button class="ghost" data-board="Ks 7d 3c">K 高干燥</button>
+    <button class="ghost" data-board="Ts 9s 4d">中连双色</button>
+    <button class="ghost" data-board="7h 6d 5c">低连彩虹</button>
+    <button class="ghost" data-board="9s 8s 6d">中连双色</button>
+  </div>
+
+  <div id="diagResult" style="display:none">
+    <div id="diagTags" style="margin-bottom:16px"></div>
+    <div class="stats">
+      <div class="stat"><div class="l">建议 cbet 频率</div><div class="v" id="dFreq">—</div><div class="n">占你整个范围</div></div>
+      <div class="stat"><div class="l">建议尺度</div><div class="v gold" id="dSize">—</div><div class="n">相对底池</div></div>
+      <div class="stat"><div class="l">范围优势</div><div class="v" id="dRA">—</div><div class="n">决定频率</div></div>
+      <div class="stat"><div class="l">坚果优势</div><div class="v" id="dNA">—</div><div class="n">决定尺度</div></div>
+    </div>
+    <div class="out" id="diagAdvice"></div>
+  </div>
+</section>
+
+<section class="panel" id="p-train">
+  <h2>翻前范围训练</h2>
+  <div class="sub">随机抽一个位置 + 手牌，你判断它是纯加注、混合、还是弃牌。按 <span class="mono">1 / 2 / 3</span> 键更快</div>
+
+  <div class="stats">
+    <div class="stat"><div class="l">正确率</div><div class="v teal" id="tAcc">—</div><div class="n" id="tCnt">0 / 0</div></div>
+    <div class="stat"><div class="l">连击</div><div class="v gold" id="tStreak">0</div><div class="n">最高 <span id="tBest">0</span></div></div>
+    <div class="stat"><div class="l">累计题数</div><div class="v" id="tTotal">0</div><div class="n">目标 100 题</div></div>
+  </div>
+
+  <div class="quiz-hand">
+    <div class="pos" id="qPos">UTG</div>
+    <div class="hh" id="qHand">AKs</div>
+    <div class="hint" id="qHint">选择你的动作</div>
+  </div>
+
+  <div class="picks" id="picks">
+    <button data-a="raise">加注<small>RAISE</small></button>
+    <button data-a="mixed">混合<small>MIXED</small></button>
+    <button data-a="fold">弃牌<small>FOLD</small></button>
+  </div>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <button class="go" id="nextQ">下一题</button>
+    <button class="ghost" id="resetQ">重置统计</button>
+  </div>
+
+  <h3>当前范围参考</h3>
+  <div class="mini-grid" id="refGrid"></div>
+  <div class="note">绿色 = 纯加注，斜纹 = 混合频率，暗色 = 弃牌。答完题后会用金框标出这手牌的位置。</div>
+</section>
+
+<footer>
+  <p>
+    <strong>GTO Lab</strong> · 纯前端单文件，无网络请求、无外部依赖、不读写任何第三方程序。
+    权益为蒙特卡洛模拟结果（默认 20,000 次迭代），存在 ±0.5% 量级的抽样误差。
+  </p>
+  <p style="margin-top:8px">牌面诊断为启发式模型，用于建立方向感，不等于 solver 输出的精确频率。</p>
+</footer>
+
+<script>
+/* ============================================================
+   基础：牌编码  c = rank*4 + suit   rank 0=2 … 12=A   suit 0=s 1=h 2=d 3=c
+   ============================================================ */
+const RCH = ['2','3','4','5','6','7','8','9','T','J','Q','K','A'];
+const RV  = {'2':0,'3':1,'4':2,'5':3,'6':4,'7':5,'8':6,'9':7,'T':8,'J':9,'Q':10,'K':11,'A':12};
+const SU  = {'s':0,'h':1,'d':2,'c':3};
+const SUS = ['\u2660','\u2665','\u2666','\u2663'];
+const GRID_RANKS = ['A','K','Q','J','T','9','8','7','6','5','4','3','2'];
+
+function parseCard(tok){
+  const m = String(tok).trim().match(/^(10|[2-9tjqka])([shdc])$/i);
+  if(!m) return -1;
+  const r = m[1].toUpperCase() === '10' ? 'T' : m[1].toUpperCase();
+  return RV[r] * 4 + SU[m[2].toLowerCase()];
+}
+function parseCards(str){
+  return String(str).split(/[\s,]+/).filter(Boolean).map(parseCard).filter(c => c >= 0);
+}
+function cardText(c){ return RCH[c >> 2] + SUS[c & 3]; }
+
+function renderCards(host, cards, max){
+  host.innerHTML = '';
+  cards.slice(0, max).forEach(c => {
+    const d = document.createElement('div');
+    d.className = 'pc' + ((c & 3) === 1 || (c & 3) === 2 ? ' red' : '');
+    d.innerHTML = '<span>' + RCH[c >> 2] + '</span><span class="s">' + SUS[c & 3] + '</span>';
+    host.appendChild(d);
+  });
+  for (let i = cards.length; i < max; i++){
+    const d = document.createElement('div');
+    d.className = 'pc empty';
+    d.textContent = '+';
+    host.appendChild(d);
+  }
+}
+
+/* ---------- 7 张牌评估 ---------- */
+function straightHigh(mask){
+  for (let hi = 12; hi >= 4; hi--){
+    const need = 0b11111 << (hi - 4);
+    if ((mask & need) === need) return hi;
+  }
+  const w = (1<<12)|(1<<0)|(1<<1)|(1<<2)|(1<<3);
+  if ((mask & w) === w) return 3;
+  return -1;
+}
+function pack(cat, arr){
+  let s = cat;
+  for (let i = 0; i < 5; i++) s = s * 16 + (arr[i] || 0);
+  return s;
+}
+function eval7(cs){
+  const rc = new Int8Array(13), sc = new Int8Array(4);
+  for (let i = 0; i < 7; i++){ const c = cs[i]; rc[c >> 2]++; sc[c & 3]++; }
+
+  let fs = -1;
+  for (let s = 0; s < 4; s++) if (sc[s] >= 5) fs = s;
+
+  let fmask = 0;
+  if (fs >= 0) for (let i = 0; i < 7; i++){ const c = cs[i]; if ((c & 3) === fs) fmask |= 1 << (c >> 2); }
+
+  let quad = -1; const trip = [], pair = [];
+  for (let r = 12; r >= 0; r--){
+    const n = rc[r];
+    if (n === 4) quad = r;
+    else if (n === 3) trip.push(r);
+    else if (n === 2) pair.push(r);
+  }
+
+  if (fs >= 0){
+    const sf = straightHigh(fmask);
+    if (sf >= 0) return pack(8, [sf]);
+  }
+  if (quad >= 0){
+    let k = 0;
+    for (let r = 12; r >= 0; r--) if (r !== quad && rc[r] > 0){ k = r; break; }
+    return pack(7, [quad, k]);
+  }
+  if (trip.length >= 2) return pack(6, [trip[0], trip[1]]);
+  if (trip.length === 1 && pair.length >= 1) return pack(6, [trip[0], pair[0]]);
+
+  if (fs >= 0){
+    const t = [];
+    for (let r = 12; r >= 0 && t.length < 5; r--) if (fmask >> r & 1) t.push(r);
+    return pack(5, t);
+  }
+
+  let mask = 0;
+  for (let r = 0; r < 13; r++) if (rc[r] > 0) mask |= 1 << r;
+  const sh = straightHigh(mask);
+  if (sh >= 0) return pack(4, [sh]);
+
+  if (trip.length === 1){
+    const k = [];
+    for (let r = 12; r >= 0 && k.length < 2; r--) if (r !== trip[0] && rc[r] > 0) k.push(r);
+    return pack(3, [trip[0], k[0], k[1]]);
+  }
+  if (pair.length >= 2){
+    let k = 0;
+    for (let r = 12; r >= 0; r--) if (r !== pair[0] && r !== pair[1] && rc[r] > 0){ k = r; break; }
+    return pack(2, [pair[0], pair[1], k]);
+  }
+  if (pair.length === 1){
+    const k = [];
+    for (let r = 12; r >= 0 && k.length < 3; r--) if (r !== pair[0] && rc[r] > 0) k.push(r);
+    return pack(1, [pair[0], k[0], k[1], k[2]]);
+  }
+  const t = [];
+  for (let r = 12; r >= 0 && t.length < 5; r--) if (rc[r] > 0) t.push(r);
+  return pack(0, t);
+}
+
+/* ---------- 范围解析 ---------- */
+function expandSet(str){
+  const set = new Set();
+  const s = String(str).trim();
+  if (!s || /^(all|random|\*)$/i.test(s)){
+    for (let i = 0; i < 13; i++) for (let j = 0; j < 13; j++) set.add(cellHand(i, j));
+    return set;
+  }
+  s.split(/[\s,]+/).filter(Boolean).forEach(tok => {
+    const m = tok.match(/^([AKQJT2-9])([AKQJT2-9])([SOso])?(\+)?$/);
+    if (!m) return;
+    const r1 = m[1].toUpperCase(), r2 = m[2].toUpperCase();
+    const suit = m[3] ? m[3].toLowerCase() : '';
+    const plus = !!m[4];
+    const i1 = GRID_RANKS.indexOf(r1), i2 = GRID_RANKS.indexOf(r2);
+    if (i1 < 0 || i2 < 0) return;
+    if (r1 === r2){
+      if (plus) for (let k = 0; k <= i1; k++) set.add(GRID_RANKS[k] + GRID_RANKS[k]);
+      else set.add(r1 + r2);
+      return;
+    }
+    const suits = suit ? [suit] : ['s', 'o'];
+    if (plus) for (let k = i2; k > i1; k--) suits.forEach(su => set.add(r1 + GRID_RANKS[k] + su));
+    else suits.forEach(su => set.add(r1 + r2 + su));
+  });
+  return set;
+}
+function cellHand(i, j){
+  if (i === j) return GRID_RANKS[i] + GRID_RANKS[i];
+  return i < j ? GRID_RANKS[i] + GRID_RANKS[j] + 's' : GRID_RANKS[j] + GRID_RANKS[i] + 'o';
+}
+function toCombos(handSet, dead){
+  const out = [];
+  const freed = c => !(dead && dead[c]);
+  handSet.forEach(h => {
+    const r1 = RV[h[0]], r2 = RV[h[1]];
+    if (h.length === 2){
+      for (let a = 0; a < 4; a++) for (let b = a + 1; b < 4; b++){
+        const c1 = r1 * 4 + a, c2 = r1 * 4 + b;
+        if (freed(c1) && freed(c2)) out.push(c1 * 52 + c2);
+      }
+    } else if (h[2] === 's'){
+      for (let s = 0; s < 4; s++){
+        const c1 = r1 * 4 + s, c2 = r2 * 4 + s;
+        if (freed(c1) && freed(c2)) out.push(c1 * 52 + c2);
+      }
+    } else {
+      for (let a = 0; a < 4; a++) for (let b = 0; b < 4; b++){
+        if (a === b) continue;
+        const c1 = r1 * 4 + a, c2 = r2 * 4 + b;
+        if (freed(c1) && freed(c2)) out.push(c1 * 52 + c2);
+      }
+    }
+  });
+  return out;
+}
+
+/* ============================================================
+   Tab 切换
+   ============================================================ */
+document.querySelectorAll('#tabs button').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('#tabs button').forEach(b => b.classList.remove('on'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+    btn.classList.add('on');
+    document.getElementById('p-' + btn.dataset.t).classList.add('on');
+  };
+});
+
+/* ============================================================
+   01 权益计算器
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const boardInput = $('board');
+function syncBoard(){
+  const cs = parseCards(boardInput.value).slice(0, 5);
+  renderCards($('boardCards'), cs, 5);
+}
+boardInput.addEventListener('input', syncBoard);
+syncBoard();
+
+const used = new Uint8Array(52);
+const deck = new Int8Array(52);
+const heroB = new Int8Array(7), villB = new Int8Array(7);
+
+function simulate(listA, listB, board, n){
+  let winA = 0, winB = 0, tie = 0, valid = 0;
+  const need = 5 - board.length;
+  const na = listA.length, nb = listB.length;
+
+  for (let t = 0; t < n; t++){
+    let a = 0, b = 0, ok = false;
+    for (let k = 0; k < 24; k++){
+      a = listA[(Math.random() * na) | 0];
+      b = listB[(Math.random() * nb) | 0];
+      const a1 = (a / 52) | 0, a2 = a % 52, b1 = (b / 52) | 0, b2 = b % 52;
+      if (a1 !== b1 && a1 !== b2 && a2 !== b1 && a2 !== b2){ ok = true; break; }
+    }
+    if (!ok) continue;
+
+    const a1 = (a / 52) | 0, a2 = a % 52, b1 = (b / 52) | 0, b2 = b % 52;
+    used.fill(0);
+    for (let i = 0; i < board.length; i++) used[board[i]] = 1;
+    used[a1] = 1; used[a2] = 1; used[b1] = 1; used[b2] = 1;
+
+    let dn = 0;
+    for (let c = 0; c < 52; c++) if (!used[c]) deck[dn++] = c;
+    for (let k = 0; k < need; k++){
+      const j = k + ((Math.random() * (dn - k)) | 0);
+      const tmp = deck[k]; deck[k] = deck[j]; deck[j] = tmp;
+    }
+
+    const bl = board.length;
+    for (let i = 0; i < bl; i++){ heroB[i] = board[i]; villB[i] = board[i]; }
+    for (let i = 0; i < need; i++){ heroB[bl + i] = deck[i]; villB[bl + i] = deck[i]; }
+    heroB[5] = a1; heroB[6] = a2; villB[5] = b1; villB[6] = b2;
+
+    const rh = eval7(heroB), rv = eval7(villB);
+    if (rh > rv) winA++; else if (rv > rh) winB++; else tie++;
+    valid++;
+  }
+  return { winA, winB, tie, valid };
+}
+
+$('runEq').onclick = () => {
+  const board = parseCards(boardInput.value).slice(0, 5);
+  const dead = new Uint8Array(52);
+  board.forEach(c => dead[c] = 1);
+
+  const A = toCombos(expandSet($('rA').value), dead);
+  const B = toCombos(expandSet($('rB').value), dead);
+  if (!A.length || !B.length){
+    $('eqStatus').textContent = '范围解析为空或全部被公共牌阻断，请检查语法';
+    return;
+  }
+  $('eqStatus').innerHTML = '<span class="spin"></span>模拟中…';
+  $('eqResult').style.display = 'none';
+
+  requestAnimationFrame(() => setTimeout(() => {
+    const N = 50000;
+    const r = simulate(A, B, board, N);
+    const tot = r.valid || 1;
+    const pT = r.tie / tot * 100;
+    const pA = (r.winA + r.tie / 2) / tot * 100, pB = (r.winB + r.tie / 2) / tot * 100;
+    $('eqA').textContent = pA.toFixed(1) + '%';
+    $('eqB').textContent = pB.toFixed(1) + '%';
+    $('eqT').textContent = pT.toFixed(1) + '%';
+    $('eqAc').textContent = A.length + ' 组合 · 胜率 ' + (r.winA / tot * 100).toFixed(1) + '%';
+    $('eqBc').textContent = B.length + ' 组合 · 胜率 ' + (r.winB / tot * 100).toFixed(1) + '%';
+    $('eqN').textContent = r.valid.toLocaleString() + ' 次有效迭代';
+    $('barA').style.width = (r.winA / tot * 100) + '%';
+    $('barT').style.width = pT + '%';
+    $('barB').style.width = (r.winB / tot * 100) + '%';
+
+    const diff = pA - 50;
+    let tip;
+    if (Math.abs(diff) < 2) tip = '<b>接近抛硬币。</b>这种节点上，位置和实现率比原始权益更重要 —— 谁有位置谁赚。';
+    else if (diff > 0) tip = '<b>你领先 ' + diff.toFixed(1) + ' 个百分点。</b>但注意：权益高不等于该跟注，还要看你能否把这份权益实现出来（位置、可玩性、后续街的可操作性）。';
+    else tip = '<b>你落后 ' + Math.abs(diff).toFixed(1) + ' 个百分点。</b>低于跟注门槛就该弃；如果有好的听牌结构，用隐含赔率而不是原始权益来评估。';
+    $('eqTip').innerHTML = tip;
+
+    $('eqStatus').textContent = '完成 · ' + (r.valid).toLocaleString() + ' 次迭代';
+    $('eqResult').style.display = 'block';
+  }, 30));
+};
+
+$('preset1').onclick = () => {
+  $('rA').value = '55+,A2s+,KTs+,QTs+,JTs,T9s,98s,ATo+,KTo+,QJo';
+  $('rB').value = '22+,A2s+,K2s+,Q4s+,J6s+,T6s+,95s+,85s+,74s+,64s+,54s,A2o+,K8o+,Q9o+,J9o+,T9o';
+  boardInput.value = '';
+  syncBoard();
+  $('runEq').click();
+};
+$('preset2').onclick = () => {
+  $('rA').value = '22+,A2s+,K2s+,Q2s+,J4s+,T5s+,95s+,84s+,74s+,63s+,53s+,43s,A2o+,K5o+,Q7o+,J7o+,T8o+,98o,87o';
+  $('rB').value = '22+,A2s+,K2s+,Q4s+,J6s+,T6s+,95s+,85s+,74s+,64s+,54s,A2o+,K8o+,Q9o+,J9o+,T9o';
+  boardInput.value = '';
+  syncBoard();
+  $('runEq').click();
+};
+
+/* ============================================================
+   02 底池数学
+   ============================================================ */
+function calcPot(){
+  const P = Math.max(0, parseFloat($('potSize').value) || 0);
+  const B = Math.max(0, parseFloat($('betSize').value) || 0);
+  const C = Math.max(0, parseFloat($('callSize').value) || 0);
+
+  if (P <= 0 || B <= 0){ $('potTip').innerHTML = '<b>请填写有效的底池与下注额。</b>'; return; }
+
+  const odds   = C / (P + B + C);
+  const alpha  = B / (P + B);
+  const mdf    = P / (P + B);
+  const bluff  = B / (P + 2 * B);
+  const ratio  = (P + B) / B;
+  const frac   = B / P;
+
+  $('o1').textContent = (odds * 100).toFixed(1) + '%';
+  $('o2').textContent = (C / (P + B + C) * 100).toFixed(1) + '%';
+  $('o3').textContent = (alpha * 100).toFixed(1) + '%';
+  $('o4').textContent = (mdf * 100).toFixed(1) + '%';
+  $('o5').textContent = (bluff * 100).toFixed(1) + '%';
+  $('o6').textContent = ratio.toFixed(2) + ' : 1';
+  $('o7').textContent = (frac * 100).toFixed(0) + '%';
+
+  $('potTip').innerHTML =
+    '<b>怎么用：</b>对手下注 ' + frac.toFixed(2) + ' 倍底池，你需要 <b>' + (odds*100).toFixed(1) +
+    '%</b> 的权益才能不亏。同时，作为防守方，你的整个范围必须守住 <b>' + (mdf*100).toFixed(1) +
+    '%</b> 的继续频率 —— 低于这个数，对手用任意两张牌诈唬就自动盈利。<br>' +
+    '<br><b>反过来：</b>如果你是这个下注方，' + (bluff*100).toFixed(1) +
+    '% 的下注范围可以是诈唬，即价值 : 诈唬 = ' + ratio.toFixed(2) + ' : 1。' +
+    (mdf < 45 ? '<br><b>注意：</b>MDF 这么低，说明这个尺度的攻击性很强 —— 它要求你真有坚果优势才成立。' : '');
+}
+$('runPot').onclick = calcPot;
+document.querySelectorAll('[data-set]').forEach(b => {
+  b.onclick = () => {
+    const P = 100;
+    const B = Math.round(P * parseFloat(b.dataset.set));
+    $('potSize').value = P; $('betSize').value = B; $('callSize').value = B;
+    calcPot();
+  };
+});
+calcPot();
+
+/* ============================================================
+   03 牌面诊断
+   ============================================================ */
+const diagInput = $('diagBoard');
+function syncDiag(){ renderCards($('diagCards'), parseCards(diagInput.value).slice(0,5), 5); }
+diagInput.addEventListener('input', syncDiag);
+syncDiag();
+
+document.querySelectorAll('[data-board]').forEach(b => {
+  b.onclick = () => { diagInput.value = b.dataset.board; syncDiag(); $('runDiag').click(); };
+});
+
+$('runDiag').onclick = () => {
+  const cs = parseCards(diagInput.value).slice(0, 5);
+  if (cs.length < 3){
+    $('diagTags').innerHTML = '<span class="tag r">至少输入 3 张公共牌</span>';
+    $('diagResult').style.display = 'block';
+    return;
+  }
+  const ranks = cs.map(c => c >> 2);
+  const suits = cs.map(c => c & 3);
+  const top = Math.max(...ranks);
+
+  const cnt = {};
+  ranks.forEach(r => cnt[r] = (cnt[r] || 0) + 1);
+  const pairRanks = Object.keys(cnt).filter(k => cnt[k] >= 2).map(Number);
+
+  const scnt = [0,0,0,0];
+  suits.forEach(s => scnt[s]++);
+  const maxSuit = Math.max(...scnt);
+
+  const uniq = [...new Set(ranks)].sort((a,b) => a-b);
+  let bestWin = 0;
+  for (let lo = 0; lo <= 12; lo++){
+    let n = 0;
+    for (const r of uniq) if (r >= lo && r < lo + 5) n++;
+    if (lo === 0 || n > bestWin) bestWin = Math.max(bestWin, n);
+  }
+  if (bestWin === 0) bestWin = uniq.length;
+
+  const topName = top >= 11 ? RCH[top] + ' 高' : (top >= 9 ? '中高（' + RCH[top] + '）' : '低（' + RCH[top] + '）');
+  const tags = [];
+  tags.push('<span class="tag a">' + topName + '</span>');
+  tags.push('<span class="tag ' + (bestWin >= 4 ? 'r' : (bestWin === 3 ? 'a' : '')) + '">' +
+    (bestWin >= 4 ? '强连接' : bestWin === 3 ? '半连接' : '不连接') + '</span>');
+  tags.push('<span class="tag ' + (maxSuit >= 3 ? 'a' : '') + '">' +
+    (maxSuit >= 3 ? '同花面（已可成花）' : '彩虹/双色') + '</span>');
+  if (pairRanks.length) tags.push('<span class="tag g">对子面 · ' + pairRanks.map(r => RCH[r]).join('/') + '</span>');
+
+  let score = 0;
+  if (top >= 11) score += 3;
+  else if (top === 10) score += 1;
+  else if (top >= 8) score += 0;
+  else score -= 2;
+  if (bestWin >= 4) score -= (top <= 8 ? 4 : 2);
+  else if (bestWin === 3) score -= (top <= 8 ? 2 : 1);
+  if (maxSuit >= 3) score -= 1;
+  if (pairRanks.length) score -= 1;
+
+  let freq, size, ra, na, advice;
+  if (score >= 2){
+    freq = '70–85%'; size = '25–33%'; ra = '高'; na = '我方偏强';
+    advice = '<b>可以用近乎整个范围小尺度下注。</b>牌面对你的开局范围极其有利，对手必须用大量中等牌硬撑，你一 bet 就让他陷入两难。这种情况下尺度要小 —— 目的是让弱牌也能一起下注，保持范围不可读。';
+  } else if (score === 1){
+    freq = '55–70%'; size = '33–50%'; ra = '中高'; na = '接近';
+    advice = '<b>中高频 + 中小尺度。</b>你有范围优势但坚果优势不明显，避免用大注把自己暴露在被反杀的位置。中等牌跟着下注，纯空气少打。';
+  } else if (score === 0){
+    freq = '45–58%'; size = '50–66%'; ra = '中性'; na = '接近';
+    advice = '<b>频率和尺度都在中间，需要按具体手牌分档。</b>这种牌面没有"一键解"，应该把范围拆成：坚果/强听牌用大尺度、顶对用中尺度、其余 check。';
+  } else if (score === -1){
+    freq = '35–45%'; size = '66–75%'; ra = '偏低'; na = '对手偏强';
+    advice = '<b>降低频率、提高尺度。</b>牌面开始偏向跟注方，你的中等牌被 check-raise 的风险上升。只拿真坚果和强听牌进攻，其余过牌控池。';
+  } else {
+    freq = '25–35%'; size = '75%+ 或过牌'; ra = '低'; na = '对手';
+    advice = '<b>大量过牌，进入防守模式。</b>坚果全在对手范围里（顺子、三条、两对），你的任何诈唬都会被加注打爆。这个牌面的正确做法是放弃高频 cbet，等转牌出现高牌再重新争夺。';
+  }
+
+  $('diagTags').innerHTML = tags.join('');
+  $('dFreq').textContent = freq;
+  $('dFreq').className = 'v ' + (score >= 1 ? 'teal' : 'red');
+  $('dSize').textContent = size;
+  $('dRA').textContent = ra;
+  $('dRA').className = 'v ' + (score >= 2 ? 'teal' : score <= -1 ? 'red' : '');
+  $('dNA').textContent = na;
+  $('dNA').className = 'v ' + (na === '我方偏强' ? 'teal' : na === '对手' ? 'red' : '');
+  $('diagAdvice').innerHTML = '<div style="font-size:13.5px;line-height:1.8;color:var(--text2)">' + advice +
+    '<div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);color:var(--muted);font-size:12.5px">' +
+    '结构评分 ' + score + ' · 连接度 ' + bestWin + '/5 · 最强花色张数 ' + maxSuit +
+    ' · 此判断假设你是翻前加注者、对手是跟注者，且为单次加注底池</div></div>';
+  $('diagResult').style.display = 'block';
+};
+/* ============================================================
+   04 翻前训练
+   ============================================================ */
+const RANGE_DATA = {
+  'UTG': {
+    raise: '55+,A2s+,KTs+,QTs+,JTs,T9s,98s,ATo+,KTo+,QJo',
+    mixed: '44,K9s,Q9s,J9s,T8s,87s,76s,A9o,K9o,QTo,JTo'
+  },
+  'MP': {
+    raise: '44+,A2s+,K9s+,Q9s+,J9s+,T8s+,97s+,87s,76s,ATo+,KTo+,QTo+,JTo',
+    mixed: '33,K8s,Q8s,T7s,96s,86s,65s,A8o,K8o,Q9o'
+  },
+  'CO': {
+    raise: '22+,A2s+,K7s+,Q8s+,J8s+,T7s+,96s+,85s+,75s+,65s,54s,A8o+,KTo+,QTo+,JTo',
+    mixed: 'K6s,Q7s,J7s,T6s,74s,64s,A5o,A7o,K9o,Q8o,T9o'
+  },
+  'BTN': {
+    raise: '22+,A2s+,K2s+,Q4s+,J6s+,T6s+,95s+,85s+,74s+,64s+,54s,A2o+,K8o+,Q9o+,J9o+,T9o',
+    mixed: 'Q3s,J5s,T5s,94s,84s,73s,63s,53s,K7o,Q8o,J8o,T8o,98o'
+  }
+};
+const POS_LIST = Object.keys(RANGE_DATA);
+const CACHE = {};
+POS_LIST.forEach(p => {
+  CACHE[p] = { r: expandSet(RANGE_DATA[p].raise), m: expandSet(RANGE_DATA[p].mixed) };
+});
+
+const ALL169 = [];
+for (let i = 0; i < 13; i++) for (let j = 0; j < 13; j++) ALL169.push(cellHand(i, j));
+
+const T = { total: 0, correct: 0, streak: 0, best: 0, pos: 'BTN', hand: 'AKo', answered: false, answer: '' };
+
+function answerOf(pos, hand){
+  if (CACHE[pos].r.has(hand)) return 'raise';
+  if (CACHE[pos].m.has(hand)) return 'mixed';
+  return 'fold';
+}
+
+function drawRefGrid(){
+  const box = $('refGrid');
+  box.innerHTML = '';
+  const c = CACHE[T.pos];
+  for (let i = 0; i < 13; i++){
+    for (let j = 0; j < 13; j++){
+      const h = cellHand(i, j);
+      const d = document.createElement('div');
+      d.className = 'mg-c';
+      if (c.r.has(h)) d.classList.add('r');
+      else if (c.m.has(h)) d.classList.add('m');
+      if (h === T.hand) d.classList.add('hit');
+      d.textContent = h;
+      box.appendChild(d);
+    }
+  }
+}
+
+function newQuestion(){
+  T.pos = POS_LIST[(Math.random() * POS_LIST.length) | 0];
+  T.hand = ALL169[(Math.random() * ALL169.length) | 0];
+  T.answered = false;
+  T.answer = answerOf(T.pos, T.hand);
+  $('qPos').textContent = T.pos + ' · 开局决策';
+  $('qHand').textContent = T.hand;
+  $('qHint').textContent = '选择你的动作';
+  $('qHint').style.color = '';
+  document.querySelectorAll('#picks button').forEach(b => {
+    b.disabled = false;
+    b.classList.remove('right', 'wrong');
+  });
+  drawRefGrid();
+}
+
+function answer(choice){
+  if (T.answered) return;
+  T.answered = true;
+  T.total++;
+  const ok = choice === T.answer;
+  if (ok){ T.correct++; T.streak++; if (T.streak > T.best) T.best = T.streak; }
+  else T.streak = 0;
+
+  document.querySelectorAll('#picks button').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.a === T.answer) b.classList.add('right');
+    else if (b.dataset.a === choice) b.classList.add('wrong');
+  });
+
+  const zh = { raise: '加注', mixed: '混合', fold: '弃牌' };
+  $('qHint').innerHTML = ok
+    ? '正确 · ' + zh[T.answer] + (T.answer === 'mixed' ? '（这手牌是混合频率，不是纯打或纯弃）' : '')
+    : '错了 · 正确答案是 <b style="color:var(--teal2)">' + zh[T.answer] + '</b>';
+  $('qHint').style.color = ok ? 'var(--teal2)' : '#f09b9a';
+
+  $('tTotal').textContent = T.total;
+  $('tCnt').textContent = T.correct + ' / ' + T.total;
+  $('tAcc').textContent = T.total ? (T.correct / T.total * 100).toFixed(0) + '%' : '—';
+  $('tStreak').textContent = T.streak;
+  $('tBest').textContent = T.best;
+}
+
+document.querySelectorAll('#picks button').forEach(b => {
+  b.onclick = () => answer(b.dataset.a);
+});
+$('nextQ').onclick = newQuestion;
+$('resetQ').onclick = () => {
+  T.total = 0; T.correct = 0; T.streak = 0; T.best = 0;
+  $('tTotal').textContent = '0';
+  $('tCnt').textContent = '0 / 0';
+  $('tAcc').textContent = '—';
+  $('tStreak').textContent = '0';
+  $('tBest').textContent = '0';
+  newQuestion();
+};
+
+document.addEventListener('keydown', e => {
+  if (!$('p-train').classList.contains('on')) return;
+  if (e.key === '1') answer('raise');
+  else if (e.key === '2') answer('mixed');
+  else if (e.key === '3') answer('fold');
+  else if (e.key === ' ' || e.key === 'Enter'){
+    if (T.answered){ e.preventDefault(); newQuestion(); }
+  }
+});
+
+newQuestion();
+</script>
+</div>
+</body>
+</html>
