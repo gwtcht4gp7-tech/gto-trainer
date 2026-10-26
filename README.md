@@ -1,33 +1,34 @@
 # GTO Trainer
 
-一套面向德州扑克学习者的 GTO 教学材料 + 可离线运行的分析工具 + 可嵌入的决策引擎。
+一套面向德州扑克学习者的 GTO 教学材料 + 可离线运行的分析工具 + 可嵌入的决策引擎 + 可接入的本地接口。
 
-纯前端、零依赖、不联网、不读取任何游戏进程。打开浏览器就能用。
+纯前端、零依赖、不联网、不读取任何游戏进程。
 
 **在线访问：<https://gwtcht4gp7-tech.github.io/gto-trainer/>**
 
 ```
-知识库（为什么）  →  工具台（怎么算）  →  引擎（怎么自动判断）
-   index.html          lab.html          engine/gto-engine.js
+知识库（为什么）  →  工具台（怎么算）  →  接口（怎么接）
+   index.html          lab.html          server/gto-server.js
 ```
 
 ---
 
-## 三个入口
+## 四个入口
 
 | 文件 | 是什么 | 适合谁 |
 |---|---|---|
 | **[index.html](index.html)** | 13 章 GTO 知识库，从 EV 到转河极化，含可交互的 13×13 范围矩阵 | 想系统理解「为什么这么打」 |
 | **[lab.html](lab.html)** | 分析台：范围权益计算、底池数学、牌面诊断、翻前训练 | 想在具体局面里算一遍 |
-| **[demo/engine-demo.html](demo/engine-demo.html)** | 引擎调试台：填状态 → 看决策 + 推理链 | 想接入引擎，或想验证某个节点 |
+| **[demo/engine-demo.html](demo/engine-demo.html)** | 引擎调试台：填状态 → 看决策 + 推理链 | 想验证某个节点 |
+| **[demo/api-lab.html](demo/api-lab.html)** | 接口调试台：发真实 HTTP 请求，看完整响应；没起服务时自动切本地引擎 | 想把决策能力接进自己的程序 |
 
-在线版（手机也能开）：
+在线版：
 
 - 知识库 <https://gwtcht4gp7-tech.github.io/gto-trainer/>
 - 分析台 <https://gwtcht4gp7-tech.github.io/gto-trainer/lab.html>
-- 调试台 <https://gwtcht4gp7-tech.github.io/gto-trainer/demo/engine-demo.html>
+- 引擎调试台 <https://gwtcht4gp7-tech.github.io/gto-trainer/demo/engine-demo.html>
 
-离线也完全能用：克隆后直接双击 `index.html`，不需要装任何东西、不需要起服务器。
+前三个是纯静态页面，克隆后双击就能开。接口调试台需要先起服务（见下节）。
 
 ---
 
@@ -59,14 +60,12 @@ const advice = GTOEngine.advise({
 //     '你当前成牌：顶对。',
 //     ...
 //   ],
-//   metrics: { equity: 0.88, betFreq: 0.725, spr: 15.7 },
+//   metrics: { equity: 0.892, betFreq: 0.725, spr: 15.67 },
 //   board: { texture: 'dry', rangeAdv: 0.5, nutAdv: 0.35, ... }
 // }
 ```
 
 浏览器里直接 `<script src="engine/gto-engine.js"></script>`，然后 `GTOEngine.advise(...)`。UMD 包装，两种环境都能跑。
-
-完整协议见 **[docs/hand-state.md](docs/hand-state.md)**。
 
 ### 它是什么，不是什么
 
@@ -94,20 +93,87 @@ GTOEngine.replay(states)            // 批量复盘
 
 ---
 
+## 接口
+
+引擎本身很宽容：位置写错不会报错，只是静默按错的索引去算，然后返回一个看起来正常的建议。
+所以对外接一层契约校验，把「静默算错」全部转成「明确报错」。
+
+```bash
+node server/gto-server.js
+```
+
+```
+  地址      http://127.0.0.1:8787
+  单次      POST http://127.0.0.1:8787/v1/advise
+  批量      POST http://127.0.0.1:8787/v1/advise/batch
+  字段说明  GET  http://127.0.0.1:8787/v1/meta
+  调试台    http://127.0.0.1:8787/demo/api-lab.html
+```
+
+```bash
+curl -X POST http://127.0.0.1:8787/v1/advise \
+  -H "Content-Type: application/json" \
+  -d '{"street":"flop","hero":{"pos":"BTN","cards":["Ac","Kc"],"stack":97.7,"invested":2.3},
+       "board":["As","7d","2c"],"pot":5.1,"toCall":0,"villainPos":"BB"}'
+```
+
+返回除了引擎原始字段，还有一层 `teaching`：一句话结论、可读数字、练习提示、隐含假设。
+
+```json
+{
+  "ok": true,
+  "seed": 2841773912,
+  "decision": { "action": "bet", "sizing": { "fraction": 0.33, "absolute": 1.683, "unit": "pot" },
+                "frequency": 0.85, "metrics": { "equity": 0.899 } },
+  "teaching": { "headline": "翻牌圈 A♠ 7♦ 2♣｜BTN AKs → 下注 33% 池（1.7bb）" }
+}
+```
+
+三种接法，挑一个用：
+
+| 方式 | 适用 | 命令 |
+|---|---|---|
+| HTTP | 跨语言、跨进程、远程调试 | `node server/gto-server.js` |
+| stdio | 已经 spawn 了子进程 | `node server/gto-cli.js` |
+| 进程内 | Node / 浏览器，零延迟 | `require('./client/gto-client.js').createLocal()` |
+
+```js
+// 客户端 SDK 把超时、重试、错误码都包好了，返回形状统一
+const { create } = require('./client/gto-client.js');
+
+const gto = create({ baseUrl: 'http://127.0.0.1:8787', timeout: 5000 });
+const r = await gto.ask(state);
+
+if (r.ok) overlay.textContent = r.teaching.headline;
+else console.warn(r.error.code, r.error.message);   // 不抛异常，统一返回错误码
+```
+
+**每个响应都带 `seed`。** 固定 `seed` 时同一输入得到完全相同的数字——复盘对齐、回归测试、问题复现都靠它。
+
+字段表、错误码、五个最容易接错的点，见 **[docs/api.md](docs/api.md)**。
+hand state 协议见 **[docs/hand-state.md](docs/hand-state.md)**。
+
+---
+
 ## 自测
 
 ```bash
-node tools/test-engine.js          # 完整，约 14 秒
-node tools/test-engine.js --fast   # 抽样，约 6 秒
+node tools/test-engine.js          # 引擎，约 14 秒
+node tools/test-engine.js --fast   # 引擎抽样，约 6 秒
+node tools/test-api.js             # 接口 + SDK + CLI，约 5 秒
 ```
 
-覆盖五组：
+引擎侧覆盖五组：
 
 1. **基础** —— 牌解析、范围展开（`22+`/`A2s+`/`ATo+`/`AK`）、组合数
 2. **牌型评估** —— 与独立的暴力枚举实现做 30 万局差分，要求零分歧
 3. **权益** —— 与完整枚举（C(48,5) = 1,712,304 局）对照，并用两套独立实现交叉验证
 4. **牌面分类** —— 纹理、顺子潜力、优势归属
 5. **全量扫描** —— 翻前 6 位置 × 169 手牌 × 6 场景（6084 例），翻后 3 条街 × 3 种面对下注（5184 例），检查动作合法、频率在 [0,1]、下注类动作必带尺度、弃牌必不带尺度、每条建议至少 2 条理由
+
+接口侧覆盖 184 项：错误码逐个验证、seed 可复现、并发隔离、
+CORS 预检、体积上限、令牌鉴权、批量预算、静态托管、CLI 管道协议，
+以及一条关键断言——**本地直算与服务端在同一个 seed 下必须给出同一个数字**。
 
 ---
 
@@ -119,12 +185,24 @@ node tools/test-engine.js --fast   # 抽样，约 6 秒
 ├── lab.html              分析台（权益/底池/牌面/训练）
 ├── engine/
 │   └── gto-engine.js     决策引擎（零依赖，UMD）
+├── server/
+│   ├── gto-server.js     HTTP 接口（零依赖）
+│   ├── gto-cli.js        stdio 接口（NDJSON）
+│   ├── validate.js       入参契约校验（UMD）
+│   ├── enrich.js         决策 → 教学语言（UMD）
+│   ├── prng.js           可复现随机
+│   └── examples.js       标准请求样例
+├── client/
+│   └── gto-client.js     客户端 SDK（HTTP + 本地两种模式）
 ├── demo/
-│   └── engine-demo.html  引擎调试台（可视化）
+│   ├── engine-demo.html  引擎调试台
+│   └── api-lab.html      接口调试台
 ├── docs/
-│   └── hand-state.md     hand state 协议
+│   ├── hand-state.md     hand state 协议
+│   └── api.md            接口文档
 ├── tools/
-│   └── test-engine.js    自测套件
+│   ├── test-engine.js    引擎自测
+│   └── test-api.js       接口自测
 ├── LICENSE
 └── README.md
 ```
@@ -148,8 +226,8 @@ node tools/test-engine.js --fast   # 抽样，约 6 秒
 ## 已知边界
 
 1. **不做树搜索。** 每个决策独立评估，不向前推演对手的再行动。
-2. **多人池按单挑处理。** 多人池在结构上不同（更收缩、更少诈唬），需要单独实现。
-3. **对手范围是启发式估计。** 按位置查表 + 按压力收窄，不是贝叶斯更新。
+2. **多人池按单挑处理。** 多人池在结构上不同（更收缩、更少诈唬），需要单独实现。接口检测到 `numPlayers > 2` 会返回 `W_MULTIWAY` 警告。
+3. **对手范围是启发式估计。** 按位置查表 + 按压力收窄，不是贝叶斯更新。大盲没有开池范围，用防守范围代替，并按开池方位置区分宽窄。
 4. **没有 ICM、没有抽水。**
 5. **翻前范围只覆盖 6-max 100bb 现金局。**
 
@@ -159,15 +237,17 @@ node tools/test-engine.js --fast   # 抽样，约 6 秒
 
 ## 关于「实时对局辅助」
 
-这个项目**不提供、也不会提供**读取游戏客户端、识别屏幕、或挂钩内存来实时提示的插件。
+这个项目**不提供**读取游戏客户端、识别屏幕、或挂钩内存来实时提示的插件。
 
 理由不是道德说教，是工程判断：
 
 - 读屏方案要处理 OCR 误差、分辨率适配、动画延迟、版本更新——脆弱且难调试。
-- 如果你手上有游戏状态，正确做法是从状态层直接导出 hand state，让引擎订阅它。不需要识别屏幕，因为你本来就知道答案。
-- 拿不到状态的场景（打别人的平台），那就该用**复盘**而不是实时提示：把打完的手牌导入 `replay()`，同样能定位问题节点，而且不违反任何服务条款。
+- **如果你手上有游戏状态，正确做法是从状态层直接导出 hand state，让引擎订阅它。** 你本来就知道答案，不需要识别屏幕。
+- 拿不到状态的场景（打别人的平台），那就该用**复盘**而不是实时提示：把打完的手牌导入 `replay()`，同样能定位问题节点。
 
-`demo/engine-demo.html` 和 `docs/hand-state.md` 就是为第一种情况准备的：协议是公开的，接入口径由你决定。
+`server/` 和 `docs/api.md` 就是为第一种情况准备的：协议是公开的，接入口径由你决定。
+如果你在做一款扑克游戏的内部教学版，正确做法是在你自己的状态机上挂一个观察者，
+在动作发生时导出一次 hand state（约 20 行代码），而不是逆向自己的游戏。
 
 ---
 

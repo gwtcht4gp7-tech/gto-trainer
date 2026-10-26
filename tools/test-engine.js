@@ -366,7 +366,9 @@ function testDecisions() {
   ok('20bb 的 AA 面对 3bet → 全下', d6.action === 'allin' || d6.action === '4bet', d6.actionCN);
 
   // --- 翻后正确性 ---
-  const f1 = adv({ street: 'flop', hero: { pos: 'BTN', cards: cardsOf('AKs'), stack: 97, invested: 3 },
+  // 注意：这里必须用具体牌面写法。cardsOf('AKs') 给的是 As+Ks，
+  // 而牌面上已经有 As —— 引擎不做冲突检查，会把它当成三张 A 去算。
+  const f1 = adv({ street: 'flop', hero: { pos: 'BTN', cards: ['Ac', 'Kc'], stack: 97, invested: 3 },
     board: 'As 7d 2c', pot: 6, villainPos: 'BB', villainOpenPos: 'BTN' });
   ok('AK 在 A-7-2 → 下注', f1.action === 'bet', f1.actionCN);
   ok('AK 在 A-7-2 尺度 <= 0.5 池', f1.sizing.fraction <= 0.5, f1.sizing.fraction.toFixed(2));
@@ -378,13 +380,52 @@ function testDecisions() {
                         f2.reasons.some(r => r.indexOf('尺度要小') >= 0);
   ok('7-6-5 无尺度矛盾', !contradiction);
 
-  const f3 = adv({ street: 'flop', hero: { pos: 'BTN', cards: cardsOf('AKs'), stack: 97, invested: 3 },
+  const f3 = adv({ street: 'flop', hero: { pos: 'BTN', cards: ['Ac', 'Kc'], stack: 97, invested: 3 },
     board: 'As 7d 2c', pot: 8, toCall: 2, villainPos: 'BB', villainOpenPos: 'BTN' });
   ok('AK 面对 1/3 下注 → 加注/跟注', f3.action === 'raise' || f3.action === 'call', f3.actionCN);
 
   const f4 = adv({ street: 'flop', hero: { pos: 'BB', cards: cardsOf('72o'), stack: 96, invested: 4 },
     board: 'As Kd 7c', pot: 10, toCall: 4, villainPos: 'BTN', villainOpenPos: 'BTN' });
   ok('BB 72o 在 A-K-7 面对 2/3 下注 → 弃牌', f4.action === 'fold', f4.actionCN);
+
+  // --- 回归：大盲没有 open 范围 ---
+  // PREFLOP.BB.open 是空字符串。若 estimateVillainRange 直接展开它，
+  // 会得到空集 → villainCombos.length === 0 → equity 恒为 0，
+  // 而决策照常返回。这个错误不会抛异常、不会打印，只会在
+  // 「对手是大盲」的每一手翻后悄悄给出错误建议。
+  // 修法：用 BB 的防守范围兜底，并按开池方位置区分宽窄。
+  const b1 = adv({ street: 'flop', hero: { pos: 'BTN', cards: ['Ac', 'Kc'], stack: 97.7, invested: 2.3 },
+    board: 'As 7d 2c', pot: 5.1, villainPos: 'BB' });
+  ok('对手是大盲时权益不为 0', b1.metrics.equity > 0.05, (b1.metrics.equity * 100).toFixed(1) + '%');
+  ok('AK 顶对顶踢 vs 大盲范围 → 权益 > 70%', b1.metrics.equity > 0.7, (b1.metrics.equity * 100).toFixed(1) + '%');
+
+  const b2 = adv({ street: 'flop', hero: { pos: 'BB', cards: ['9h', '8h'], stack: 97.7, invested: 2.3 },
+    board: 'Ah 7h 2c', pot: 9.1, toCall: 4, villainPos: 'BTN' });
+  ok('同花听牌 vs BTN 下注 → 权益落在 30%-55%', b2.metrics.equity > 0.3 && b2.metrics.equity < 0.55,
+    (b2.metrics.equity * 100).toFixed(1) + '%');
+
+  // 开池方在后位时，大盲的防守范围更宽，同样的垃圾牌权益应该更高。
+  // 用固定种子比较，避免把抽样噪音当成策略差异。
+  function seededAdv(seed, st) {
+    const orig = Math.random;
+    let a = seed >>> 0;
+    Math.random = function () {
+      a = (a + 0x6D2B79F5) >>> 0;
+      let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+    try { return G.advise(st); } finally { Math.random = orig; }
+  }
+
+  const wideEq = seededAdv(100, { street: 'flop', hero: { pos: 'BTN', cards: cardsOf('72o'), stack: 97, invested: 2.3 },
+    board: 'As 9d 4c', pot: 5.1, villainPos: 'BB' });
+  const tightEq = seededAdv(100, { street: 'flop', hero: { pos: 'UTG', cards: cardsOf('72o'), stack: 97, invested: 2.3 },
+    board: 'As 9d 4c', pot: 5.1, villainPos: 'BB' });
+  ok('BB 面对后位开池时防守范围更宽（同手牌权益更高）',
+    wideEq.metrics.equity > tightEq.metrics.equity + 0.005,
+    (wideEq.metrics.equity * 100).toFixed(1) + '% vs ' + (tightEq.metrics.equity * 100).toFixed(1) + '%');
 
   // --- 输出契约 ---
   section('6. 输出契约');

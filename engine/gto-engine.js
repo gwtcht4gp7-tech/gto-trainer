@@ -546,6 +546,22 @@
     BB:  { open: '' }
   };
 
+  /**
+   * 大盲的「翻后范围」。
+   *
+   * BB 不存在开池（open 为空），但他在翻后当然有范围——那是防守范围。
+   * 早期版本漏了这一步：estimateVillainRange 拿到空字符串，展开成空集，
+   * 于是 villainCombos.length === 0，equity 恒等于 0，而决策照常返回。
+   * 结果就是「对手是大盲」的每一手翻后，所有跟注/弃牌判断全错，
+   * 且没有任何报错。这类静默失效比抛异常危险得多。
+   */
+  const BB_DEFEND = {
+    // 面对 UTG / MP 的开池：范围紧，防守也窄
+    vsEarly: '22+,A2s+,K9s+,Q9s+,J9s+,T8s+,97s+,87s,76s,65s,ATo+,KJo+,QJo',
+    // 面对 CO / BTN / SB 的开池：价格便宜且对手范围宽，防守可以很宽
+    vsLate:  '22+,A2s+,K2s+,Q4s+,J6s+,T6s+,95s+,85s+,74s+,64s+,54s,A2o+,K5o+,Q7o+,J8o+,T8o+,98o,87o'
+  };
+
   // 3bet 范围（面对一个 open），按「我方位置 vs 对手位置」简化成两档
   const THREEBET = {
     // 位置有利或对手在 CO/BTN（对手范围宽，我们 3bet 更线性、更宽）
@@ -831,8 +847,17 @@
       if (set.size) return set;
     }
     const openPos = st.villainOpenPos || st.villainPos || 'MP';
-    const base = PREFLOP[openPos] ? PREFLOP[openPos].open : PREFLOP.MP.open;
+    let base = PREFLOP[openPos] ? PREFLOP[openPos].open : PREFLOP.MP.open;
+
+    // 大盲没有开池范围，但翻后确实有范围 —— 用防守范围补上。
+    // 缺了这一步，equity 会恒为 0 而决策照常返回，属于最难发现的错误。
+    if (!base) {
+      const openerPos = (st.hero && st.hero.pos) || 'MP';
+      base = posIndex(openerPos) >= posIndex('CO') ? BB_DEFEND.vsLate : BB_DEFEND.vsEarly;
+    }
+
     let set = expandRange(base);
+    if (!set.size) set = expandRange(BB_DEFEND.vsLate);
     // 若对手在翻后加注过，收窄到强价值 + 部分诈唬
     if (st.villainRaisedPostflop) {
       const tight = new Set();
@@ -927,6 +952,10 @@
           if (straightHigh(mask | (1 << r)) >= 0) { draw = 'straightDraw'; break; }
         }
       }
+    }
+
+    if (!villainCombos.length) {
+      reasons.push('⚠ 对手范围估值为空，权益按 0 处理，本建议不可用。请显式传 villainRange。');
     }
 
     reasons.push(`牌面 ${tex.highRank} 高 · ${tex.textureCN}（${tex.suitTypeCN}${tex.isPaired ? ' · 对子面' : ''}${tex.hasStraightPossible ? ' · 有顺子可能' : ''}）。`);

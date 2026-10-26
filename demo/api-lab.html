@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GTO 接口调试台</title>
+<style>
+  :root{
+    --bg:#0a0d12;
+    --bg2:#0f141b;
+    --panel:#131a23;
+    --panel2:#182029;
+    --line:#232e3b;
+    --line2:#2e3c4c;
+    --text:#e8eef6;
+    --text2:#b6c3d2;
+    --muted:#7d8ea3;
+    --gold:#d9a94a;
+    --gold2:#f0c774;
+    --teal:#3fbfa8;
+    --teal2:#63d9c2;
+    --red:#e0605e;
+    --blue:#5a9de0;
+    --violet:#9b7bd4;
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1100px 520px at 82% -10%, rgba(217,169,74,.08), transparent 60%),
+      radial-gradient(800px 420px at 4% 6%, rgba(63,191,168,.05), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    font-size:14px;line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  ::selection{background:rgba(217,169,74,.28)}
+  a{color:var(--teal2);text-decoration:none;border-bottom:1px dashed rgba(63,191,168,.35)}
+  code{font-family:var(--mono);font-size:.9em;background:rgba(90,157,224,.12);color:#9cc7ef;padding:1px 5px;border-radius:4px}
+
+  /* ---------- 顶栏 ---------- */
+  .top{
+    display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
+    padding:16px clamp(16px,3vw,32px);
+    border-bottom:1px solid var(--line);
+    background:rgba(10,13,18,.85);backdrop-filter:blur(10px);
+    position:sticky;top:0;z-index:20;
+  }
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand .dot{width:9px;height:9px;border-radius:2px;background:var(--gold);box-shadow:0 0 12px rgba(217,169,74,.8);flex:none}
+  .brand b{font-size:14px;letter-spacing:.05em;font-weight:700;display:block}
+  .brand span{font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.04em}
+
+  .conn{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .conn label{font-size:11px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+  .conn input{
+    width:200px;background:var(--panel2);border:1px solid var(--line);color:var(--text);
+    font-family:var(--mono);font-size:12.5px;padding:6px 10px;border-radius:7px;outline:none;
+    transition:.15s;
+  }
+  .conn input:focus{border-color:rgba(217,169,74,.55);background:#1b232d}
+
+  .st{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;padding:4px 10px;border-radius:999px;border:1px solid var(--line2);color:var(--text2)}
+  .st::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--muted)}
+  .st.on::before{background:var(--teal);box-shadow:0 0 8px rgba(63,191,168,.9)}
+  .st.on{border-color:rgba(63,191,168,.45);color:var(--teal2)}
+  .st.off::before{background:var(--red)}
+  .st.off{border-color:rgba(224,96,94,.4);color:#f08c8a}
+
+  /* ---------- 布局 ---------- */
+  .wrap{
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    gap:16px;padding:16px clamp(16px,3vw,32px) 0;align-items:start;
+  }
+  @media (max-width:1080px){ .wrap{grid-template-columns:minmax(0,1fr)} }
+
+  .panel{
+    background:linear-gradient(180deg,var(--panel),var(--bg2));
+    border:1px solid var(--line);border-radius:12px;
+    overflow:hidden;
+  }
+  .panel-head{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:13px 18px;border-bottom:1px solid var(--line);
+    background:rgba(255,255,255,.012);
+  }
+  .panel-head h2{font-size:13px;font-weight:700;letter-spacing:.1em;color:var(--text2);text-transform:uppercase}
+  .panel-body{padding:16px 18px}
+
+  /* ---------- 控件 ---------- */
+  button{
+    font-family:inherit;font-size:12.5px;cursor:pointer;
+    background:var(--panel2);border:1px solid var(--line2);color:var(--text2);
+    padding:7px 13px;border-radius:7px;transition:.15s;
+  }
+  button:hover{border-color:rgba(217,169,74,.4);color:var(--text);background:#1c2430}
+  button.primary{
+    background:linear-gradient(180deg,rgba(217,169,74,.92),rgba(190,145,52,.92));
+    border-color:rgba(217,169,74,.6);color:#171104;font-weight:700;letter-spacing:.04em;
+    box-shadow:0 2px 14px rgba(217,169,74,.22);
+  }
+  button.primary:hover{filter:brightness(1.08)}
+  button.primary:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+  button:disabled{opacity:.45;cursor:not-allowed}
+
+  .tabs{display:flex;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:3px}
+  .tabs button{border:none;background:transparent;padding:4px 11px;border-radius:5px;font-size:12px}
+  .tabs button.on{background:rgba(217,169,74,.14);color:var(--gold2);font-weight:600}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .grid.three{grid-template-columns:1fr 1fr 1fr}
+  @media (max-width:520px){ .grid,.grid.three{grid-template-columns:1fr} }
+
+  .field{display:flex;flex-direction:column;gap:5px;min-width:0}
+  .field.wide{grid-column:1/-1}
+  .field label{font-size:11px;letter-spacing:.06em;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .field label .k{font-family:var(--mono);font-size:10.5px;color:var(--line2);letter-spacing:0}
+  .field input,.field select{
+    background:var(--panel2);border:1px solid var(--line);color:var(--text);
+    font-family:var(--mono);font-size:13px;padding:7px 10px;border-radius:7px;outline:none;width:100%;
+    transition:.15s;
+  }
+  .field input:focus,.field select:focus{border-color:rgba(217,169,74,.55);background:#1b232d}
+  .field select{font-family:inherit;cursor:pointer}
+  .field input::placeholder{color:#4b5a6b}
+
+  .posgroup{display:flex;gap:4px;flex-wrap:wrap}
+  .posgroup button{flex:1;min-width:44px;padding:6px 4px;font-family:var(--mono);font-size:12px;letter-spacing:.03em}
+  .posgroup button.on{background:rgba(217,169,74,.16);border-color:rgba(217,169,74,.55);color:var(--gold2);font-weight:700}
+
+  /* 牌面 chip */
+  .cards{display:flex;gap:5px;flex-wrap:wrap;min-height:0;margin-top:2px}
+  .pc{
+    width:30px;height:42px;border-radius:5px;background:#e9eef5;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:var(--mono);font-weight:700;font-size:14px;line-height:1;
+    color:#10161f;box-shadow:0 1px 4px rgba(0,0,0,.35);
+    transition:.15s;
+  }
+  .pc i{font-style:normal;font-size:11px;margin-top:1px}
+  .pc.red{color:#c4392f}
+  .pc.empty{background:transparent;border:1px dashed var(--line2);box-shadow:none;color:#3a4859;font-weight:400}
+  .pc.back{background:linear-gradient(135deg,#1e2a38,#16202b);border:1px solid var(--line2);box-shadow:none}
+
+  .hint{font-size:11px;color:var(--muted);line-height:1.55}
+  .hint b{color:var(--text2);font-weight:600}
+
+  /* ---------- 请求区 ---------- */
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:14px}
+  .row .spacer{flex:1}
+  select.preset{
+    flex:1;min-width:180px;background:var(--panel2);border:1px solid var(--line);color:var(--text2);
+    font-size:12.5px;padding:7px 10px;border-radius:7px;outline:none;cursor:pointer;font-family:inherit;
+  }
+
+  .preview{border-top:1px solid var(--line);margin-top:14px}
+  .preview-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:9px 18px;font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;
+  }
+  pre{
+    font-family:var(--mono);font-size:11.5px;line-height:1.65;color:#9fb4c9;
+    background:#0b1016;border-top:1px solid var(--line);
+    padding:12px 18px;overflow:auto;max-height:260px;
+    white-space:pre-wrap;word-break:break-word;
+  }
+  pre::-webkit-scrollbar{width:8px;height:8px}
+  pre::-webkit-scrollbar-thumb{background:var(--line2);border-radius:4px}
+  .tok-k{color:#8fb8dd}
+  .tok-s{color:#a8c98f}
+  .tok-n{color:#e0b978}
+  .tok-b{color:#d18f8d}
+
+  textarea#jsonBox{
+    width:100%;min-height:330px;resize:vertical;
+    background:#0b1016;border:none;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    color:#9fb4c9;font-family:var(--mono);font-size:12px;line-height:1.7;
+    padding:14px 18px;outline:none;display:block;
+  }
+
+  .banner{
+    display:flex;gap:10px;align-items:flex-start;
+    padding:11px 14px;border-radius:8px;font-size:12.5px;line-height:1.6;
+    margin-bottom:14px;
+  }
+  .banner.warn{background:rgba(224,160,60,.09);border:1px solid rgba(224,160,60,.28);color:#e5c48a}
+  .banner.info{background:rgba(90,157,224,.08);border:1px solid rgba(90,157,224,.24);color:#a8c7e8}
+  .banner b{color:#fff;font-weight:600}
+  .banner code{background:rgba(0,0,0,.3);color:#cfdcea}
+
+  /* ---------- 响应区 ---------- */
+  .empty{
+    padding:56px 24px;text-align:center;color:var(--muted);
+  }
+  .empty .big{font-size:15px;color:var(--text2);margin-bottom:6px;font-weight:600}
+  .empty p{font-size:12.5px;max-width:34ch;margin:0 auto;line-height:1.7}
+
+  .verdict{padding:18px 18px 16px;border-bottom:1px solid var(--line)}
+  .vtop{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:9px}
+  .act{
+    font-size:17px;font-weight:800;letter-spacing:.03em;padding:4px 14px;border-radius:7px;
+    border:1px solid transparent;
+  }
+  .act.agg{color:#171104;background:linear-gradient(180deg,var(--gold2),#c99a3f);border-color:rgba(217,169,74,.7)}
+  .act.pass{color:#04201b;background:linear-gradient(180deg,var(--teal2),#33a48f);border-color:rgba(63,191,168,.6)}
+  .act.drop{color:#c8d2de;background:#232c38;border-color:var(--line2)}
+  .sizing{font-family:var(--mono);font-size:13px;color:var(--gold2)}
+  .headline{font-size:13.5px;color:var(--text2);line-height:1.7}
+  .headline b{color:#fff}
+
+  .freqwrap{margin-top:13px}
+  .freqtop{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px}
+  .freqtop b{color:var(--gold2);font-family:var(--mono);font-size:12px}
+  .freqbar{height:5px;background:#0b1016;border-radius:3px;overflow:hidden;border:1px solid var(--line)}
+  .freqbar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:3px;transition:width .35s ease}
+  .freqnote{font-size:12px;color:var(--text2);margin-top:7px;line-height:1.6}
+
+  .block{padding:14px 18px;border-bottom:1px solid var(--line)}
+  .block:last-child{border-bottom:none}
+  .block h4{
+    font-size:10.5px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;
+    margin-bottom:10px;font-weight:600;
+  }
+
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px}
+  .metric{background:#0d131a;border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+  .metric span{display:block;font-size:10.5px;color:var(--muted);letter-spacing:.05em}
+  .metric b{display:block;font-family:var(--mono);font-size:16px;color:var(--text);margin:1px 0 2px;font-weight:600}
+  .metric i{display:block;font-style:normal;font-size:10px;color:#5e6f82;line-height:1.45}
+
+  .edge{
+    display:flex;gap:10px;align-items:baseline;
+    background:rgba(63,191,168,.06);border:1px solid rgba(63,191,168,.2);
+    border-radius:8px;padding:10px 13px;margin-top:10px;
+  }
+  .edge b{font-family:var(--mono);font-size:15px;color:var(--teal2);flex:none}
+  .edge.neg{background:rgba(224,96,94,.06);border-color:rgba(224,96,94,.22)}
+  .edge.neg b{color:#f08c8a}
+  .edge span{font-size:11.5px;color:var(--text2);line-height:1.6}
+
+  ol.reasons{list-style:none;counter-reset:r}
+  ol.reasons li{
+    counter-increment:r;position:relative;padding-left:24px;font-size:12.5px;
+    color:var(--text2);line-height:1.75;margin-bottom:9px;
+  }
+  ol.reasons li:last-child{margin-bottom:0}
+  ol.reasons li::before{
+    content:counter(r);position:absolute;left:0;top:2px;
+    width:17px;height:17px;border-radius:4px;background:rgba(217,169,74,.13);
+    color:var(--gold);font-family:var(--mono);font-size:10.5px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  .tip{
+    background:rgba(90,157,224,.055);border:1px solid rgba(90,157,224,.18);
+    border-radius:8px;padding:11px 13px;font-size:12px;color:#a8c7e8;line-height:1.7;
+  }
+  ul.assume{list-style:none;font-size:11.5px;color:var(--muted);line-height:1.75}
+  ul.assume li{padding-left:12px;position:relative}
+  ul.assume li::before{content:"·";position:absolute;left:2px;color:var(--line2)}
+
+  .errbox{padding:18px;border-bottom:1px solid var(--line);background:rgba(224,96,94,.04)}
+  .errcode{
+    display:inline-block;font-family:var(--mono);font-size:12px;font-weight:700;
+    color:#f08c8a;background:rgba(224,96,94,.12);border:1px solid rgba(224,96,94,.3);
+    padding:3px 10px;border-radius:6px;margin-bottom:10px;
+  }
+  .errmsg{font-size:13px;color:#f3d0cf;line-height:1.7;margin-bottom:7px}
+  .errhint{font-size:12px;color:var(--muted);line-height:1.65}
+  .errlist{margin-top:12px;border-top:1px solid rgba(224,96,94,.15);padding-top:10px}
+  .errlist div{font-family:var(--mono);font-size:11px;color:#c9a5a4;line-height:1.75}
+
+  details.raw{border-top:1px solid var(--line)}
+  details.raw summary{
+    cursor:pointer;padding:10px 18px;font-size:11px;letter-spacing:.14em;
+    color:var(--muted);text-transform:uppercase;outline:none;user-select:none;
+  }
+  details.raw summary:hover{color:var(--text2)}
+  details.raw pre{max-height:340px}
+
+  /* ---------- 代码区 ---------- */
+  .codes{margin:16px clamp(16px,3vw,32px) 40px}
+  .copy{
+    position:absolute;top:8px;right:10px;font-size:11px;padding:3px 9px;
+    background:rgba(255,255,255,.04);
+  }
+  .codebox{position:relative}
+  .foot{
+    padding:0 clamp(16px,3vw,32px) 36px;font-size:11.5px;color:var(--muted);line-height:1.8;
+  }
+  .foot b{color:var(--text2);font-weight:600}
+  .spin{
+    display:inline-block;width:11px;height:11px;border:2px solid rgba(0,0,0,.25);
+    border-top-color:#171104;border-radius:50%;animation:sp .6s linear infinite;
+    vertical-align:-1px;margin-right:5px;
+  }
+  @keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <span class="dot"></span>
+    <div>
+      <b>GTO 接口调试台</b>
+      <span>POST /v1/advise</span>
+    </div>
+  </div>
+  <div class="conn">
+    <label>服务</label>
+    <input id="baseUrl" value="http://127.0.0.1:8787" spellcheck="false">
+    <button id="btnPing">连接</button>
+    <span class="st" id="connState">未连接</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ================= 左：请求 ================= -->
+  <section class="panel">
+    <div class="panel-head">
+      <h2>请求</h2>
+      <div class="tabs">
+        <button class="on" data-mode="form">表单</button>
+        <button data-mode="json">JSON</button>
+      </div>
+    </div>
+
+    <div id="formMode">
+      <div class="panel-body">
+
+        <div class="grid">
+          <div class="field">
+            <label>街道 <span class="k">street</span></label>
+            <select id="f-street">
+              <option value="">自动（按牌面张数）</option>
+              <option value="preflop">preflop 翻前</option>
+              <option value="flop">flop 翻牌</option>
+              <option value="turn">turn 转牌</option>
+              <option value="river">river 河牌</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>入池人数 <span class="k">numPlayers</span></label>
+            <input type="number" id="f-numPlayers" value="2" min="2" max="10">
+          </div>
+
+          <div class="field wide">
+            <label>我的位置 <span class="k">hero.pos</span></label>
+            <div class="posgroup" id="posGroup">
+              <button data-p="UTG">UTG</button>
+              <button data-p="MP">MP</button>
+              <button data-p="CO">CO</button>
+              <button data-p="BTN" class="on">BTN</button>
+              <button data-p="SB">SB</button>
+              <button data-p="BB">BB</button>
+            </div>
+          </div>
+
+          <div class="field wide">
+            <label>我的手牌 <span class="k">hero.cards</span></label>
+            <input id="f-hero" value="Ac Kc" placeholder="Ac Kc" spellcheck="false" maxlength="24">
+            <div class="cards" id="heroCards"></div>
+          </div>
+
+          <div class="field wide">
+            <label>公共牌 <span class="k">board</span> <span class="hint" id="boardHint"></span></label>
+            <input id="f-board" placeholder="As 7d 2c" spellcheck="false" maxlength="40">
+            <div class="cards" id="boardCards"></div>
+          </div>
+
+          <div class="field">
+            <label>底池 <span class="k">pot</span></label>
+            <input type="number" id="f-pot" value="1.5" step="0.1" min="0">
+          </div>
+          <div class="field">
+            <label>需跟注 <span class="k">toCall</span></label>
+            <input type="number" id="f-toCall" value="0" step="0.1" min="0">
+          </div>
+          <div class="field">
+            <label>后手 <span class="k">hero.stack</span></label>
+            <input type="number" id="f-stack" value="100" step="0.1" min="0">
+          </div>
+          <div class="field">
+            <label>对手位置 <span class="k">villainPos</span></label>
+            <select id="f-villainPos">
+              <option value="">未指定</option>
+              <option value="UTG">UTG</option>
+              <option value="MP">MP</option>
+              <option value="CO">CO</option>
+              <option value="BTN">BTN</option>
+              <option value="SB">SB</option>
+              <option value="BB" selected>BB</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:13px">
+          <label class="hint" style="display:flex;align-items:center;gap:7px;cursor:pointer">
+            <input type="checkbox" id="f-advanced-toggle" style="width:auto;accent-color:#d9a94a">
+            高级参数
+          </label>
+        </div>
+
+        <div id="advanced" class="grid" style="margin-top:10px;display:none">
+          <div class="field">
+            <label>抽样次数 <span class="k">iterations</span></label>
+            <input type="number" id="f-iterations" value="6000" step="1000" min="200" max="50000">
+          </div>
+          <div class="field">
+            <label>随机种子 <span class="k">seed</span></label>
+            <input id="f-seed" placeholder="留空 = 服务端生成" spellcheck="false">
+          </div>
+          <div class="field wide">
+            <label>对手范围 <span class="k">villainRange</span></label>
+            <input id="f-villainRange" placeholder="留空 = 按位置自动估算，如 AA,KK,AKs,ATs+" spellcheck="false">
+          </div>
+          <div class="field wide">
+            <label>加注次数 <span class="k">raiseCount</span></label>
+            <input type="number" id="f-raiseCount" placeholder="留空 = 由 toCall 推导" min="0" max="10">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="jsonMode" style="display:none">
+      <textarea id="jsonBox" spellcheck="false"></textarea>
+    </div>
+
+    <div class="panel-body" style="border-top:1px solid var(--line);padding-top:14px">
+      <div class="row" style="margin-top:0">
+        <select class="preset" id="preset">
+          <option value="">— 载入预设局面 —</option>
+        </select>
+        <button id="btnSend" class="primary">发送请求</button>
+      </div>
+      <div class="hint" id="sendHint" style="margin-top:9px"></div>
+    </div>
+
+    <div class="preview">
+      <div class="preview-head">
+        <span>请求体</span>
+        <button id="btnCopyReq" style="font-size:10.5px;padding:2px 8px">复制</button>
+      </div>
+      <pre id="reqPreview">{}</pre>
+    </div>
+  </section>
+
+  <!-- ================= 右：响应 ================= -->
+  <section class="panel">
+    <div class="panel-head">
+      <h2>响应</h2>
+      <span class="hint" id="timing" style="font-family:var(--mono);font-size:11px"></span>
+    </div>
+    <div id="respBody">
+      <div class="empty">
+        <div class="big">还没有发送请求</div>
+        <p>左侧填好局面后点「发送请求」。没起服务也可以，会自动切到本地引擎直算。</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ================= 代码 ================= -->
+<section class="panel codes">
+  <div class="panel-head">
+    <h2>接入代码</h2>
+    <div class="tabs" id="codeTabs">
+      <button class="on" data-lang="curl">cURL</button>
+      <button data-lang="fetch">fetch</button>
+      <button data-lang="node">Node</button>
+      <button data-lang="python">Python</button>
+    </div>
+  </div>
+  <div class="codebox">
+    <button class="copy" id="btnCopyCode">复制</button>
+    <pre id="codeBox" style="max-height:none;border-top:none"></pre>
+  </div>
+</section>
+
+<div class="foot">
+  <b>调试台说明</b>　所有数字都由 <code>engine/gto-engine.js</code> 现场算出。服务在线时走 HTTP，
+  离线时浏览器内直接调用同一个引擎 —— 两条路径的算法完全一致，只有随机种子处理不同。
+  引擎是规则拟合而非 solver，多人池按单挑 + 死钱处理，无 ICM。
+</div>
+
+<script src="../engine/gto-engine.js"></script>
+<script src="../server/validate.js"></script>
+<script src="../server/enrich.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var $ = function (id) { return document.getElementById(id); };
+  var ENGINE = window.GTOEngine;
+  var VALIDATE = window.GTOValidate;
+  var ENRICH = window.GTOEnrich;
+
+  var state = {
+    pos: 'BTN',
+    mode: 'form',
+    lang: 'curl',
+    online: false,
+    lastRequest: null,
+    lastResponse: null,
+    examples: []
+  };
+
+  /* ---------------- 牌面渲染 ---------------- */
+
+  var SUIT_SYM = { s: '♠', h: '♥', d: '♦', c: '♣' };
+
+  function parseCardInput(str) {
+    var t = String(str || '').replace(/[^0-9A-Za-z]/g, '');
+    if (t.length % 2 === 1) t = t.slice(0, -1);
+    var out = [];
+    for (var i = 0; i < t.length; i += 2) out.push(t.slice(i, i + 2));
+    return out;
+  }
+
+  function cardEl(code, opts) {
+    opts = opts || {};
+    var el = document.createElement('div');
+    if (!code) {
+      el.className = 'pc ' + (opts.emptyClass || 'empty');
+      el.textContent = opts.emptyText || '+';
+      return el;
+    }
+    var rank = code[0].toUpperCase();
+    var suit = code[1].toLowerCase();
+    var isRed = suit === 'h' || suit === 'd';
+    el.className = 'pc' + (isRed ? ' red' : '');
+    var r = document.createElement('span');
+    r.textContent = rank === 'T' ? '10' : rank;
+    var s = document.createElement('i');
+    s.textContent = SUIT_SYM[suit] || '?';
+    el.appendChild(r);
+    el.appendChild(s);
+    return el;
+  }
+
+  function renderCards(container, codes, total) {
+    container.innerHTML = '';
+    codes.forEach(function (c) { container.appendChild(cardEl(c)); });
+    for (var i = codes.length; i < (total || 0); i++) {
+      container.appendChild(cardEl(null));
+    }
+  }
+
+  /* ---------------- 表单读写 ---------------- */
+
+  function readForm() {
+    var street = $('f-street').value;
+    var hero = parseCardInput($('f-hero').value);
+    var board = parseCardInput($('f-board').value);
+    var req = { hero: { pos: state.pos, cards: hero } };
+
+    if (street) req.street = street;
+    if (board.length) req.board = board;
+
+    var pot = $('f-pot').value;
+    if (pot !== '') req.pot = Number(pot);
+
+    var toCall = $('f-toCall').value;
+    if (toCall !== '') req.toCall = Number(toCall);
+
+    var stack = $('f-stack').value;
+    if (stack !== '') req.hero.stack = Number(stack);
+
+    var np = $('f-numPlayers').value;
+    if (np !== '') req.numPlayers = Number(np);
+
+    var vp = $('f-villainPos').value;
+    if (vp) req.villainPos = vp;
+
+    var it = $('f-iterations').value;
+    if (it !== '' && Number(it) !== 6000) req.iterations = Number(it);
+
+    var seed = $('f-seed').value.trim();
+    if (seed) req.seed = /^\d+$/.test(seed) ? Number(seed) : seed;
+
+    var vr = $('f-villainRange').value.trim();
+    if (vr) req.villainRange = vr;
+
+    var rc = $('f-raiseCount').value;
+    if (rc !== '') req.raiseCount = Number(rc);
+
+    return req;
+  }
+
+  function fillForm(req) {
+    var h = req.hero || {};
+    state.pos = h.pos || 'BTN';
+    Array.prototype.forEach.call($('posGroup').children, function (b) {
+      b.classList.toggle('on', b.getAttribute('data-p') === state.pos);
+    });
+
+    $('f-street').value = req.street || '';
+    $('f-hero').value = (h.cards || []).join(' ');
+    $('f-board').value = (req.board || []).join(' ');
+    $('f-pot').value = req.pot === undefined ? '' : req.pot;
+    $('f-toCall').value = req.toCall === undefined ? '' : req.toCall;
+    $('f-stack').value = h.stack === undefined ? 100 : h.stack;
+    $('f-numPlayers').value = req.numPlayers === undefined ? 2 : req.numPlayers;
+    $('f-villainPos').value = req.villainPos || '';
+    $('f-iterations').value = req.iterations === undefined ? 6000 : req.iterations;
+    $('f-seed').value = req.seed === undefined ? '' : req.seed;
+    $('f-villainRange').value = req.villainRange || '';
+    $('f-raiseCount').value = req.raiseCount === undefined ? '' : req.raiseCount;
+
+    var adv = !!req.iterations || !!req.seed || !!req.villainRange || req.raiseCount !== undefined;
+    $('f-advanced-toggle').checked = adv;
+    $('advanced').style.display = adv ? 'grid' : 'none';
+
+    syncCardViews();
+  }
+
+  function syncCardViews() {
+    var hero = parseCardInput($('f-hero').value);
+    var board = parseCardInput($('f-board').value);
+    renderCards($('heroCards'), hero.slice(0, 2), 2);
+    renderCards($('boardCards'), board.slice(0, 5), board.length === 0 ? 0 : 0);
+
+    var street = $('f-street').value;
+    var need = { preflop: 0, flop: 3, turn: 4, river: 5 }[street];
+    var hintEl = $('boardHint');
+    if (need !== undefined) {
+      hintEl.textContent = '需要 ' + need + ' 张';
+      hintEl.style.color = board.length === need ? '' : '#e0a060';
+    } else {
+      hintEl.textContent = '0 / 3 / 4 / 5 张';
+      hintEl.style.color = '';
+    }
+  }
+
+  /* ---------------- 语法着色 ---------------- */
+
+  function highlight(json) {
+    var esc = String(json).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return esc.replace(
+      /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+      function (m) {
+        var cls = 'tok-n';
+        if (/^"/.test(m)) cls = /:$/.test(m) ? 'tok-k' : 'tok-s';
+        else if (/true|false|null/.test(m)) cls = 'tok-b';
+        return '<span class="' + cls + '">' + m + '</span>';
+      }
+    );
+  }
+
+  /* ---------------- 预览 ---------------- */
+
+  function currentRequest() {
+    if (state.mode === 'json') {
+      try { return JSON.parse($('jsonBox').value); }
+      catch (e) { return null; }
+    }
+    return readForm();
+  }
+
+  function refreshPreview() {
+    if (state.mode === 'json') {
+      $('reqPreview').innerHTML = highlight($('jsonBox').value);
+      return;
+    }
+    var req = readForm();
+    // 预览里隐藏空数组，读起来更干净
+    var clean = JSON.parse(JSON.stringify(req));
+    if (clean.board && clean.board.length === 0) delete clean.board;
+    if (clean.hero && clean.hero.cards && clean.hero.cards.length === 0) {
+      clean.hero.cards = ['?', '?'];
+    }
+    $('reqPreview').innerHTML = highlight(JSON.stringify(clean, null, 2));
+    updateCode();
+  }
+
+  /* ---------------- 本地引擎（离线兜底） ---------------- */
+
+  function mulberry32(a) {
+    a = a >>> 0;
+    return function () {
+      a = (a + 0x6D2B79F5) >>> 0;
+      var t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function localAnalyse(raw) {
+    var v = VALIDATE.validate(raw);
+    if (!v.ok) {
+      return {
+        ok: false, offline: true,
+        error: v.errors[0], errors: v.errors, warnings: v.warnings
+      };
+    }
+
+    var seed = (raw && raw.seed !== undefined && raw.seed !== null && raw.seed !== '')
+      ? raw.seed : null;
+
+    var decision;
+    var original = Math.random;
+    if (seed !== null) {
+      var n = typeof seed === 'number' ? seed >>> 0 : (function (s) {
+        var h = 2166136261 >>> 0;
+        s = String(s);
+        for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+        return h >>> 0;
+      })(seed);
+      Math.random = mulberry32(n);
+    }
+    try {
+      decision = ENGINE.advise(v.value);
+    } finally {
+      Math.random = original;
+    }
+
+    var st = v.value;
+    return {
+      ok: true, offline: true,
+      apiVersion: VALIDATE.API_VERSION,
+      engineVersion: ENGINE.version,
+      seed: seed,
+      input: {
+        street: st.street,
+        hero: {
+          pos: st.hero.pos,
+          cards: st.hero.cards.map(ENGINE.cardStr),
+          stack: st.hero.stack,
+          invested: st.hero.invested
+        },
+        board: st.boardCards.map(ENGINE.cardStr),
+        pot: st.pot, toCall: st.toCall,
+        handClass: ENGINE.handClass(st.hero.cards[0], st.hero.cards[1])
+      },
+      decision: {
+        action: decision.action,
+        actionCN: decision.actionCN,
+        sizing: decision.sizing || null,
+        frequency: decision.frequency,
+        confidence: decision.confidence,
+        mixed: !!decision.mixed,
+        metrics: decision.metrics || {},
+        board: decision.board || null,
+        reasons: decision.reasons || []
+      },
+      warnings: v.warnings,
+      teaching: ENRICH.enrich(st, decision)
+    };
+  }
+
+  /* ---------------- 请求 ---------------- */
+
+  function ping() {
+    var base = $('baseUrl').value.replace(/\/+$/, '');
+    var el = $('connState');
+    el.className = 'st';
+    el.textContent = '检查中…';
+
+    var ac = new AbortController();
+    var timer = setTimeout(function () { ac.abort(); }, 2500);
+
+    fetch(base + '/v1/health', { signal: ac.signal })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        clearTimeout(timer);
+        if (j && j.ok) {
+          state.online = true;
+          el.className = 'st on';
+          el.textContent = '在线 · v' + (j.apiVersion || '?');
+          $('sendHint').innerHTML = '请求将发送到 <code>' + base + '/v1/advise</code>';
+        } else {
+          throw new Error('bad health');
+        }
+      })
+      .catch(function () {
+        clearTimeout(timer);
+        state.online = false;
+        el.className = 'st off';
+        el.textContent = '离线';
+        $('sendHint').innerHTML = '连不上服务，发送时会自动用浏览器内的引擎直算。'
+          + '要跑真实接口：<code>node server/gto-server.js</code>';
+      });
+  }
+
+  function send() {
+    var req = currentRequest();
+    if (!req) {
+      renderError({ error: { code: 'E_JSON', message: '左侧 JSON 不是合法的 JSON 对象', hint: '检查引号和逗号' } });
+      return;
+    }
+
+    var btn = $('btnSend');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin"></span>计算中';
+    state.lastRequest = req;
+
+    var base = $('baseUrl').value.replace(/\/+$/, '');
+    var t0 = performance.now();
+
+    var finish = function (json, offline) {
+      var ms = Math.round(performance.now() - t0);
+      state.lastResponse = json;
+      btn.disabled = false;
+      btn.textContent = '发送请求';
+      $('timing').textContent = (offline ? '本地引擎 · ' : 'HTTP · ') + ms + 'ms';
+      if (json && json.ok) renderDecision(json);
+      else renderError(json || {});
+      updateCode();
+    };
+
+    if (!state.online) {
+      // 直接本地算，但仍然尝试一次网络，成功就顺带把状态改回在线
+      setTimeout(function () {
+        finish(localAnalyse(req), true);
+      }, 60);
+      return;
+    }
+
+    fetch(base + '/v1/advise', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req)
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (json) { finish(json, false); })
+      .catch(function () {
+        state.online = false;
+        $('connState').className = 'st off';
+        $('connState').textContent = '离线';
+        finish(localAnalyse(req), true);
+      });
+  }
+
+  /* ---------------- 渲染响应 ---------------- */
+
+  var AGGRESSIVE = ['bet', 'raise', '3bet', '4bet', 'allin'];
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function renderDecision(json) {
+    var t = json.teaching || {};
+    var d = json.decision || {};
+    var actCls = AGGRESSIVE.indexOf(d.action) >= 0 ? 'agg'
+      : (d.action === 'fold' ? 'drop' : 'pass');
+
+    var html = '';
+
+    if (json.offline) {
+      html += '<div class="banner info" style="margin:14px 18px 0">'
+        + '<span>⚡</span><span>当前结果由浏览器内的引擎直接计算，'
+        + '与服务端走的是同一套代码。要验证真实 HTTP 接口，请先运行 '
+        + '<code>node server/gto-server.js</code>。</span></div>';
+    }
+
+    html += '<div class="verdict">';
+    html += '<div class="vtop">';
+    html += '<span class="act ' + actCls + '">' + esc(d.actionCN || d.action) + '</span>';
+    if (t.sizingText) html += '<span class="sizing">' + esc(t.sizingText) + '</span>';
+    html += '</div>';
+    html += '<div class="headline">' + (t.headline ? esc(t.headline) : esc(d.actionCN)) + '</div>';
+
+    if (typeof d.frequency === 'number') {
+      html += '<div class="freqwrap">'
+        + '<div class="freqtop"><span>建议频率</span><b>' + (t.frequencyPct || Math.round(d.frequency * 100) + '%') + '</b></div>'
+        + '<div class="freqbar"><i style="width:' + Math.round(d.frequency * 100) + '%"></i></div>'
+        + (t.frequencyNote ? '<div class="freqnote">' + esc(t.frequencyNote) + '</div>' : '')
+        + '</div>';
+    }
+    html += '</div>';
+
+    // 指标
+    if (t.metrics && t.metrics.length) {
+      html += '<div class="block"><h4>关键数字</h4><div class="metrics">';
+      t.metrics.forEach(function (m) {
+        html += '<div class="metric"><span>' + esc(m.label) + '</span>'
+          + '<b>' + esc(m.display) + '</b>'
+          + '<i>' + esc(m.desc) + '</i></div>';
+      });
+      html += '</div>';
+      if (t.edge) {
+        html += '<div class="edge' + (t.edge.value < 0 ? ' neg' : '') + '">'
+          + '<b>' + esc(t.edge.display) + '</b><span>' + esc(t.edge.note) + '</span></div>';
+      }
+      html += '</div>';
+    }
+
+    // 牌面
+    if (t.board) {
+      html += '<div class="block"><h4>牌面诊断</h4>'
+        + '<div class="metrics">'
+        + '<div class="metric"><span>纹理</span><b style="font-size:14px">' + esc(t.board.textureCN || t.board.texture) + '</b></div>'
+        + '<div class="metric"><span>花色</span><b style="font-size:14px">' + esc(t.board.suitTypeCN || t.board.suitType) + '</b></div>'
+        + '<div class="metric"><span>范围优势</span><b>' + (t.board.rangeAdv > 0 ? '+' : '') + esc(t.board.rangeAdv) + '</b></div>'
+        + '<div class="metric"><span>坚果优势</span><b>' + (t.board.nutAdv > 0 ? '+' : '') + esc(t.board.nutAdv) + '</b></div>'
+        + '</div></div>';
+    }
+
+    // 理由
+    if (d.reasons && d.reasons.length) {
+      html += '<div class="block"><h4>为什么是这个动作</h4><ol class="reasons">';
+      d.reasons.forEach(function (r) { html += '<li>' + esc(r) + '</li>'; });
+      html += '</ol></div>';
+    }
+
+    // 练习
+    if (t.practiceTip) {
+      html += '<div class="block"><div class="tip">' + esc(t.practiceTip) + '</div></div>';
+    }
+
+    // 警告
+    if (json.warnings && json.warnings.length) {
+      html += '<div class="block"><h4>需要注意</h4>';
+      json.warnings.forEach(function (w) {
+        html += '<div class="banner warn" style="margin-bottom:8px">'
+          + '<span>!</span><span><b>' + esc(w.code) + '</b>　' + esc(w.message) + '</span></div>';
+      });
+      html += '</div>';
+    }
+
+    // 假设
+    if (t.assumptions && t.assumptions.length) {
+      html += '<div class="block"><h4>隐含假设</h4><ul class="assume">';
+      t.assumptions.forEach(function (a) { html += '<li>' + esc(a) + '</li>'; });
+      html += '</ul></div>';
+    }
+
+    // 原始
+    html += '<details class="raw"><summary>原始响应 JSON</summary><pre>'
+      + highlight(JSON.stringify(json, null, 2)) + '</pre></details>';
+
+    $('respBody').innerHTML = html;
+  }
+
+  function renderError(json) {
+    var e = (json && json.error) || { code: 'E_UNKNOWN', message: '未知错误' };
+    var html = '<div class="errbox">';
+    html += '<div class="errcode">' + esc(e.code) + '</div>';
+    html += '<div class="errmsg">' + esc(e.message) + '</div>';
+    if (e.field) html += '<div class="errhint">字段：<code>' + esc(e.field) + '</code></div>';
+    if (e.hint) html += '<div class="errhint">' + esc(e.hint) + '</div>';
+
+    if (json.errors && json.errors.length > 1) {
+      html += '<div class="errlist">';
+      json.errors.forEach(function (x) {
+        html += '<div>' + esc(x.code) + '　' + (x.field ? esc(x.field) + '　' : '') + esc(x.message) + '</div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+
+    if (json.warnings && json.warnings.length) {
+      html += '<div class="block">';
+      json.warnings.forEach(function (w) {
+        html += '<div class="banner warn" style="margin-bottom:8px"><span>!</span><span>'
+          + '<b>' + esc(w.code) + '</b>　' + esc(w.message) + '</span></div>';
+      });
+      html += '</div>';
+    }
+
+    html += '<details class="raw"><summary>原始响应 JSON</summary><pre>'
+      + highlight(JSON.stringify(json, null, 2)) + '</pre></details>';
+
+    $('respBody').innerHTML = html;
+    $('timing').textContent = '';
+  }
+
+  /* ---------------- 代码片段 ---------------- */
+
+  function codeSnippets() {
+    var base = $('baseUrl').value.replace(/\/+$/, '');
+    // 优先反映「当前正在编辑的请求」，而不是上一次发送的快照
+    var req = currentRequest() || state.lastRequest || {};
+    var body = JSON.stringify(req, null, state.lang === 'curl' ? 0 : 2);
+
+    if (state.lang === 'curl') {
+      return 'curl -X POST ' + base + '/v1/advise \\\n'
+        + '  -H "Content-Type: application/json" \\\n'
+        + "  -d '" + JSON.stringify(req) + "'";
+    }
+
+    if (state.lang === 'fetch') {
+      return 'const res = await fetch("' + base + '/v1/advise", {\n'
+        + '  method: "POST",\n'
+        + '  headers: { "Content-Type": "application/json" },\n'
+        + '  body: JSON.stringify(state)\n'
+        + '});\n'
+        + 'const { decision, teaching } = await res.json();\n'
+        + 'console.log(teaching.headline);   // ' + (state.lastResponse && state.lastResponse.teaching
+          ? state.lastResponse.teaching.headline : '翻牌圈 A♠ 7♦ 2♣｜BTN AKs → 下注 66% 池') + '\n'
+        + 'console.log(decision.action, decision.sizing);';
+    }
+
+    if (state.lang === 'node') {
+      return '// 方式一：直接 require 引擎（同进程，零网络开销）\n'
+        + 'const GTO = require("./engine/gto-engine.js");\n'
+        + 'const advice = GTO.advise(' + body + ');\n\n'
+        + '// 方式二：调 HTTP 接口（跨语言 / 跨进程）\n'
+        + 'const res = await fetch("' + base + '/v1/advise", {\n'
+        + '  method: "POST",\n'
+        + '  headers: { "Content-Type": "application/json" },\n'
+        + '  body: JSON.stringify(' + JSON.stringify(req) + ')\n'
+        + '});\n'
+        + 'console.log((await res.json()).teaching.headline);';
+    }
+
+    // python
+    return 'import requests\n\n'
+      + 'state = ' + JSON.stringify(req, null, 4)
+        .replace(/:\s*true\b/g, ': True')
+        .replace(/:\s*false\b/g, ': False')
+        .replace(/:\s*null\b/g, ': None') + '\n\n'
+      + 'r = requests.post("' + base + '/v1/advise", json=state, timeout=10)\n'
+      + 'data = r.json()\n\n'
+      + 'if data["ok"]:\n'
+      + '    print(data["teaching"]["headline"])\n'
+      + '    for reason in data["decision"]["reasons"]:\n'
+      + '        print(" -", reason)\n'
+      + 'else:\n'
+      + '    print(data["error"]["code"], data["error"]["message"])';
+  }
+
+  function updateCode() {
+    $('codeBox').innerHTML = highlight(codeSnippets());
+  }
+
+  /* ---------------- 复制 ---------------- */
+
+  function copyText(text, btn) {
+    var done = function () {
+      var old = btn.textContent;
+      btn.textContent = '已复制';
+      setTimeout(function () { btn.textContent = old; }, 1200);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallback(); });
+    } else {
+      fallback();
+    }
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { /* 忽略 */ }
+      document.body.removeChild(ta);
+    }
+  }
+
+  /* ---------------- 事件绑定 ---------------- */
+
+  $('btnPing').addEventListener('click', ping);
+
+  Array.prototype.forEach.call(document.querySelectorAll('.tabs [data-mode]'), function (b) {
+    b.addEventListener('click', function () {
+      var mode = b.getAttribute('data-mode');
+      if (mode === state.mode) return;
+
+      if (mode === 'json') {
+        // 表单 -> JSON
+        $('jsonBox').value = JSON.stringify(readForm(), null, 2);
+      } else {
+        // JSON -> 表单（能解析才回填，避免把用户输入冲掉）
+        try {
+          var parsed = JSON.parse($('jsonBox').value);
+          if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) fillForm(parsed);
+        } catch (e) { /* 保留 JSON 不动 */ }
+      }
+
+      state.mode = mode;
+      Array.prototype.forEach.call(document.querySelectorAll('.tabs [data-mode]'), function (x) {
+        x.classList.toggle('on', x === b);
+      });
+      $('formMode').style.display = mode === 'form' ? '' : 'none';
+      $('jsonMode').style.display = mode === 'json' ? '' : 'none';
+      refreshPreview();
+    });
+  });
+
+  Array.prototype.forEach.call($('codeTabs').children, function (b) {
+    b.addEventListener('click', function () {
+      state.lang = b.getAttribute('data-lang');
+      Array.prototype.forEach.call($('codeTabs').children, function (x) {
+        x.classList.toggle('on', x === b);
+      });
+      updateCode();
+    });
+  });
+
+  $('posGroup').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-p]');
+    if (!b) return;
+    state.pos = b.getAttribute('data-p');
+    Array.prototype.forEach.call($('posGroup').children, function (x) {
+      x.classList.toggle('on', x === b);
+    });
+    refreshPreview();
+  });
+
+  ['f-hero', 'f-board'].forEach(function (id) {
+    $(id).addEventListener('input', function () { syncCardViews(); refreshPreview(); });
+  });
+
+  ['f-street', 'f-pot', 'f-toCall', 'f-stack', 'f-numPlayers', 'f-villainPos',
+   'f-iterations', 'f-seed', 'f-villainRange', 'f-raiseCount'].forEach(function (id) {
+    $(id).addEventListener('input', function () { syncCardViews(); refreshPreview(); });
+    $(id).addEventListener('change', refreshPreview);
+  });
+
+  $('f-advanced-toggle').addEventListener('change', function () {
+    $('advanced').style.display = this.checked ? 'grid' : 'none';
+  });
+
+  $('jsonBox').addEventListener('input', refreshPreview);
+  $('btnSend').addEventListener('click', send);
+
+  $('btnCopyReq').addEventListener('click', function () {
+    copyText($('reqPreview').textContent, this);
+  });
+  $('btnCopyCode').addEventListener('click', function () {
+    copyText($('codeBox').textContent, this);
+  });
+
+  // Ctrl/Cmd + Enter 发送
+  document.addEventListener('keydown', function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      e.preventDefault();
+      send();
+    }
+  });
+
+  /* ---------------- 预设 ---------------- */
+
+  function loadPresets() {
+    var sel = $('preset');
+    fetch($('baseUrl').value.replace(/\/+$/, '') + '/v1/examples')
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (!j || !j.examples) throw new Error('no examples');
+        state.examples = j.examples;
+      })
+      .catch(function () {
+        // 离线时用内置的最小集合
+        state.examples = [
+          {
+            id: 'offline-preflop', name: '翻前 · BTN 开池（内置）',
+            state: { street: 'preflop', hero: { pos: 'BTN', cards: ['Ac', 'Kc'], stack: 100 }, pot: 1.5, toCall: 0, numPlayers: 6, villainPos: 'BB' }
+          },
+          {
+            id: 'offline-flop', name: '翻牌 · 顶对顶踢（内置）',
+            state: { street: 'flop', hero: { pos: 'BTN', cards: ['Ac', 'Kc'], stack: 97.7, invested: 2.3 }, board: ['As', '7d', '2c'], pot: 5.1, toCall: 0, numPlayers: 2, villainPos: 'BB' }
+          }
+        ];
+      })
+      .then(function () {
+        sel.innerHTML = '<option value="">— 载入预设局面 —</option>';
+        state.examples.forEach(function (ex) {
+          var o = document.createElement('option');
+          o.value = ex.id;
+          o.textContent = ex.name;
+          sel.appendChild(o);
+        });
+      });
+  }
+
+  $('preset').addEventListener('change', function () {
+    var id = this.value;
+    if (!id) return;
+    var ex = state.examples.filter(function (x) { return x.id === id; })[0];
+    if (!ex) return;
+    if (state.mode === 'json') {
+      $('jsonBox').value = JSON.stringify(ex.state, null, 2);
+    } else {
+      fillForm(ex.state);
+    }
+    refreshPreview();
+    send();
+  });
+
+  /* ---------------- 初始化 ---------------- */
+
+  syncCardViews();
+  refreshPreview();
+  updateCode();
+  loadPresets();
+  ping();
+
+})();
+</script>
+</body>
+</html>
