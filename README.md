@@ -4,6 +4,8 @@
 
 纯前端、零依赖、不联网、不读取任何游戏进程。打开浏览器就能用。
 
+**在线访问：<https://gwtcht4gp7-tech.github.io/gto-trainer/>**
+
 ```
 知识库（为什么）  →  工具台（怎么算）  →  引擎（怎么自动判断）
    index.html          lab.html          engine/gto-engine.js
@@ -19,7 +21,13 @@
 | **[lab.html](lab.html)** | 分析台：范围权益计算、底池数学、牌面诊断、翻前训练 | 想在具体局面里算一遍 |
 | **[demo/engine-demo.html](demo/engine-demo.html)** | 引擎调试台：填状态 → 看决策 + 推理链 | 想接入引擎，或想验证某个节点 |
 
-直接双击 `index.html` 即可，不需要装任何东西、不需要起服务器。
+在线版（手机也能开）：
+
+- 知识库 <https://gwtcht4gp7-tech.github.io/gto-trainer/>
+- 分析台 <https://gwtcht4gp7-tech.github.io/gto-trainer/lab.html>
+- 调试台 <https://gwtcht4gp7-tech.github.io/gto-trainer/demo/engine-demo.html>
+
+离线也完全能用：克隆后直接双击 `index.html`，不需要装任何东西、不需要起服务器。
 
 ---
 
