@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('assert'),fs=require('fs'),vm=require('vm'),path=require('path');
 const source=fs.readFileSync(path.join(__dirname,'pokerist-panel.html'),'utf8').match(/<script>([\s\S]*?)<\/script>/)[1];
-let stream;const elements={},el=id=>elements[id]||(elements[id]={innerHTML:'',textContent:''});
+let stream;const elements={},el=id=>elements[id]||(elements[id]={innerHTML:'',textContent:'',style:{}});
 const timers=[];const context={document:{getElementById:el},EventSource:class{constructor(){stream=this;}},console,
   setInterval(fn){timers.push(fn);}};
 vm.runInNewContext(source,context);

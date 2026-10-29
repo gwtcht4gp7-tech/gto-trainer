@@ -45,11 +45,32 @@ def analyze_practical(req, cancel=None):
         approx.append('翻前动作来自简单范围模板；联合权益不决定翻前开池频率。')
     if preview.get('kind')=='closed_river_call_fold':
         approx.append('本次仅比较河牌跟注与弃牌，未比较加注收益。')
+    raw=result['variants']['joint_equity_correction']['rawDecision']
+    raw_reasons=raw.get('reasons') or []
+    q,se=result['equity']['heroEquity'],result['equity']['standardError']
+    call=min(public.get('toCall',0),public['heroStack'])
+    price=call/(public['pot']+call)
+    headline=raw_reasons[-1] if raw_reasons else '依据简单范围与牌面规则给出近似候选。'
+    details=raw_reasons
+    if preview['reasons']==['minimum_legal_size_enforced']:
+        headline+=' '+REASONS['minimum_legal_size_enforced']
+    elif preview['reasons'] or preview.get('kind')=='closed_river_call_fold':
+        headline=' '.join(REASONS.get(r,r) for r in preview['reasons']) or ('河牌跟注后结束下注，按估计权益与当前价格比较跟注、弃牌。')
+        details=[]  # A guarded replacement must not inherit the old action's rationale.
+    own=str(req.get('heroId'))
+    public_actions=[a for a in req.get('history',[]) if str(a.get('playerId'))!=own and a.get('action') not in ('blind','ante')]
+    reasoning=dict(headline=headline,
+        keyPoints=[{'label':'牌力估计','text':f"对 {result['numPlayers']-1} 位对手的联合权益约 {q:.1%}，抽样标准误 {se:.1%}。"},
+                   {'label':'当前价格','text':f'跟注需要 {price:.1%} 权益；该门槛不包含后续下注风险。' if call else '当前无需跟注，可以选择免费过牌；主动下注是启发式选择。'},
+                   {'label':'公开路线','text':f'已观察 {len(public_actions)} 条对手自愿行动，结合位置与玩家统计估计范围。'}],
+        details=details,
+        limitations=['翻前行动来自位置范围模板，联合权益仅供参考。'] if result['street']=='preflop' else
+                    ['这是牌面/范围启发式，未验证下注 EV 或弃牌率。','下注尺度与过牌概率尚未精细建模。'])
     return dict(ok=True,version=VERSION,model='practical_heuristic_v1',testRelease=True,
                 recommendationReady=ready,recommendation=action,quality={'reasons':[REASONS.get(r,r) for r in preview['reasons']]},
                 actionAmounts={} if not ready else {action:dict(additionalBB=preview['additionalBB'],
                     raiseToBB=preview['additionalBB']+float(req.get('heroWagerBB',0)))},
-                frequencies={},evs={},approx=approx,street=result['street'],
+                frequencies={},evs={},approx=approx,reasoning=reasoning,street=result['street'],
                 heroEquity=result['equity']['heroEquity'],standardError=result['equity']['standardError'],
                 samples=result['samples'],historyActions=result['historyActions'],
                 historyComplete=result['historyComplete'],numPlayers=result['numPlayers'],

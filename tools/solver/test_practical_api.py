@@ -24,6 +24,9 @@ class PracticalApiTests(unittest.TestCase):
         self.assertTrue(out['recommendationReady'])
         self.assertIn(out['recommendation'],('raise','call'))
         self.assertIn(out['recommendation'],out['actionAmounts'])
+        self.assertTrue(out['reasoning']['headline'])
+        self.assertEqual(len(out['reasoning']['keyPoints']),3)
+        self.assertIn('翻前',out['reasoning']['limitations'][0])
         req['stackBB']=req.pop('heroStack')
         self.assertTrue(analyze_practical(req)['ok'],'archived stackBB aliases remain accepted')
 
@@ -52,6 +55,18 @@ class PracticalApiTests(unittest.TestCase):
         with patch('practical_api.run_case',return_value={'status':'cancelled','wallMs':1}) as run:
             analyze_practical({'rangeModel':'anything','heroStack':100})
         self.assertNotIn('range_model',run.call_args.kwargs)
+
+    def test_guarded_action_explanation_does_not_claim_original_raise_reason(self):
+        req=prefixes(HAND)[0]['request']
+        fake=dict(status='ok',street='river',numPlayers=2,sidePotRisk=False,samples=4000,
+          historyActions=4,historyComplete=True,equity={'heroEquity':.6,'standardError':.01},
+          variants={'joint_equity_correction':{'rawDecision':{'action':'raise','reasons':['原始加注理由不应沿用']},
+          'guardedPreview':{'ready':True,'action':'call','additionalBB':1,'reasons':[],'kind':'closed_river_call_fold'}}})
+        with patch('practical_api.run_case',return_value=fake):
+            out=analyze_practical(req)
+        self.assertEqual(out['recommendation'],'call')
+        self.assertEqual(out['reasoning']['details'],[])
+        self.assertIn('跟注',out['reasoning']['headline'])
 
     def test_actual_production_http_route_selects_practical_mode(self):
         import server

@@ -14,18 +14,23 @@ button{font:inherit;color:inherit;cursor:pointer}button:focus-visible,summary:fo
 .sidebar .section{margin-top:0;margin-bottom:15px}.route-player{padding:12px 0;border-top:1px solid #273249}.route-player:first-child{border-top:0;padding-top:0}.player-head{display:flex;justify-content:space-between;gap:8px;align-items:baseline}.player-name{font-size:13px;font-weight:600}.player-pos{font-size:10px;padding:1px 6px;background:#263650;border-radius:4px;color:#b9c9df}.route-street{display:flex;align-items:baseline;gap:7px;margin-top:7px}.street-label{font-size:10px;color:#7d91ad;flex:0 0 25px}.route-actions{display:flex;flex-wrap:wrap;align-items:center;gap:4px}.route-action{font-size:11px;padding:2px 6px;border:1px solid #2c3a50;border-radius:5px;color:var(--accent,#b3c3da);background:#0e1725}.route-arrow{color:#5c708e;font-size:10px}.sample{font-size:10px;color:#8195b1;margin-top:7px}.history-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid #263249;font-size:12px}.history-row:last-child{border:0}.history-action{color:var(--accent,#9cafc9);font-weight:600}.footer{margin-top:19px;color:#647d9e;font-size:10px;display:flex;gap:14px;justify-content:space-between}.offline{margin-top:14px;padding:14px 18px}.offline>summary{font-size:12px}.offline-body{padding-top:8px}.focus-mode .secondary,.focus-mode .sidebar,.focus-mode .footer{display:none}.focus-mode .layout{grid-template-columns:1fr}.focus-mode .decision{min-height:330px}.focus-mode .action-title{font-size:clamp(58px,9vw,94px)}.focus-mode .decision-amount{font-size:clamp(42px,7vw,70px)}
 @media(max-width:800px){.layout{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:1fr 1fr;gap:12px}.sidebar .section{margin:0}.route-section{grid-column:1/-1}.wrap{padding:17px 16px 30px}}
 @media(max-width:520px){.wrap{padding:13px 12px 26px}.header{margin-bottom:14px}.mark{width:31px;height:36px;font-size:21px}h1{font-size:16px}.eyebrow{font-size:8px}.header-right{gap:7px}.connection{font-size:10px}button{font-size:11px;padding:7px 9px}.card-groups{gap:14px}.table-context{padding:13px}.position{font-size:15px}.context-stats{gap:16px}.context-stats strong{font-size:18px}.context-stats .small-label{display:block;margin:0 0 2px}.context-label{font-size:9px}.decision{padding:20px;min-height:240px}.decision-sub{font-size:12px}.decision-header{font-size:11px}.action-title{font-size:52px}.sidebar{grid-template-columns:1fr}.section{padding:15px}.board-cards .playing-card{width:26px;height:38px}.board-cards .playing-card b{font-size:17px}.cards{gap:4px}.card-groups .small-label{font-size:10px}.footer{display:block}.pill{font-size:9px}}
+
+.decision.waiting{min-height:112px;padding:18px 22px}.decision.waiting .action-title{font-size:24px;margin:8px 0}.decision.waiting .decision-sub{font-size:12px}.decision .action-title{font-size:clamp(38px,5vw,58px);margin:12px 0 4px}.decision .decision-amount{font-size:clamp(30px,4vw,44px)}
+.why-now{margin-top:15px;border-top:1px solid #90b3d433;padding-top:13px}.why-title{font-size:10px;letter-spacing:1px;color:#82bde6;margin-bottom:6px}.why-headline{font-size:14px;line-height:1.6;color:#edf3ff;font-weight:600}.why-points{display:grid;gap:6px;margin-top:9px}.why-point{font-size:12px;color:#b1c2d8;line-height:1.55}.why-point b{color:#deeaff;font-weight:600;margin-right:7px}.why-details{font-size:12px;color:#a6b8cf}.why-details li{margin:7px 0}.why-limits{font-size:11px;color:#ddb887;padding-top:8px}.decision-bottom{margin-top:12px}.archive-section{margin-top:14px}.archive-card{padding:15px 18px;border:1px solid #3a485d;border-radius:14px;background:#111a28;opacity:.92}.archive-badge{font-size:10px;color:#e8c78e;border:1px solid #80633977;padding:2px 7px;border-radius:5px}.archive-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.archive-action{font-size:21px;font-weight:650;color:var(--accent,#b8c9df);margin-top:8px}.archive-context{font-size:12px;color:#9db0cb;margin:5px 0}.archive-context .playing-card{width:24px;height:32px;display:inline-flex;vertical-align:middle;margin-right:3px}.archive-context .playing-card b{font-size:15px}.archive-context .playing-card i{font-size:10px}.live-feed{display:grid;gap:5px;max-height:235px;overflow:auto}.feed-row{display:flex;gap:8px;align-items:baseline;border-bottom:1px solid #263247;padding:6px 0;font-size:12px}.feed-row .street-label{flex-basis:28px}.feed-name{min-width:55px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#a3b8d4}.feed-action{color:var(--accent,#d6e3f5)}.live-label{font-size:10px;color:#67d6b0}.live-label.stale{color:#e3bf82}.review-open{font-size:11px;padding:4px 8px}.focus-mode .archive-section{display:block}.focus-mode .why-now{display:block}.focus-mode .decision .action-title{font-size:clamp(46px,7vw,72px)}
+@media(max-width:520px){.decision{padding:17px}.decision .action-title{font-size:42px}.why-headline{font-size:13px}.why-point{font-size:11px}.archive-card{padding:13px}.context-top{gap:7px}.table-context{margin-bottom:10px}.header{margin-bottom:11px}}
+#main .decision:not(.waiting){min-height:205px;padding:18px 22px}#main>.why-now{background:#111b2b;border:1px solid #2a3c55;border-radius:12px;padding:14px 17px;margin-top:10px}
 </style></head>
 <body><div class="wrap">
 <header class="header"><div class="brand"><div class="mark" aria-hidden="true">♠</div><div><div class="eyebrow">TABLE COMPANION</div><h1>牌局助手 · 实用测试版</h1></div></div><div class="header-right"><span class="connection" id="connection">连接中</span><button id="focus" onclick="toggleFocus()" aria-pressed="false">专注模式</button></div></header>
 <section class="surface table-context" aria-label="牌局信息"><div class="context-top"><div class="card-groups"><div><div class="small-label">你的手牌</div><div class="cards" id="hand"><span class="empty-board">等待发牌</span></div></div><div><div class="small-label">公共牌</div><div class="cards board-cards" id="board"><span class="empty-board">尚未发出</span></div></div></div><div class="position" id="pos">—<small>等待位置</small></div></div><div class="context-stats"><div><span class="small-label">底池</span><strong id="pot">—</strong></div><div><span class="small-label">需跟</span><strong id="call">—</strong></div><span class="context-label" id="context-label">等待当前决策</span></div></section>
-<div class="layout"><div class="primary"><section id="main" aria-live="polite"><div class="decision waiting action-wait"><div class="decision-header">实时决策 <span class="pill">等待对局</span></div><div class="action-title">等待轮到你</div><div class="decision-sub">有新的行动机会时，建议会自动出现在这里。</div></div></section><section class="surface section secondary" aria-label="行动比较"><div class="section-title">候选行动 <span class="muted"><span id="comparison-label">近似建议 / 计算依据</span></span></div><div id="gto" class="muted">等待当前决策分析…</div><div class="legend"><span class="action-fold">弃牌</span><span class="action-check">过牌</span><span class="action-call">跟注</span><span class="action-raise">下注 / 加注</span><span class="action-allin">全下</span></div></section></div>
-<aside class="sidebar secondary"><section class="surface section route-section"><div class="section-title">对手行动路线 <span class="pill" id="route-count">公开信息</span></div><div id="routes" class="muted">观察到行动后，按玩家和街道排列。</div><details><summary>这些路线怎样影响建议</summary><div class="muted" style="margin-top:8px">整手公开历史会保留。下注、加注和跟注用于估计对手范围，结合位置与历史统计；当前简单模型尚未按下注大小或过牌概率细分范围。范围模型仍较粗，不代表已经准确识别每个人的打法。</div></details><details><summary>玩家统计</summary><div id="profiles" class="muted">等待样本…</div></details></section><section class="surface section"><div class="section-title">最近决策 <span class="muted">历史参考</span></div><div id="hist" class="muted">尚无记录</div></section></aside></div>
+<div class="layout"><div class="primary"><section id="main" aria-live="polite"><div class="decision waiting action-wait"><div class="decision-header">实时决策 <span class="pill">等待对局</span></div><div class="action-title">等待轮到你</div><div class="decision-sub">有新的行动机会时，建议会自动出现在这里。</div></div></section><section id="archive" class="archive-section" aria-label="过往建议复盘" style="display:none"></section><section class="surface section secondary" aria-label="行动比较"><div class="section-title">候选行动 <span class="muted"><span id="comparison-label">近似建议 / 计算依据</span></span></div><div id="gto" class="muted">等待当前决策分析…</div><div class="legend"><span class="action-fold">弃牌</span><span class="action-check">过牌</span><span class="action-call">跟注</span><span class="action-raise">下注 / 加注</span><span class="action-allin">全下</span></div></section></div>
+<aside class="sidebar secondary"><section class="surface section"><div class="section-title">实时行动记录 <span id="live-status" class="live-label">等待采集</span></div><div id="live-actions" class="live-feed muted">无需轮到你，也会持续更新。</div></section><section class="surface section route-section"><div class="section-title">对手行动路线 <span class="pill" id="route-count">公开信息</span></div><div id="routes" class="muted">观察到行动后，按玩家和街道排列。</div><details><summary>这些路线怎样影响建议</summary><div class="muted" style="margin-top:8px">整手公开历史会保留。下注、加注和跟注用于估计对手范围，结合位置与历史统计；当前简单模型尚未按下注大小或过牌概率细分范围。范围模型仍较粗，不代表已经准确识别每个人的打法。</div></details><details><summary>玩家统计</summary><div id="profiles" class="muted">等待样本…</div></details></section><section class="surface section"><div class="section-title">最近决策 <span class="muted">历史参考</span></div><div id="hist" class="muted">尚无记录</div></section></aside></div>
 <section class="surface section" aria-label="测试反馈"><div class="section-title">你的测试反馈 <button onclick="reviewCurrent()">评价最近建议</button></div><div id="feedback-target" class="muted">收到建议后，可在这里或“最近决策”中选择评价目标。</div><textarea id="feedback-comment" maxlength="1000" placeholder="可选：哪里不合理，例如人数、路线或下注尺度" style="width:100%;margin:10px 0;padding:10px;background:#0d1523;color:#edf3ff;border:1px solid #253147;border-radius:8px;font:inherit" rows="2"></textarea><div style="display:flex;gap:8px;flex-wrap:wrap"><button onclick="submitFeedback('reasonable')">合理</button><button onclick="submitFeedback('questionable')">有疑问</button><button onclick="submitFeedback('unreasonable')">明显不合理</button></div><div id="feedback-status" class="sample">选择即保存到本机。建议、实际行动与结算可按决策 ID 对照。</div></section><details class="surface offline secondary"><summary>账本、牌后复盘与离线训练</summary><div class="offline-body"><div id="observations" class="muted">等待记录…</div><div id="training" class="muted" style="margin-top:12px">离线训练：等待状态</div></div></details>
 <footer class="footer"><span>基于可见信息的近似分析 · 不确定性随样本与局面变化</span><span id="meta">等待数据…</span></footer>
 </div><script>
 const CN={s:'♠',h:'♥',d:'♦',c:'♣'}, STREETS={preflop:'翻前',flop:'翻牌',turn:'转牌',river:'河牌'};
 const LABELS={raise:'加注',bet:'下注',check:'过牌',fold:'弃牌',call:'跟注',allin:'有效全下',bet50:'下注半池',bet100:'下注满池',raise50:'加注半池',raise100:'加注满池'};
-const hist=[];let currentDecision=null,currentItem=null,currentResult=null,feedbackTarget=null;
+const hist=[];let currentDecision=null,currentItem=null,currentResult=null,feedbackTarget=null,lastTable=null,archiveId=null;
 const el=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function n(x,d=1){return Number.isFinite(Number(x))?Number(x).toLocaleString('zh-CN',{maximumFractionDigits:d}):'—';}
@@ -46,7 +51,7 @@ function sizing(k,g,a){
  if(['fold','check'].includes(type))return {amount:'',sub:type==='fold'?'本次不再投入筹码':'本次无需额外投入'};
  if(v&&bb>0&&Number.isFinite(v.additionalBB)&&Number.isFinite(v.raiseToBB)) {
   const raise=['raise','bet','allin'].includes(type);
-  return {amount:n((raise?v.raiseToBB:v.additionalBB)*bb,0),prefix:raise?'加至':'投入',
+  return {amount:n((raise?v.raiseToBB:v.additionalBB)*bb,0),prefix:type==='bet'?'下注':raise?'加至':'投入',
    sub:(raise?'本次增加 '+n(v.additionalBB*bb,0)+' 筹码 · ':'')+n(v.additionalBB,2)+' bb'+(type==='allin'?' · 按对手有效筹码计算':'')};
  }
  if(type==='call'&&a&&Number.isFinite(a.toCallChips))return {amount:n(a.toCallChips,0),prefix:'投入',sub:n(a.toCallBB,2)+' bb'};
@@ -55,7 +60,33 @@ function sizing(k,g,a){
 function waiting(title='等待下一次行动',sub='行动与牌面更新后，旧建议立即失效。',busy=false){
  el('main').innerHTML='<div class="decision waiting action-wait"><div class="decision-header">实时决策 <span class="pill">'+(busy?'通常约 3 秒':'等待行动')+'</span></div><div class="action-title">'+esc(title)+'</div><div class="decision-sub">'+esc(sub)+'</div>'+(busy?'<div class="wait-line"><i></i></div>':'')+'</div>';
 }
-function renderHistory(){el('hist').innerHTML=hist.slice(0,6).map(h=>'<div class="history-row"><div>'+h.cards.map(pc).join('')+' <span class="muted">'+esc(STREETS[h.street]||h.street)+'</span></div><span class="history-action action-'+kind(h.action||'wait')+'">'+esc(h.action?label(h.action):'等待结果')+'</span><button data-review="'+esc(h.id)+'" onclick="reviewDecision(this.dataset.review)">评价</button></div>').join('');}
+function explanation(g){
+ const r=g.reasoning||{},points=r.keyPoints||[];
+ return '<div class="why-now"><div class="why-title">为什么这样建议 · 启发式依据</div><div class="why-headline">'+esc(r.headline||g.error||(g.approx||[])[0]||'本次没有完整的决策解释。')+'</div><div class="why-points">'+points.slice(0,2).map(p=>'<div class="why-point"><b>'+esc(p.label)+'</b>'+esc(p.text)+'</div>').join('')+'</div><details class="why-details"><summary>展开完整依据与局限</summary><ul>'+[...points.map(p=>p.label+'：'+p.text),...(r.details||[]),...(g.approx||[])].map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul><div class="why-limits">'+(r.limitations||[]).map(esc).join(' ')+'</div></details></div>';
+}
+function renderArchive(row){
+ if(!row||!row.analysis)return;
+ archiveId=row.id;const g=row.analysis,a=row.snapshot||{},selected=choose(g),size=selected?sizing(selected,g,a):{},type=kind(selected||'wait');
+ el('archive').style.display='block';
+ el('archive').innerHTML='<div class="archive-card action-'+type+'"><div class="archive-top"><strong>上一条建议 / 复盘</strong><span class="archive-badge">已失效 · 不用于当前行动</span></div><div class="archive-context">'+(a.heroCards||row.cards||[]).map(pc).join('')+' '+esc(STREETS[a.street||row.street]||'')+' · '+(a.board||[]).map(pc).join('')+'</div><div class="archive-action">当时建议：'+esc(selected?label(selected):'暂不提供')+(size.amount?' '+(size.prefix==='加至'?'加至 ':'')+size.amount+' 筹码':'')+'</div><div class="sample">'+esc(row.archiveReason||'过往局面')+(row.actual?' · 你实际：'+esc(label(row.actual.action))+(row.actual.amount>0?' '+n(row.actual.amount,0):''):'')+'</div><details><summary>保留的原因与完整局面</summary>'+explanation(g)+'<div class="sample">底池 '+n(a.potChips,0)+' · 需跟 '+n(a.toCallChips,0)+' · '+esc(a.heroPos||'')+' · 决策 '+esc(row.id)+'</div></details><button class="review-open" data-review="'+esc(row.id)+'" onclick="reviewDecision(this.dataset.review)">评价这条建议</button></div>';
+}
+function archiveCurrent(reason,actual){
+ if(currentItem&&currentResult){const row=hist.find(h=>h.id===currentItem.decisionId);if(row){row.analysis=currentResult;row.snapshot=currentItem;row.archiveReason=reason;row.actual=actual||null;renderArchive(row);}}
+}
+function renderTable(a){
+ lastTable=a;el('hand').innerHTML=(a.heroCards||[]).map(pc).join('')||'<span class="empty-board">等待发牌</span>';
+ el('board').innerHTML=(a.board||[]).map(pc).join('')||'<span class="empty-board">尚未发出</span>';
+ el('pos').innerHTML=esc(a.heroPos||'—')+'<small>'+esc(STREETS[a.street]||a.street||'')+'</small>';
+ el('pot').textContent=n(a.potChips,0);el('call').textContent=n(a.toCallChips,0);
+ el('context-label').textContent=(a.numPlayers||0)+' 人池 · '+(a.over?'本手已结束':a.isHeroTurn?'轮到你':'持续跟桌');
+ const stale=a.observedAt&&Date.now()-Date.parse(a.observedAt)>15000;
+ el('live-status').textContent=stale?'采集暂无新增':'实时更新';el('live-status').className='live-label'+(stale?' stale':'');
+ const names=Object.fromEntries((a.playersContext||[]).map(p=>[String(p.id),p.name||'玩家']));
+ el('live-actions').innerHTML=(a.history||[]).slice(-10).reverse().map(x=>'<div class="feed-row"><span class="street-label">'+esc(STREETS[x.street]||x.street)+'</span><span class="feed-name">'+esc(String(x.playerId)===String(a.heroId)?'你':names[String(x.playerId)]||'玩家')+'</span><span class="feed-action action-'+kind(x.action)+'">'+esc(({blind:'盲注',ante:'前注'}[x.action])||label(x.action))+(x.amount>0?' '+n(x.amount,0):'')+'</span></div>').join('')||'<span class="muted">等待本手行动</span>';
+ renderRoutes(a);
+}
+function showPast(id){const row=hist.find(h=>h.id===id);if(row){if(id!==currentDecision)renderArchive(row);reviewDecision(id);}}
+function renderHistory(){el('hist').innerHTML=hist.slice(0,6).map(h=>'<div class="history-row"><div>'+h.cards.map(pc).join('')+' <span class="muted">'+esc(STREETS[h.street]||h.street)+'</span></div><span class="history-action action-'+kind(h.action||'wait')+'">'+esc(h.action?label(h.action):'等待结果')+'</span><button data-review="'+esc(h.id)+'" onclick="showPast(this.dataset.review)">展开 / 评价</button></div>').join('');}
 function reviewDecision(id){
  const row=hist.find(h=>h.id===id);if(!row||!row.analysis){el('feedback-status').textContent='该局面尚无分析结果';return;}
  feedbackTarget=id;el('feedback-target').textContent='评价目标 '+id+' · '+row.cards.join(' ')+' · '+(STREETS[row.street]||row.street)+' · '+(row.action?label(row.action):'本次未给建议');
@@ -88,6 +119,7 @@ function renderRoutes(a){
 function renderGto(g){
  if(g.decisionId!==currentDecision)return;
  currentResult=g;
+ if(archiveId===g.decisionId){const previous=hist.find(h=>h.id!==g.decisionId&&h.analysis);if(previous)renderArchive(previous);else{el('archive').style.display='none';archiveId=null;}}
  if(!g.ok){waiting('本次没有可用建议',g.error||'等待下一次有效计算。');el('gto').textContent=g.error||'分析失败';return;}
  const practical=g.model==='practical_heuristic_v1';
  el('comparison-label').textContent=practical?'启发式近似 · 无混合频率':'混合占比 / 估计 EV';
@@ -112,6 +144,7 @@ function renderGto(g){
   const explanation=g.recommendationReady===false?((g.quality&&g.quality.reasons||[]).map(x=>reasons[x]||x).join(' ')||'该结果未通过策略质量核对。'):g.fallbackReason||'本次只完成权益估算，未得到可比较的候选行动。';
   el('main').innerHTML='<div class="decision waiting action-warning"><div class="decision-header">本次分析 <span class="pill warning">'+(g.recommendationReady===false?'估值未通过核对':'暂无行动策略')+'</span></div><div class="action-title">暂不提供行动建议</div><div class="decision-sub">'+esc(explanation)+'</div><div class="decision-bottom">'+(g.heroEquity!=null?'<span>权益估算 <strong>'+pct(g.heroEquity)+'</strong></span>':'')+(g.potOdds!=null?'<span>跟注门槛 <strong>'+pct(g.potOdds)+'</strong></span>':'')+'</div></div>';
  }
+ if(selected)el('main').innerHTML+=explanation(g);
  const labels=[...new Set([...(selected?[selected]:[]),...Object.keys(freq),...Object.keys(evs)])];
  labels.sort((a,b)=>{
   if(a===b)return 0;if(a===selected)return -1;if(b===selected)return 1;
@@ -124,28 +157,32 @@ function renderGto(g){
  detail+='<details><summary>计算依据与不确定性</summary><div class="metrics"><span>'+(practical?'启发式 + 多人联合权益':full?'全街抽样近似':hu?'当前街简化 CFR':'权益估算')+'</span><span>历史 '+(g.historyActions||0)+' 条</span>'+(full?'<span>每动作验证 '+g.evSamplesPerAction+' 次</span><span>本次根节点 '+g.rootLocalVisits+' 次</span><span>基础策略命中 '+g.warmStartInfoSets+'</span>':'')+'</div>'+
   (g.callCheckdownEV!=null?'<div class="muted">后续均过牌假设下的跟注 EV：'+n(g.callCheckdownEV,2)+' bb</div>':'')+'<ul class="reasons">'+(g.approx||[]).map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></details>';
  el('gto').innerHTML=(g.evDiagnosticOnly?'<div class="caution">以下为诊断数值，不是可执行策略或已求解的最优 EV。</div>':'')+'<div class="option-list">'+detail+'</div>';
- const row=hist.find(h=>h.id===g.decisionId);if(row){row.action=selected;row.analysis=g;renderHistory();if(!feedbackTarget)reviewDecision(row.id);}
+ const row=hist.find(h=>h.id===g.decisionId);if(row){row.action=selected;row.analysis=g;row.snapshot=currentItem;renderHistory();if(!feedbackTarget)reviewDecision(row.id);}
 }
 function toggleFocus(){const on=document.body.classList.toggle('focus-mode');el('focus').textContent=on?'完整视图':'专注模式';el('focus').setAttribute('aria-pressed',String(on));}
 const src=new EventSource('/events');
 src.onopen=()=>{el('connection').textContent='已连接';el('connection').className='connection ready';};
-src.onerror=()=>{el('connection').textContent='重新连接中';el('connection').className='connection';currentDecision=null;currentItem=null;currentResult=null;waiting('连接暂时中断','连接恢复后自动接收新决策；旧建议已失效。');};
+src.onerror=()=>{archiveCurrent('连接中断，旧建议已失效');el('connection').textContent='重新连接中';el('connection').className='connection';currentDecision=null;currentItem=null;currentResult=null;waiting('连接暂时中断','连接恢复后自动接收新决策；旧建议已失效。');};
 src.onmessage=e=>{
  const msg=JSON.parse(e.data);
- if(msg.clear){currentDecision=null;currentItem=null;currentResult=null;waiting();el('gto').textContent='上次分析已失效';el('context-label').textContent='上次决策信息';return;}
+ if(msg.clear){archiveCurrent(msg.reason||'局面已更新',msg.actualAction);currentDecision=null;currentItem=null;currentResult=null;waiting('持续记录牌桌','未轮到你时继续显示牌面与行动；上一条建议已移入复盘区。');el('gto').textContent='等待下一次决策；过往原因仍可展开查看。';return;}
+ if(msg.table){renderTable(msg.table);return;}
+ if(msg.recent){for(const r of msg.recent){if(!hist.some(h=>h.id===r.item.decisionId))hist.push({id:r.item.decisionId,cards:r.item.heroCards||[],street:r.item.street,action:choose(r.analysis),snapshot:r.item,analysis:r.analysis,archiveReason:'重新连接前的历史建议'});}renderHistory();if(hist[0])renderArchive(hist[0]);return;}
  if(msg.gto){renderGto(msg.gto);return;}
  const {item:a,stats={},heroSeat}=msg;if(!a)return;
+ if(currentDecision&&currentDecision!==a.decisionId)archiveCurrent('新的决策已开始');
  currentDecision=a.decisionId;currentItem=a;currentResult=null;
  el('gto').textContent='正在分析当前决策…';el('context-label').textContent=a.numPlayers+' 人池 · 当前决策';
  el('meta').textContent='座位 '+(heroSeat??'?')+' · 决策 '+(stats.decisions||0)+' · 错误 '+(stats.errors||0);
  el('hand').innerHTML=(a.heroCards||[]).map(pc).join('');el('board').innerHTML=(a.board||[]).length?a.board.map(pc).join(''):'<span class="empty-board">翻前 · 等待发牌</span>';
  el('pos').innerHTML=esc(a.heroPos)+'<small>'+esc(STREETS[a.street]||a.street)+'</small>';
  el('pot').textContent=n(a.potChips,0);el('call').textContent=n(a.toCallChips,0);
- waiting('正在计算候选行动','正在计算多人权益并检查候选动作；不展开随机全街续局。',true);renderRoutes(a);
- if(!hist.some(h=>h.id===a.decisionId)){hist.unshift({id:a.decisionId,cards:a.heroCards||[],street:a.street,action:null});hist.length=Math.min(hist.length,12);renderHistory();}
+ waiting('轮到你 · 正在计算','正在计算多人权益并检查候选动作；不展开随机全街续局。',true);renderRoutes(a);
+ if(!hist.some(h=>h.id===a.decisionId)){hist.unshift({id:a.decisionId,cards:a.heroCards||[],street:a.street,action:null,snapshot:a});hist.length=Math.min(hist.length,12);renderHistory();}
 };
 if(typeof setInterval==='function')setInterval(()=>{
- if(currentDecision&&currentItem&&Date.now()-Date.parse(currentItem.at)>15000){currentDecision=null;currentItem=null;currentResult=null;waiting('建议已过期','等待新的行动事件，避免使用旧局面建议。');el('gto').textContent='上次分析已失效';}
+ if(currentDecision&&currentItem&&Date.now()-Date.parse(currentItem.at)>15000){archiveCurrent('建议已过期');currentDecision=null;currentItem=null;currentResult=null;waiting('建议已过期','等待新的行动事件，避免使用旧局面建议。');el('gto').textContent='上次分析已失效';}
+ if(lastTable&&lastTable.observedAt&&Date.now()-Date.parse(lastTable.observedAt)>15000){el('live-status').textContent='采集暂无新增';el('live-status').className='live-label stale';}
 },1000);
 if(typeof fetch==='function'){
  const updateTraining=()=>fetch('/training').then(r=>r.json()).then(t=>{

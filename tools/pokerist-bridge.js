@@ -91,7 +91,7 @@ const S = {
 };
 let handNo = 0;
 let activeSolverReq = null, activeSolverItem = null;
-function invalidate(reason) {
+function invalidate(reason, actualAction=null) {
   ledger.invalidate();
   const previous = S.currentDecision;
   S.currentDecision = null; S.gto = null; S.pending = null;
@@ -106,13 +106,14 @@ function invalidate(reason) {
     S.stats.cancelledRequests = (S.stats.cancelledRequests || 0) + 1;
     activeSolverReq.destroy();
   }
-  pushSSE({ clear: true, reason });
+  pushSSE({ clear: true, reason, actualAction });
 }
 function isCurrent(item) { return S.currentDecision === item.decisionId; }
 
 
 function resetHand() {
   invalidate('新手牌');
+  S.snapshot=null;
   S.hand = {
     no: ++handNo,
     id: null,
@@ -194,7 +195,12 @@ function onEvent(rec) {
   profiles.event(rec, S.hand.board, card);
   if (['NewHandEventArgs', 'PokerStageEventArgs', 'FoldEventArgs', 'CallEventArgs',
        'CheckEventArgs', 'BetEventArgs', 'RaiseEventArgs', 'GameResultEventArgs',
-       'GameEndedEventArgs'].includes(t)) invalidate('行动或牌面已更新');
+       'GameEndedEventArgs'].includes(t)) {
+    const action={FoldEventArgs:'fold',CallEventArgs:'call',CheckEventArgs:'check',BetEventArgs:'bet',RaiseEventArgs:'raise'}[t];
+    S.awaitingSnapshot=true;
+    invalidate(action&&d.Who===S.heroSeat?'你已行动':'行动或牌面已更新',
+      action&&d.Who===S.heroSeat?{action,amount:num(d.LastBet)}:null);
+  }
   switch (t) {
     case 'NewHandEventArgs':
       resetHand();
@@ -272,6 +278,7 @@ function onSnapshot(rec) {
     S.table = { deskId: st.DeskID };
   }
   S.snapshot = rec;
+  S.awaitingSnapshot=false;
   if (S.heroId && OPT.heroSeat === null) {
     const me = (st.Players || []).find(p => String(p.m_ID) === S.heroId);
     if (me) S.heroSeat = me.Place;
@@ -543,6 +550,42 @@ function broadcastGto(g) {
 
 const PAGE = fs.readFileSync(path.join(__dirname, 'pokerist-panel.html'), 'utf8');
 
+function tableView() {
+  const h=S.hand;if(!h)return null;
+  const st=S.snapshot&&S.snapshot.state||{}, sc=st.StakeConfig||{};
+  const history=profiles.hand&&profiles.hand.key===h.id?profiles.hand.actions:[];
+  const players=st.Players||(h.startPlayers||[]).map(p=>({m_ID:p.id,Place:p.seat,m_Nick:p.name,DAmount:p.stack,IsPlaying:true}));
+  const me=players.find(p=>p.Place===S.heroSeat), heroId=S.heroId||(me&&String(me.m_ID));
+  const members=players.filter(p=>p.IsPlaying||(h.startPlayers||[]).some(x=>x.id===String(p.m_ID)));
+  const context=members.map(p=>{
+    const acts=history.filter(a=>String(a.playerId)===String(p.m_ID));
+    const last=acts.filter(a=>a.moneyLeft!=null).at(-1);
+    return {id:String(p.m_ID),seat:p.Place,name:p.m_Nick,pos:(h.posmap||{})[p.Place],
+      folded:!!p.Folded||acts.some(a=>a.action==='fold'),stackChips:last?last.moneyLeft:num(p.DAmount),
+      profile:profiles.summary(String(p.m_ID))};
+  });
+  const complete=h.historyComplete&&profiles.hand&&profiles.hand.key===h.id;
+  const pot=complete?history.reduce((n,a)=>n+num(a.amount),0):Math.max(num(sc.Pot),h.streetStartPot)+players.reduce((n,p)=>n+num(p.TableAmount),0);
+  const mine=context.find(p=>p.id===heroId);
+  const price=profiles.hand&&profiles.hand.maxWager||0, paid=profiles.hand&&(profiles.hand.wagers[S.heroSeat]||0)||0;
+  return {handId:h.id,heroId,heroCards:h.heroCards||(st.PrivateCards||[]).map(card).filter(Boolean),
+    board:h.board||[],street:h.street,heroPos:(h.posmap||{})[S.heroSeat]||'—',
+    potChips:pot,toCallChips:mine&&!mine.folded?Math.min(mine.stackChips,Math.max(0,price-paid)):0,
+    bbChips:num(sc.BigBlind),numPlayers:context.filter(p=>!p.folded).length,
+    playersContext:context,opponents:context.filter(p=>p.id!==heroId&&!p.folded),history,
+    isHeroTurn:!S.awaitingSnapshot&&!h.over&&!h.heroFolded&&st.GameInProgress&&st.Current===S.heroSeat,
+    over:!!h.over,observedAt:S.lastObservedAt};
+}
+
+function publishTable() {
+  const table=tableView();if(!table)return;
+  S.liveTable=table;
+  const key=JSON.stringify({...table,observedAt:null});
+  if(!S.warming&&(key!==S.liveTableKey||Date.now()-(S.liveTableSentAt||0)>1000)){
+    S.liveTableKey=key;S.liveTableSentAt=Date.now();pushSSE({table});
+  }
+}
+
 function recordFeedback(body) {
   if (!body || !['reasonable','questionable','unreasonable'].includes(body.rating) ||
       typeof body.decisionId!=='string' || typeof (body.comment||'')!=='string' || (body.comment||'').length>1000)
@@ -577,6 +620,11 @@ function startServer() {
     } else if (req.url === '/events') {
       res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive' });
       res.write('retry: 2000\n\n');
+      if(S.liveTable)res.write('data: '+JSON.stringify({table:S.liveTable})+'\n\n');
+      const recent=S.advice.filter(a=>a.analysis&&!isCurrent(a)).slice(0,6).map(a=>{
+        const {analysis,...item}=a;return {item,analysis};
+      });
+      if(recent.length)res.write('data: '+JSON.stringify({recent})+'\n\n');
       if (S.advice[0] && isCurrent(S.advice[0])) res.write('data: ' + JSON.stringify({ item: S.advice[0], stats: S.stats, heroSeat: S.heroSeat }) + '\n\n');
       if (S.gto) res.write('data: ' + JSON.stringify({gto: S.gto}) + '\n\n');
       SSE.push(res);
@@ -706,6 +754,7 @@ function ingest(line) {
   if (rec.kind === 'event_received') onEvent(rec);
   else if (rec.kind === 'snapshot') onSnapshot(rec);
   else if (rec.kind === 'table_info') onTableInfo(rec);
+  publishTable();
 }
 
 /* ------------------------------------------------------------------ */
@@ -737,4 +786,4 @@ if (OPT.replay) {
 }
 
 }
-module.exports = { OPT, S, profiles, ledger, seatPositions, ingest, flushPending, PAGE, isCurrent, askSolver, departedWagers, recordFeedback, startServer };
+module.exports = { OPT, S, profiles, ledger, seatPositions, ingest, flushPending, PAGE, isCurrent, askSolver, departedWagers, recordFeedback, startServer, tableView };

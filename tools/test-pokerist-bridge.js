@@ -84,7 +84,7 @@ assert.equal(B.S.advice[0].opponents.find(p=>p.seat===7).pos,'CO','fold must not
 ingest({...snap,state:{...snap.state,Current:7}});
 assert.equal(B.S.currentDecision,null,'stale Call > 0 does not imply hero turn');
 
-const elements={};const el=id=>elements[id]||(elements[id]={innerHTML:'',textContent:''});
+const elements={};const el=id=>elements[id]||(elements[id]={innerHTML:'',textContent:'',style:{}});
 let stream;
 const context={document:{getElementById:el}, EventSource:class {constructor(){stream=this;}},console};
 vm.runInNewContext(B.PAGE.match(/<script>([\s\S]*?)<\/script>/)[1],context);
@@ -101,7 +101,7 @@ assert(!el('gto').innerHTML.includes('NaN'));
 const next={...first,decisionId:'next'};send({item:next,stats:B.S.stats,heroSeat:3});
 assert.equal(el('gto').textContent,'正在分析当前决策…');
 const before=el('gto').innerHTML;send({gto:g});assert.equal(el('gto').innerHTML,before);
-send({clear:true});assert.equal(el('gto').textContent,'上次分析已失效');
+send({clear:true});assert(el('gto').textContent.includes('过往原因'));
 // Warm-start identity recovery must work before any advisory decision is emitted.
 B.S.warming=true;
 ingest(event('PlayerStakeEventArgsPrivate',{TableID:'table',Timestamp:{utc:'2026-10-27T08:00:00Z'}}));
