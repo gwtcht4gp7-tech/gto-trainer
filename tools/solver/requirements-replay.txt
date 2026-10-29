@@ -1,0 +1,2 @@
+# Optional, isolated public PHH prefix importer; not a live service dependency.
+pokerkit==0.7.7

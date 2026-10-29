@@ -887,7 +887,7 @@
     return set;
   }
 
-  function advisePostflop(st) {
+  function advisePostflop(st, equityEstimate) {
     const board = st.boardCards;
     const heroCards = st.heroCards;
     const pot = st.pot;
@@ -902,7 +902,7 @@
     board.forEach(c => { dead[c] = 1; });
     heroCards.forEach(c => { dead[c] = 1; });
     const villainCombos = toCombos(villainSet, dead);
-    const equity = villainCombos.length
+    const equity = equityEstimate !== undefined ? equityEstimate : villainCombos.length
       ? equityVsRange(heroCards, villainCombos, board, st.iterations || 6000)
       : 0;
 
@@ -954,14 +954,16 @@
       }
     }
 
-    if (!villainCombos.length) {
+    if (!villainCombos.length && equityEstimate === undefined) {
       reasons.push('⚠ 对手范围估值为空，权益按 0 处理，本建议不可用。请显式传 villainRange。');
     }
 
     reasons.push(`牌面 ${tex.highRank} 高 · ${tex.textureCN}（${tex.suitTypeCN}${tex.isPaired ? ' · 对子面' : ''}${tex.hasStraightPossible ? ' · 有顺子可能' : ''}）。`);
     reasons.push(`你的范围优势评分 ${tex.rangeAdv.toFixed(2)}，坚果优势评分 ${tex.nutAdv.toFixed(2)}（正数偏向翻前加注者）。`);
     reasons.push(`你当前成牌：${madeStrength === 'air' ? '无对子（空气）' : madeStrength === 'monster' ? '强成牌（三条以上）' : madeStrength === 'strong' ? '两对' : madeStrength === 'topPair' ? '顶对' : madeStrength === 'overPair' ? '超对' : '弱对子'}${draw ? ` + ${draw === 'flushDraw' ? '同花听牌' : '顺子听牌'}` : ''}。`);
-    reasons.push(`对估计的对手范围，你的权益 ${pct(equity)}（${itersLabel} 次蒙特卡洛）。`);
+    reasons.push(equityEstimate === undefined
+      ? `对估计的对手范围，你的权益 ${pct(equity)}（${itersLabel} 次蒙特卡洛）。`
+      : `统一回放提供的权益 ${pct(equity)}；范围与抽样说明见回放报告。`);
 
     // ================= 分支 A：面对下注 =================
     if (facing) {
@@ -1165,13 +1167,18 @@
   /**
    * 主入口
    * @param {object} input hand state
+   * @param {number} [equityEstimate] 离线同局面对照使用的外部权益；默认行为不变
    * @returns {object} 决策
    */
-  function advise(input) {
+  function advise(input, equityEstimate) {
+    if (equityEstimate !== undefined &&
+        (typeof equityEstimate !== 'number' || !Number.isFinite(equityEstimate) || equityEstimate < 0 || equityEstimate > 1)) {
+      throw new Error('外部权益必须是 0–1 的有限数值');
+    }
     const st = normalize(input);
     let result;
     if (st.street === 'preflop') result = advisePreflop(st);
-    else result = advisePostflop(st);
+    else result = advisePostflop(st, equityEstimate);
 
     result.street = st.street;
     result.handClass = st.hero.handClass;

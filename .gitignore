@@ -4,3 +4,11 @@ Thumbs.db
 *.log
 _*.js
 _*.txt
+__pycache__/
+*.py[cod]
+runtime/
+*.sqlite
+*.sqlite-*
+*.db
+.env
+.env.*
