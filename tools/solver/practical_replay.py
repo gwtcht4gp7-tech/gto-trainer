@@ -181,18 +181,27 @@ def guarded_preview(decision, endpoints, req, stack, side_pot, equity, error):
     return out
 
 
-def evaluate(req, seed, samples):
+def evaluate(req, seed, samples, range_model=None):
     pot, call, stack, opponents, factory = validate(req)
     from opponent_model import joint_equity
     from ranges import parse_card
     history = req.get('history') or []
+    estimates = None
+    model_hash = None
+    if range_model:
+        from residual_range import residual_range
+        model_path = Path(range_model)
+        model = json.loads(model_path.read_text(encoding='utf-8'))
+        model_hash = hashlib.sha256(model_path.read_bytes()).hexdigest()
+        estimates = [residual_range(p, history, [parse_card(c) for c in req['board']], model) for p in opponents]
     by_id = {str(p['id']): i for i, p in enumerate(opponents)}
     reference = next((by_id[str(a['playerId'])] for a in reversed(history)
                       if str(a.get('playerId')) in by_id and a.get('street') == req['street']
                       and a.get('action') in ('bet', 'raise')), 0)
     t0 = time.perf_counter()
     mc = joint_equity([parse_card(c) for c in req['heroCards']], [parse_card(c) for c in req['board']],
-                      opponents, history, samples=samples, seed=seed, compare_opponent=reference)
+                      opponents, history, samples=samples, seed=seed, compare_opponent=reference,
+                      range_estimates=estimates)
     state = engine_state(req, stack, [opponents[reference]] + [p for i, p in enumerate(opponents) if i != reference])
     estimates = [(mc['headsUpReference']['equity'], mc['headsUpReference']['standardError']),
                  (mc['heroEquity'], mc['standardError'])]
@@ -230,7 +239,9 @@ def evaluate(req, seed, samples):
                           'guardedPreview': guarded_preview(decision, [decisions[2+i], decisions[4+i]],
                                                             req, stack, side_pot, *estimates[i]),
                           'reason': 'Offline experiment; comparative strategy strength not established'}
-    return {'status': 'ok', 'seed': seed, 'samples': samples, 'numPlayers': len(opponents) + 1,
+    return {'status': 'ok', 'rangeModelSha256': model_hash,
+            'rangeModel': 'public_size_residual_v2' if range_model else 'legacy',
+            'seed': seed, 'samples': samples, 'numPlayers': len(opponents) + 1,
             'street': req['street'], 'heroCards': req['heroCards'], 'board': req['board'],
             'historyActions': len(history), 'historyComplete': bool(req.get('historyComplete')),
             'potBB': pot, 'callBB': call, 'heroStackBB': stack, 'sidePotRisk': side_pot,
@@ -310,7 +321,7 @@ def terminate_tree(process):
     process.wait(timeout=2)
 
 
-def run_case(req, seed, samples, budget_ms):
+def run_case(req, seed, samples, budget_ms, range_model=None):
     """Wall-clock deadline includes Python startup, validation, equity and Node."""
     t0 = time.perf_counter()
     cleanup_ms = 0.
@@ -320,7 +331,7 @@ def run_case(req, seed, samples, budget_ms):
                                 text=True, encoding='utf-8', start_new_session=os.name != 'nt',
                                 env={**os.environ, 'PYTHONIOENCODING': 'utf-8',
                                      'PYTHONDONTWRITEBYTECODE': '1', 'OPENBLAS_NUM_THREADS': '1'})
-        output, errors = proc.communicate(json.dumps(dict(request=req, seed=seed, samples=samples)),
+        output, errors = proc.communicate(json.dumps(dict(request=req, seed=seed, samples=samples, rangeModel=range_model)),
                                           timeout=budget_ms / 1000)
         if proc.returncode:
             result = {'status': 'error', 'error': errors[-1500:]}
@@ -347,11 +358,12 @@ def main():
     ap.add_argument('--seeds', default='20261027,333,777')
     ap.add_argument('--samples', type=int, default=4000)
     ap.add_argument('--budget-ms', type=int, default=3800)
+    ap.add_argument('--range-model', type=Path, help='Optional offline v2 candidate; never changes the live solver')
     args = ap.parse_args()
     if args.worker:
         payload = json.load(sys.stdin)
         try:
-            result = evaluate(payload['request'], payload['seed'], payload['samples'])
+            result = evaluate(payload['request'], payload['seed'], payload['samples'], payload.get('rangeModel'))
         except subprocess.TimeoutExpired:
             result = {'status': 'timed_out', 'error': 'Node evaluation exceeded its deadline'}
         except (ValueError, KeyError, TypeError, IndexError) as error:
@@ -370,7 +382,8 @@ def main():
     for key, case in cases.items():
         req = case.get('request', case)
         for seed in seeds:
-            result = run_case(req, seed, args.samples, args.budget_ms)
+            result = run_case(req, seed, args.samples, args.budget_ms,
+                              str(args.range_model.resolve()) if args.range_model else None)
             rows.append({'caseId': key, **result})
             print(json.dumps({'caseId': key, 'seed': seed, 'status': result['status'], 'wallMs': result['wallMs']}), flush=True)
     sources = [Path(__file__), Path(__file__).with_name('opponent_model.py'), ROOT / 'engine/gto-engine.js']

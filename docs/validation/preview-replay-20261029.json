@@ -1,0 +1,39 @@
+{
+  "candidate": {
+    "ok": 531,
+    "invalid_input": 0,
+    "timed_out": 0,
+    "error": 0
+  },
+  "control": {
+    "ok": 531,
+    "invalid_input": 0,
+    "timed_out": 0,
+    "error": 0
+  },
+  "candidateWallRangeMs": [
+    286.1,
+    422.3
+  ],
+  "inputSha256": "5d27096d047cee896576cf5c2bfc6f325a281ad07d41169f8a24b53779c3670b",
+  "sourceSha256": {
+    "tools\\solver\\practical_replay.py": "65c2e992237674d8e72cdedd4d8c212edd3353dc58b4a41222bec692382fb6d8",
+    "tools\\solver\\opponent_model.py": "aeaf212ea264f72efabb89c9d6a9afbffa63914ec2e65b59830d43a9bf583f15",
+    "engine\\gto-engine.js": "d863d3c52732e736327707b0d2653c6c420182b0ee011fe88342b1e1f704b147"
+  },
+  "http": {
+    "scope": "Local HTTP + worker startup + ranges + equity + Node; excludes collector/game/bridge",
+    "mode": "isolated_preview",
+    "requests": 18,
+    "successes": 18,
+    "maxClientRoundtripMs": 367.4961000215262,
+    "publishable": false
+  },
+  "independentLegality": {
+    "scope": "PokerKit action legality only; no policy strength certification",
+    "legal": 518,
+    "held": 13,
+    "failures": []
+  },
+  "publishable": false
+}

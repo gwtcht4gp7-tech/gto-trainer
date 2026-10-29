@@ -1,0 +1,22 @@
+{
+  "version": "public-size-residual-v2",
+  "features": [
+    "aggression_size_strength",
+    "aggression_size_polarity",
+    "check_strength",
+    "call_price_strength",
+    "aggression_size_flushdraw"
+  ],
+  "theta": [
+    -0.24585657178028142,
+    -0.09543821327328832,
+    -0.35341099533426823,
+    0.009793393737250272,
+    0.20926794379893845
+  ],
+  "trainingLabels": 612,
+  "initialObjective": -1.7041903250752235e-17,
+  "finalObjective": -0.012043236140865287,
+  "regularization": 0.05,
+  "steps": 160
+}

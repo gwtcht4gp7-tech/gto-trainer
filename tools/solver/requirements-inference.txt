@@ -1,0 +1,2 @@
+# Frozen environment used for isolated preview inference; Node.js also required.
+numpy==2.2.5

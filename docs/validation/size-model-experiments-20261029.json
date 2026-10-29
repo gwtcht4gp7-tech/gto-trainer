@@ -1,0 +1,2067 @@
+{
+  "sized-range-evaluation": {
+    "allStreets": {
+      "labels": 1997,
+      "handClusters": 92,
+      "meanHandGainNats": -0.004604430037949199,
+      "handClusterSE": 0.004513558516349177,
+      "approximate95Interval": [
+        -0.013451004729993585,
+        0.0042421446540951875
+      ]
+    },
+    "postflop": {
+      "labels": 296,
+      "handClusters": 47,
+      "meanHandGainNats": -0.033060615244072535,
+      "handClusterSE": 0.03874504157560645,
+      "approximate95Interval": [
+        -0.10900089673226118,
+        0.042879666244116106
+      ]
+    },
+    "byStreet": {
+      "flop": {
+        "labels": 146,
+        "handClusters": 47,
+        "meanHandGainNats": -0.0012089575456187191,
+        "handClusterSE": 0.02614561178043244,
+        "approximate95Interval": [
+          -0.052454356635266305,
+          0.050036441544028865
+        ]
+      },
+      "preflop": {
+        "labels": 1701,
+        "handClusters": 92,
+        "meanHandGainNats": 0.0,
+        "handClusterSE": 0.0,
+        "approximate95Interval": [
+          0.0,
+          0.0
+        ]
+      },
+      "river": {
+        "labels": 64,
+        "handClusters": 27,
+        "meanHandGainNats": -0.07563890204012058,
+        "handClusterSE": 0.08304950394991267,
+        "approximate95Interval": [
+          -0.23841592978194942,
+          0.08713812570170826
+        ]
+      },
+      "turn": {
+        "labels": 86,
+        "handClusters": 35,
+        "meanHandGainNats": -0.07407472372999645,
+        "handClusterSE": 0.061941522194736684,
+        "approximate95Interval": [
+          -0.19548010723168036,
+          0.04733065977168745
+        ]
+      }
+    },
+    "maxBothPriorMs": 19.345000036992133,
+    "scope": "Independent-match conditional range density, not policy profitability",
+    "trainHands": 71,
+    "heldoutHands": 92,
+    "trainingObservations": 270,
+    "rejections": {
+      "training": [],
+      "heldout": []
+    },
+    "modelSha256": "de28e44d9ced72b0755e47a8f632692fbbc85aea228dfb6a0f7848754ec83ed4",
+    "trainingBundleSha256": "971c16da650d47b12fbd1b631adf8d52c37daee75209a6b41dd7b26981e6283d",
+    "heldoutBundleSha256": "c3166f578d6b1fcaa2ab8d2d9f76587a79feaebb39f55e3198921973d00ef65e",
+    "heldoutSources": [
+      {
+        "name": "101/0.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/0.phh",
+        "sha256": "6067713a1ffa54398a2bcc9db86def62d48f8a00525d1273d42e74b3ef2cac39"
+      },
+      {
+        "name": "101/1.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/1.phh",
+        "sha256": "46ded83a193eea43b9c76cd1ed917785dd988387ecae2752a4a3543f0df6fe66"
+      },
+      {
+        "name": "101/2.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/2.phh",
+        "sha256": "19d9b0cf0ec4868159767b8ce4fa11093ae529d85f73bd055f0e1384edbacb17"
+      },
+      {
+        "name": "101/3.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/3.phh",
+        "sha256": "d3b8dcbab57377e0ab8a30f0d3d83411aa4c21138ae550d9608c4b718f2883c1"
+      },
+      {
+        "name": "101/4.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/4.phh",
+        "sha256": "d56b4aa993df2c51255ad8ebe30c09dd5f2f6f8edb725107eca2b561e968ef6a"
+      },
+      {
+        "name": "101/5.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/5.phh",
+        "sha256": "2081f2ef127c17700a9afcac26d3e8f89060c89a422fe1ab2c93e86d5dd85932"
+      },
+      {
+        "name": "101/6.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/6.phh",
+        "sha256": "f69dfeecf3ca778fb27f57ef19e9050d12c1588bf03bfc579af980dc102353d3"
+      },
+      {
+        "name": "101/7.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/7.phh",
+        "sha256": "ffc3363812b57413ae9257edb01f7dac92f891bf42c6b1d9292901c90f96a68a"
+      },
+      {
+        "name": "101/8.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/8.phh",
+        "sha256": "e0ba55c6bea8267bf40f4be914182d0ccc3e09922733e8cdbe69796c1fe10e57"
+      },
+      {
+        "name": "101/9.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/9.phh",
+        "sha256": "c0c10171940be6c2774372332dbfabce497f9cf280e3f6181088a372bad8d0bf"
+      },
+      {
+        "name": "101/10.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/10.phh",
+        "sha256": "04ab9cb112028fd8dff3ff48ec944f1c5c44bb2b644b433e9da3ed3dcbcb074c"
+      },
+      {
+        "name": "101/11.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/11.phh",
+        "sha256": "e6f377f41e10b768bfaaf915adc20bb35c598154fca59e296e03be13e04b12c8"
+      },
+      {
+        "name": "101/12.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/12.phh",
+        "sha256": "f47f6b5ebfa46de95cab901ab6c0db066ace540b9e874d2012435fd3459db548"
+      },
+      {
+        "name": "101/13.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/13.phh",
+        "sha256": "ff3398c9b548370222648cb1a4341e5dca9cf3fb25bb93fa346fd885732554a7"
+      },
+      {
+        "name": "101/14.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/14.phh",
+        "sha256": "40922368a1e66a950b62e6578928f0f3c193bf50aee939292c2dccf2957e6ac6"
+      },
+      {
+        "name": "101/15.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/15.phh",
+        "sha256": "61000a7d84eba519ab965c020063ae0d4bb621e8e668d57321a4f0e846dea8aa"
+      },
+      {
+        "name": "101/16.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/16.phh",
+        "sha256": "9fb805a8a64b93f0410891324d4f6ab347223affd30c5dc78e89f3cc8e02502a"
+      },
+      {
+        "name": "101/17.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/17.phh",
+        "sha256": "02651301163b40535397b7ab519d7c90682d7a1813c1c7ea98018ca4c514464b"
+      },
+      {
+        "name": "101/18.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/18.phh",
+        "sha256": "ccd8c874acbf258a1888a6e75faee3be1ede7d5dbdcf29a30ec7ca227a08033b"
+      },
+      {
+        "name": "101/19.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/19.phh",
+        "sha256": "c9cb240152a8ad0a041730ed8295695aa00b6d27bf9c167645c3dcf8299c3935"
+      },
+      {
+        "name": "101/20.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/20.phh",
+        "sha256": "168e9503e447000625d8c0a6091dc9f4492faeee182cfdf0ac55d1744a97c7bc"
+      },
+      {
+        "name": "101/21.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/21.phh",
+        "sha256": "f9433ce26d7913fdb49f63b421438b72e29db03ab6542f5cc2b6ef3be2116a0a"
+      },
+      {
+        "name": "101/22.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/22.phh",
+        "sha256": "8ceeb6243e985596a60aa73a4f0180ce7b1f76983adf856a96d7c0f5addf1e24"
+      },
+      {
+        "name": "101/23.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/23.phh",
+        "sha256": "1d60c544ddaf57d8ff8b4b0806b03aaa5848c088029a6380d23a3b399ee77095"
+      },
+      {
+        "name": "101/24.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/24.phh",
+        "sha256": "4282ea2154bf30566cf87de19a162be7a3b121bd9d7d5a6434738e22c6feaf9e"
+      },
+      {
+        "name": "101/25.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/25.phh",
+        "sha256": "7cf7b3e4527f7228dfde6e5e766cdfef1a3862c6c898579c4b20f13f40e3e80d"
+      },
+      {
+        "name": "101/26.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/26.phh",
+        "sha256": "be9f99a5b4bc305a026542910e64e474d4513e530dd113d99dcf2167c81e6cba"
+      },
+      {
+        "name": "101/27.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/27.phh",
+        "sha256": "795430649ad44a79bdb451ec81ab509c465ac72bfcf66b4701eac18b50321b29"
+      },
+      {
+        "name": "101/28.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/28.phh",
+        "sha256": "0bd5ad3d0c8fa494d236d7aa981b60752b318f97c317e3beae2349f32d441943"
+      },
+      {
+        "name": "101/29.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/29.phh",
+        "sha256": "c8ba9c7f53007cdc770cbcddb1e7092e033ea663361bf859084ca652eb1aec04"
+      },
+      {
+        "name": "101/30.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/30.phh",
+        "sha256": "b2cd314dd8c12938c27b9c3116a6872187c3f62785ef3dee382c1f41cc5550e4"
+      },
+      {
+        "name": "101/31.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/31.phh",
+        "sha256": "7950777bbb5c0a44a111c5a46913fd649a54a4c6c02c9cf1e8c04e56d9155f51"
+      },
+      {
+        "name": "101/32.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/32.phh",
+        "sha256": "9be0ad7f7abb66a4e16e87ae02aeb8a3664058a9f98afc8c33dd5beff0d8cd55"
+      },
+      {
+        "name": "101/33.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/33.phh",
+        "sha256": "28b43272fe821f30168533865bb9f9a6ae09a39848bee66c865716e00fae3e38"
+      },
+      {
+        "name": "101/34.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/34.phh",
+        "sha256": "2b46ec0419137d0db185c1bccab110d3dcd9276131d31283c26387f65a432633"
+      },
+      {
+        "name": "101/35.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/35.phh",
+        "sha256": "86985559924f25709b3d35e0405a6941d5afcdca03b48c933e92ff10a5774988"
+      },
+      {
+        "name": "101/36.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/36.phh",
+        "sha256": "526ab1c94f92dd38a0f789cb0329af795cfd5c6f048cba126702494f43caafb0"
+      },
+      {
+        "name": "101/37.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/37.phh",
+        "sha256": "16f94b6fcd68e60e3ec62b48ae69f3a243031af05629799b14eafc5e929c0938"
+      },
+      {
+        "name": "101/38.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/38.phh",
+        "sha256": "7946d5e70e71b7f5188f6dca15f84c221542cc44e59c91ae54f032dc632ee23b"
+      },
+      {
+        "name": "101/39.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/39.phh",
+        "sha256": "a47ad380573333872e453011a96e195fbe038329e5f7a4a86f12d00fa08fac8a"
+      },
+      {
+        "name": "101/40.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/40.phh",
+        "sha256": "77fcf6ddbcb6fbb3a23a518ca4f44de1b11f57554e67f409551600d1d627ed0a"
+      },
+      {
+        "name": "101/41.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/41.phh",
+        "sha256": "5c872521b127227e4495b277cbe97611c21e26185b35ff8f26337e69bf0b0f3e"
+      },
+      {
+        "name": "101/42.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/42.phh",
+        "sha256": "2a67c36fea42f6e595f569d8bea240a488d4298c8767a6d0dffb09a5134aa185"
+      },
+      {
+        "name": "101/43.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/43.phh",
+        "sha256": "e9aa0b755729c36c5c099fa486f69114535a720776255270f6211c6275925868"
+      },
+      {
+        "name": "101/44.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/44.phh",
+        "sha256": "fd161a5b36f9c46cfba7f71435629e17936fe247419f958ce7146314b77c05f2"
+      },
+      {
+        "name": "101/45.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/45.phh",
+        "sha256": "77335be99c227a93e9c05d4b44fd71922026a680aa76a06eb8d4e16eda2e6fb7"
+      },
+      {
+        "name": "101/46.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/46.phh",
+        "sha256": "522f1c8083019bda210d5d3fe04fd7d45de25714e9a6c2a688ed130f9ed6cd36"
+      },
+      {
+        "name": "101/47.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/47.phh",
+        "sha256": "561d5b340264db186c46d77c68523968b6c760d9b5936c7d12464bf243349d32"
+      },
+      {
+        "name": "101/48.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/48.phh",
+        "sha256": "368e85b387ae3d68113a5d0f308d6da155e512208e81b774385da3134da4ebe9"
+      },
+      {
+        "name": "101/49.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/49.phh",
+        "sha256": "eeb84de25d639588d3b0aeb223146b7cbdbb3fbd2e1b873fba21a0b17645195f"
+      },
+      {
+        "name": "101/50.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/50.phh",
+        "sha256": "df54f920a95b9aecc97c99b6e6489503480c07ddda859e428a2ddaf075b160ab"
+      },
+      {
+        "name": "101/51.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/51.phh",
+        "sha256": "3126ffdd793a091a02e2c9be4ac8fb7054b16d352186e62be226ea7e93b52a1b"
+      },
+      {
+        "name": "101/52.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/52.phh",
+        "sha256": "5a4c3dafa96c89f0c95fd843ce84c8dbcbdd88c7d97ad9eb163b8ac1e27eab2b"
+      },
+      {
+        "name": "101/53.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/53.phh",
+        "sha256": "9b7a30cf82da963d20196dd7a148adc832cd8468ef90372f296ab2ac71f89430"
+      },
+      {
+        "name": "101/54.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/54.phh",
+        "sha256": "7a5e8080fb3f0a6c250a24cdb03d64ad240c6bfdca65371209b67833155b07f8"
+      },
+      {
+        "name": "101/55.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/55.phh",
+        "sha256": "7d512298ea47a6d94edcf49479acd1a839340c9b28f34a9c8d3c6492907f8032"
+      },
+      {
+        "name": "101/56.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/56.phh",
+        "sha256": "a22777d81e390eb151cdeeb3955ceb31705d933349b3969c1e1afe0bdde0d077"
+      },
+      {
+        "name": "101/57.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/57.phh",
+        "sha256": "24b75782b104de6b9eb870de8f1ac898051d92edd937ab66ba7e8eac47cf60bb"
+      },
+      {
+        "name": "101/58.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/58.phh",
+        "sha256": "a975cafa1905ff5a5f499cc1b6bf7435263554193beda49c21d581ffa6d5da03"
+      },
+      {
+        "name": "101/59.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/59.phh",
+        "sha256": "6668c85d868ea0aeb34169d04979a37ebafa753c38b661c7716dce6f84ee7ef4"
+      },
+      {
+        "name": "101/60.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/60.phh",
+        "sha256": "d82cee7f1f3736e98afa77ed09cdbc25385f1e303b010ff48deffd8551ee1239"
+      },
+      {
+        "name": "101/61.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/61.phh",
+        "sha256": "7898d16aa2b039d1e5f911164a0cc0449aef68da1d78ed704cfd6e876cfdaddc"
+      },
+      {
+        "name": "101/62.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/62.phh",
+        "sha256": "1c517f7aa84747d52364015417e392b727755c46b07d615274d4ef25352be0e4"
+      },
+      {
+        "name": "101/63.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/63.phh",
+        "sha256": "1b2fbe6c00fa0122c06eb786df2913de85f81c016bcb4405f1c1ce7dcb40f570"
+      },
+      {
+        "name": "101/64.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/64.phh",
+        "sha256": "11414b9be7b8fe37bd3af5c1ac42253841474733a38ac17e561650943200ae9e"
+      },
+      {
+        "name": "101/65.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/65.phh",
+        "sha256": "65b8baced95831a14f92aef8528fac4c32009e4385e81bda816f87330e0c3845"
+      },
+      {
+        "name": "101/66.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/66.phh",
+        "sha256": "8036c74b083475c5b360f5688fa5c5be927ab135297d08ac61835fb65a117f7a"
+      },
+      {
+        "name": "101/67.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/67.phh",
+        "sha256": "178ec2e2b17b1d56b3da3faccb8f51cba55644299eb0d043c59f3c4aed5436f5"
+      },
+      {
+        "name": "101/68.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/68.phh",
+        "sha256": "2d1b89b03d23a2a7eddeacc33d262dde68e40b3660193928c99c10b6b3868f40"
+      },
+      {
+        "name": "101/69.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/69.phh",
+        "sha256": "6bf76a57d3118dccd8b54b3a892502e9a6419cd6c0aacc6bbf37fa774d46cd3c"
+      },
+      {
+        "name": "101/70.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/70.phh",
+        "sha256": "49fe7fc5a80b480c04acf65f4a338ba955f8971783f5fde8764ee85300d0034c"
+      },
+      {
+        "name": "101/71.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/71.phh",
+        "sha256": "1151d8e6c4fb48557ae15b6c8f11f9c5f4f140ed33babbf735693ff72893ba46"
+      },
+      {
+        "name": "101/72.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/72.phh",
+        "sha256": "28802cdb529986b7ef0af8fa4b12f7631b14653944a53d2f278fc33f2a3afc37"
+      },
+      {
+        "name": "101/73.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/73.phh",
+        "sha256": "7f821ec755fd9f308660e4b08dc8a669c3bad0809da0c1fbf7afa55d2ac97080"
+      },
+      {
+        "name": "101/74.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/74.phh",
+        "sha256": "2dbe58a091addf977a4e8c515f1de9df95445bee35dfed600cc8cac0b91b7fce"
+      },
+      {
+        "name": "101/75.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/75.phh",
+        "sha256": "ba32912bb2bf2a637b4978310521a94a30f90eec85479cea6a925d46c3ce5bae"
+      },
+      {
+        "name": "101/76.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/76.phh",
+        "sha256": "0e2c96770ba33a587e961755441955fc71ce95cc8eaeede82075e8ef31078d02"
+      },
+      {
+        "name": "101/77.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/77.phh",
+        "sha256": "e5fa612b21ec1874711cacdfcc4742b255d2d9ad13fbe7e1dee5f318283f874d"
+      },
+      {
+        "name": "101/78.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/78.phh",
+        "sha256": "8892bc34b828858f17ab1db17506e725505ed0ac134ef39e43a0212d9f81c216"
+      },
+      {
+        "name": "101/79.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/79.phh",
+        "sha256": "0603eb09242ef8546947a26b4745d90ac9df6418d18ac87cca6d7e9ad12833f0"
+      },
+      {
+        "name": "101/80.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/80.phh",
+        "sha256": "6fbd51988e45ac5d557b107ca9f3577491a851e9ca64a45373f17accc4a03d33"
+      },
+      {
+        "name": "101/81.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/81.phh",
+        "sha256": "35c255e9ea66c7d487de9536d15fc2a7c95b9ec775451979a2e6b7fbbe72512d"
+      },
+      {
+        "name": "101/82.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/82.phh",
+        "sha256": "c4443ebe4fe23323dca35187380210e3c176fdc169ff90fed24bcc261c0e683c"
+      },
+      {
+        "name": "101/83.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/83.phh",
+        "sha256": "9d3201b42328727cfe4a5a253a0f3d01b958b71fa03123fbadef5c8d71aed519"
+      },
+      {
+        "name": "101/84.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/84.phh",
+        "sha256": "e7d6eecfedab501f824e4a23d5e1b4e76bf0b3e32d3b032d7a33826e4a5d29c7"
+      },
+      {
+        "name": "101/85.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/85.phh",
+        "sha256": "630595c517a68d116b4b40c2e9fa7488c2679798115b5868f5234568af352aed"
+      },
+      {
+        "name": "101/86.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/86.phh",
+        "sha256": "7506bded6b0f5c2ae772428a5c3c5d453728259593169589bf3ce842337223bc"
+      },
+      {
+        "name": "101/87.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/87.phh",
+        "sha256": "cbff42efe5c4a4192338ae855e6a5e3719345148d1933f34bfbbec865096a229"
+      },
+      {
+        "name": "101/88.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/88.phh",
+        "sha256": "2415cbf6a7bd8cec6232ecacc5587ece637998aa8969cccfe69e944b4742774a"
+      },
+      {
+        "name": "101/89.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/89.phh",
+        "sha256": "4fe031dca6daf1d6c0cb0ee666b60a97c8c630f33e7f08218cca6ced4c0b0f27"
+      },
+      {
+        "name": "101/90.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/90.phh",
+        "sha256": "19bb8d1d637984b544e3f0685b5a3513d54e4c1c062da4a872e49b72d1cbede4"
+      },
+      {
+        "name": "101/91.phh",
+        "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/91.phh",
+        "sha256": "ce01a6a30dc8f0b6d9c05ef27e40880121ebc9886fca504e80f7e08aec46bc59"
+      }
+    ],
+    "densityGate": false,
+    "deploymentApproved": false
+  },
+  "residual-evaluation": {
+    "allStreets": {
+      "labels": 1576,
+      "handClusters": 73,
+      "meanHandGainNats": -7.98331755580592e-05,
+      "handClusterSE": 0.0016848029633754744,
+      "approximate95Interval": [
+        -0.003382046983773989,
+        0.003222380632657871
+      ]
+    },
+    "postflop": {
+      "labels": 226,
+      "handClusters": 32,
+      "meanHandGainNats": 0.01250740750731055,
+      "handClusterSE": 0.01139802719777846,
+      "approximate95Interval": [
+        -0.009832725800335233,
+        0.034847540814956335
+      ]
+    },
+    "byStreet": {
+      "flop": {
+        "labels": 113,
+        "handClusters": 32,
+        "meanHandGainNats": 0.00657129983855888,
+        "handClusterSE": 0.006268663442800094,
+        "approximate95Interval": [
+          -0.005715280509329303,
+          0.018857880186447063
+        ]
+      },
+      "preflop": {
+        "labels": 1350,
+        "handClusters": 73,
+        "meanHandGainNats": 0.0,
+        "handClusterSE": 0.0,
+        "approximate95Interval": [
+          0.0,
+          0.0
+        ]
+      },
+      "river": {
+        "labels": 43,
+        "handClusters": 12,
+        "meanHandGainNats": 0.009362592748889474,
+        "handClusterSE": 0.038973880216400705,
+        "approximate95Interval": [
+          -0.06702621247525592,
+          0.08575139797303485
+        ]
+      },
+      "turn": {
+        "labels": 70,
+        "handClusters": 19,
+        "meanHandGainNats": 0.012672725653828851,
+        "handClusterSE": 0.022291489185995057,
+        "approximate95Interval": [
+          -0.031018593150721457,
+          0.056364044458379156
+        ]
+      }
+    },
+    "maxBothPriorMs": 34.11830007098615,
+    "trainHands": 163,
+    "testHands": 73,
+    "model": {
+      "version": "public-size-residual-v2",
+      "features": [
+        "aggression_size_strength",
+        "aggression_size_polarity",
+        "check_strength",
+        "call_price_strength",
+        "aggression_size_flushdraw"
+      ],
+      "theta": [
+        -0.24585657178028142,
+        -0.09543821327328832,
+        -0.35341099533426823,
+        0.009793393737250272,
+        0.20926794379893845
+      ],
+      "trainingLabels": 612,
+      "initialObjective": -1.7041903250752235e-17,
+      "finalObjective": -0.012043236140865287,
+      "regularization": 0.05,
+      "steps": 160
+    },
+    "modelSha256": "241f70388f02547c8f140e60dc0678de6e5bc7edb47e71fc0813fa83be338a06",
+    "inputSha256": {
+      "range-training-v2.json": "b9ee7092b307245323d17768884cd263ae0739cd5385c9461cc13efe0f83dd01",
+      "range-test102.json": "576ce5b76bbda7d7f90946ad520c61e985846076ceef3d2d4c3d8cdcce84d9b0"
+    },
+    "rejections": {
+      "train": [],
+      "test": []
+    },
+    "densityGate": false,
+    "deploymentApproved": false
+  },
+  "sourceManifest": [
+    {
+      "split": "train-v2",
+      "name": "100/0.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/0.phh",
+      "sha256": "794cf64c4225a081ab80a07ac05865e9691eca67980b0f480ba6df6ee67e2487"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/1.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/1.phh",
+      "sha256": "4e48de5a2031e038d4bbb4d2c6127bfbcf9a91f1a369c3eaa73eaec54f2be113"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/2.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/2.phh",
+      "sha256": "17c0ffb386d7f2876e5fad8a341ba48063e078ccf9de494e9a48c10125cb8d11"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/3.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/3.phh",
+      "sha256": "9265fadee55605b00c996dffee703abba3b466b2c9b1657648e5dd544ec7e142"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/4.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/4.phh",
+      "sha256": "ff895ab284e0b7840425267f83cf12ef7b164a1302345c14a2edf4f8437eb124"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/5.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/5.phh",
+      "sha256": "cdc76002e6bf4cfa9e5d41eebc65c056732fc9c3162e60fc7a127e6689d9e258"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/6.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/6.phh",
+      "sha256": "f017e2b5a81d2eb5aa34af6ac526fcd854deb9c49bbe504ae5b609c0033ccd49"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/7.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/7.phh",
+      "sha256": "b26ee370cd9141f1ae88c5e0ebd916837779cd7a69d51c80335c48f6e1c493ce"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/8.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/8.phh",
+      "sha256": "89deffe5125965fb9a12c9553489a169427b84a96b648c02c4e30fdfe719181e"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/9.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/9.phh",
+      "sha256": "0c0279fb2ca78304f015ac130417b7486f05cfcb192e92aee451a6800b23863a"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/10.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/10.phh",
+      "sha256": "85ce789cc9bbf1a0c1c84155deda3514d5fc87113278549be9b38a236575ae87"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/11.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/11.phh",
+      "sha256": "4e36fc56706624111e2e340084f249aa30e8abfedd0a6d82484b717b82af17cd"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/12.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/12.phh",
+      "sha256": "0ea7452656d1f1f67b0b7f929a9223af9b3e5ee7f5de0a73099109ca17836969"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/13.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/13.phh",
+      "sha256": "457099edfcb95e1e1f079fbe292db75ac26c1c72cabfc187e180fd63fa0fcf96"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/14.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/14.phh",
+      "sha256": "e71f634759c740b8ecf4458a69c5b16529ededc89c34f2949925bd526177bda6"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/15.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/15.phh",
+      "sha256": "b7c3de66d4c6427295141fa4d56bf7203718fccffc3c753f85be7a693ab085c0"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/16.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/16.phh",
+      "sha256": "dde18f198f87246f1250de644458b3bf8448e9d2de1ee3389fe8ae2125d8763e"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/17.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/17.phh",
+      "sha256": "2e5fbd24ad3c7b632ad82f6099ed8e0d80c7c019723f741bf96781c319ff0d03"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/18.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/18.phh",
+      "sha256": "b92b7cd7642c6e69a8311381bd65b0c6951f6a69ec146d1e01ff5ab37d01b386"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/19.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/19.phh",
+      "sha256": "bccc3f9c700a3409f5444d3bdc383d2edf1f2948b49e03247a8ff737bc4d8e8d"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/20.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/20.phh",
+      "sha256": "48b7f0e8d3f974dc8a141e645adb84cdbfd9ea12d3345b56c573cbe18801bda4"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/21.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/21.phh",
+      "sha256": "31c6715883726408f866fc8f4db36839c6cc6e4657d05703cbab1b301e426fc9"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/22.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/22.phh",
+      "sha256": "4cc61937b2cc1f04de88bb00eb680580be7ec74e0fcf61f41853b5b6ddfc5de0"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/23.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/23.phh",
+      "sha256": "35fccfb8db45f9b177dbd279c4d471b20580e30ec7668e79a74e0fd13f0ece78"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/24.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/24.phh",
+      "sha256": "7c27abf4b17e955824439f1850594e4862552c3361d7ac74f43c29de4cffa905"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/25.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/25.phh",
+      "sha256": "a04b14222503732a04691f8ae7367f4bc199dc0b87fb36097fc582074644bba7"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/26.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/26.phh",
+      "sha256": "ba7df581328e74854e9da7ed362c2c4f3e5565d2bc0b23bbf7ad3ad5ee35255d"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/27.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/27.phh",
+      "sha256": "959a4fd2b5c75f202601ade2b7d82cb5d5a5d753e83821a8e27fea8aacc4d578"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/28.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/28.phh",
+      "sha256": "74f7a0c06e9427a6590327cdc48b7bae969b5280876ec4c609443c9b1a707634"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/29.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/29.phh",
+      "sha256": "48a95b2d75632fa9f69be0f517084f947138692196a59a77a97dbaefc87d06ed"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/30.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/30.phh",
+      "sha256": "fbaa52ca192453fb601e6d18e8b764b799a9fd38387fc8659059e526e6a1dfa2"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/31.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/31.phh",
+      "sha256": "7f7c5132f0ef23cf4989e1bf7a9d4c6135647f2736446b3545d36e9e52780e27"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/32.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/32.phh",
+      "sha256": "effc46ae8d27d12c8701f7f5cda4db62258eb6d94a5df6f45a2285056e072a3d"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/33.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/33.phh",
+      "sha256": "3befeb44687955896619a77a1bb465f89b34566a0ba09df3ff712abee5119a02"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/34.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/34.phh",
+      "sha256": "15afad6b29a36252b5d7b08a737c96e45693b64ee1f3afb6e821951f64464f5c"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/35.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/35.phh",
+      "sha256": "e8b52b2ea46269ffd80fac322891bdaac672f3e374dd1099b644a34346eaa931"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/36.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/36.phh",
+      "sha256": "1caca6d426bcc7cde2e201d2de191a26ffd53a2980364b1b29afe3d05c560a45"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/37.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/37.phh",
+      "sha256": "7abc56b8f580319ff43e30a66de85c3eeac5943b07dd5477939b9cb3d68840d1"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/38.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/38.phh",
+      "sha256": "179ce839140228d0254e7a763514a27be3ac36cfd149ac366c6dde885a7ef368"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/39.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/39.phh",
+      "sha256": "c135c31360df478e2556ffa4045d918787d2c04d024da0f8eaa5a43c7286f1d2"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/40.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/40.phh",
+      "sha256": "b6a6b026fd0facf632c95590f224f188fb099d9a3a39831c39eef681542f7cf0"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/41.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/41.phh",
+      "sha256": "0202ea32637b0b622bbb189b2ca6a929817a3fbf968480e656952216f939ce50"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/42.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/42.phh",
+      "sha256": "347304463be8e2023b63116dd694324f41f8858d507e5bf84b51b728d96327ed"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/43.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/43.phh",
+      "sha256": "a2429b681a41d92d68bc3caaa42e5b43a0c08f4ae423a8d1a6fabcbc3ca40535"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/44.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/44.phh",
+      "sha256": "09bdde2f9a57207fe72670ff8ec1aa5a252dd4c17fb37aa26070fe14fae82b8d"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/45.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/45.phh",
+      "sha256": "b4896e02c852be1ad127338c0f7df572fa8367acd8b5e564ae990dfc872cf75d"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/46.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/46.phh",
+      "sha256": "b7862221776110338303801ec448ae18bce23173a0cf8da8e7721c582f95d008"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/47.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/47.phh",
+      "sha256": "0e66368f818270e20a26d152567fd3f06e2f6c6add3b5c0837527b4d219b8ced"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/48.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/48.phh",
+      "sha256": "34a120a8984eb92941c6867523e73f34b0b55854f7b3018fe58ae16f76a31d7b"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/49.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/49.phh",
+      "sha256": "4e6a2cbc7dfd238ac53c4b771947faaf0d1effd083ac147171e32a1002a35415"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/50.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/50.phh",
+      "sha256": "34fed00b69d1d1cb7610fed8d17b8681311dbb593582d453ac2418536395c608"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/51.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/51.phh",
+      "sha256": "ec87a456bafc3e00533501182c59997201730fa8ce7bd173aea0e2abb6854a2f"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/52.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/52.phh",
+      "sha256": "f98f7c67cd60b0493f9c40a7093ddd0dd91fe0889fedf08679235bdee142041b"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/53.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/53.phh",
+      "sha256": "5ce9a204c8e78773719f053c03d4873f56631fe62e0e2598e3cf8cc2f444def3"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/54.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/54.phh",
+      "sha256": "fd01ddb3ffa733966774938b246f9713d8c20735c8fb9e3c0ae4b21a2994e3ee"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/55.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/55.phh",
+      "sha256": "6a9b2f04895431c05eb6bf9d88c383c813d941c1ab4d731ccf5640534bc6b16f"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/56.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/56.phh",
+      "sha256": "76b865a9a9102cf99a9cc163b25b1b621a1c9c928b492e421d309663a96f5655"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/57.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/57.phh",
+      "sha256": "ad8a36fda7ca0d21f6bb200ec7db47fec0f7c9d8993ef4ff9425cd8c1120e0a8"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/58.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/58.phh",
+      "sha256": "08c6a151e754c3712c3e130041294a2ecf34804a1bb7ec97f65dd9e9819a8490"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/59.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/59.phh",
+      "sha256": "e3f4b8c73f9bb010ebd94ac0ef00062ecd523cebad6d2d722cb1ad221e39fc28"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/60.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/60.phh",
+      "sha256": "8dbc674356f5ad22c63d9382fa1cf89534d0a742fdab7c7c560ac5b0507f577f"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/61.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/61.phh",
+      "sha256": "cf7b7e9c41e362d139675bd0361cf67b8561cf0600dc49d02ea40204ae70cb8f"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/62.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/62.phh",
+      "sha256": "a900e7cfef2b07a445830ac26d3a169e539e993bdde723f7871182a6b6e165fd"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/63.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/63.phh",
+      "sha256": "df767969081581bf30b94c53b3b9fb5a79b2c839e3b07cea63689121e5359172"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/64.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/64.phh",
+      "sha256": "4d6765174087eaeb0f8c19534d5d2f93b7de61ecfee44798d77c853a899dc574"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/65.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/65.phh",
+      "sha256": "b9d1b0c5eff430ad14d3ed689cae6534cca16f0ef3dcb7bbb22f68babe7b1d8c"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/66.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/66.phh",
+      "sha256": "9cdc203b8cc011d4ec8057b4c9a5f43f4b30ca54dadf5f7d7056a5b7c80421c2"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/67.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/67.phh",
+      "sha256": "34ec10a71e8e24fadf87eabed0c94037b9cacf79f8482ce0bf327a36717362de"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/68.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/68.phh",
+      "sha256": "16bd657a6b97da20607be3d8c952008e8fc5b5be886595dbc503d99b3606c2b6"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/69.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/69.phh",
+      "sha256": "376d7b958c54167b3375f788fa9a0b77d7394ade6f2c7e996902dfac73cdc331"
+    },
+    {
+      "split": "train-v2",
+      "name": "100/70.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/70.phh",
+      "sha256": "7637f3c56b3d2a1217fd05a322cc3c89651c91a6375cd6e5f12331e04718887d"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/0.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/0.phh",
+      "sha256": "6067713a1ffa54398a2bcc9db86def62d48f8a00525d1273d42e74b3ef2cac39"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/1.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/1.phh",
+      "sha256": "46ded83a193eea43b9c76cd1ed917785dd988387ecae2752a4a3543f0df6fe66"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/2.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/2.phh",
+      "sha256": "19d9b0cf0ec4868159767b8ce4fa11093ae529d85f73bd055f0e1384edbacb17"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/3.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/3.phh",
+      "sha256": "d3b8dcbab57377e0ab8a30f0d3d83411aa4c21138ae550d9608c4b718f2883c1"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/4.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/4.phh",
+      "sha256": "d56b4aa993df2c51255ad8ebe30c09dd5f2f6f8edb725107eca2b561e968ef6a"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/5.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/5.phh",
+      "sha256": "2081f2ef127c17700a9afcac26d3e8f89060c89a422fe1ab2c93e86d5dd85932"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/6.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/6.phh",
+      "sha256": "f69dfeecf3ca778fb27f57ef19e9050d12c1588bf03bfc579af980dc102353d3"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/7.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/7.phh",
+      "sha256": "ffc3363812b57413ae9257edb01f7dac92f891bf42c6b1d9292901c90f96a68a"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/8.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/8.phh",
+      "sha256": "e0ba55c6bea8267bf40f4be914182d0ccc3e09922733e8cdbe69796c1fe10e57"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/9.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/9.phh",
+      "sha256": "c0c10171940be6c2774372332dbfabce497f9cf280e3f6181088a372bad8d0bf"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/10.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/10.phh",
+      "sha256": "04ab9cb112028fd8dff3ff48ec944f1c5c44bb2b644b433e9da3ed3dcbcb074c"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/11.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/11.phh",
+      "sha256": "e6f377f41e10b768bfaaf915adc20bb35c598154fca59e296e03be13e04b12c8"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/12.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/12.phh",
+      "sha256": "f47f6b5ebfa46de95cab901ab6c0db066ace540b9e874d2012435fd3459db548"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/13.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/13.phh",
+      "sha256": "ff3398c9b548370222648cb1a4341e5dca9cf3fb25bb93fa346fd885732554a7"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/14.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/14.phh",
+      "sha256": "40922368a1e66a950b62e6578928f0f3c193bf50aee939292c2dccf2957e6ac6"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/15.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/15.phh",
+      "sha256": "61000a7d84eba519ab965c020063ae0d4bb621e8e668d57321a4f0e846dea8aa"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/16.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/16.phh",
+      "sha256": "9fb805a8a64b93f0410891324d4f6ab347223affd30c5dc78e89f3cc8e02502a"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/17.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/17.phh",
+      "sha256": "02651301163b40535397b7ab519d7c90682d7a1813c1c7ea98018ca4c514464b"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/18.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/18.phh",
+      "sha256": "ccd8c874acbf258a1888a6e75faee3be1ede7d5dbdcf29a30ec7ca227a08033b"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/19.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/19.phh",
+      "sha256": "c9cb240152a8ad0a041730ed8295695aa00b6d27bf9c167645c3dcf8299c3935"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/20.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/20.phh",
+      "sha256": "168e9503e447000625d8c0a6091dc9f4492faeee182cfdf0ac55d1744a97c7bc"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/21.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/21.phh",
+      "sha256": "f9433ce26d7913fdb49f63b421438b72e29db03ab6542f5cc2b6ef3be2116a0a"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/22.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/22.phh",
+      "sha256": "8ceeb6243e985596a60aa73a4f0180ce7b1f76983adf856a96d7c0f5addf1e24"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/23.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/23.phh",
+      "sha256": "1d60c544ddaf57d8ff8b4b0806b03aaa5848c088029a6380d23a3b399ee77095"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/24.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/24.phh",
+      "sha256": "4282ea2154bf30566cf87de19a162be7a3b121bd9d7d5a6434738e22c6feaf9e"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/25.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/25.phh",
+      "sha256": "7cf7b3e4527f7228dfde6e5e766cdfef1a3862c6c898579c4b20f13f40e3e80d"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/26.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/26.phh",
+      "sha256": "be9f99a5b4bc305a026542910e64e474d4513e530dd113d99dcf2167c81e6cba"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/27.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/27.phh",
+      "sha256": "795430649ad44a79bdb451ec81ab509c465ac72bfcf66b4701eac18b50321b29"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/28.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/28.phh",
+      "sha256": "0bd5ad3d0c8fa494d236d7aa981b60752b318f97c317e3beae2349f32d441943"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/29.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/29.phh",
+      "sha256": "c8ba9c7f53007cdc770cbcddb1e7092e033ea663361bf859084ca652eb1aec04"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/30.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/30.phh",
+      "sha256": "b2cd314dd8c12938c27b9c3116a6872187c3f62785ef3dee382c1f41cc5550e4"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/31.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/31.phh",
+      "sha256": "7950777bbb5c0a44a111c5a46913fd649a54a4c6c02c9cf1e8c04e56d9155f51"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/32.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/32.phh",
+      "sha256": "9be0ad7f7abb66a4e16e87ae02aeb8a3664058a9f98afc8c33dd5beff0d8cd55"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/33.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/33.phh",
+      "sha256": "28b43272fe821f30168533865bb9f9a6ae09a39848bee66c865716e00fae3e38"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/34.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/34.phh",
+      "sha256": "2b46ec0419137d0db185c1bccab110d3dcd9276131d31283c26387f65a432633"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/35.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/35.phh",
+      "sha256": "86985559924f25709b3d35e0405a6941d5afcdca03b48c933e92ff10a5774988"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/36.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/36.phh",
+      "sha256": "526ab1c94f92dd38a0f789cb0329af795cfd5c6f048cba126702494f43caafb0"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/37.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/37.phh",
+      "sha256": "16f94b6fcd68e60e3ec62b48ae69f3a243031af05629799b14eafc5e929c0938"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/38.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/38.phh",
+      "sha256": "7946d5e70e71b7f5188f6dca15f84c221542cc44e59c91ae54f032dc632ee23b"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/39.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/39.phh",
+      "sha256": "a47ad380573333872e453011a96e195fbe038329e5f7a4a86f12d00fa08fac8a"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/40.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/40.phh",
+      "sha256": "77fcf6ddbcb6fbb3a23a518ca4f44de1b11f57554e67f409551600d1d627ed0a"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/41.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/41.phh",
+      "sha256": "5c872521b127227e4495b277cbe97611c21e26185b35ff8f26337e69bf0b0f3e"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/42.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/42.phh",
+      "sha256": "2a67c36fea42f6e595f569d8bea240a488d4298c8767a6d0dffb09a5134aa185"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/43.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/43.phh",
+      "sha256": "e9aa0b755729c36c5c099fa486f69114535a720776255270f6211c6275925868"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/44.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/44.phh",
+      "sha256": "fd161a5b36f9c46cfba7f71435629e17936fe247419f958ce7146314b77c05f2"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/45.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/45.phh",
+      "sha256": "77335be99c227a93e9c05d4b44fd71922026a680aa76a06eb8d4e16eda2e6fb7"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/46.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/46.phh",
+      "sha256": "522f1c8083019bda210d5d3fe04fd7d45de25714e9a6c2a688ed130f9ed6cd36"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/47.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/47.phh",
+      "sha256": "561d5b340264db186c46d77c68523968b6c760d9b5936c7d12464bf243349d32"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/48.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/48.phh",
+      "sha256": "368e85b387ae3d68113a5d0f308d6da155e512208e81b774385da3134da4ebe9"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/49.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/49.phh",
+      "sha256": "eeb84de25d639588d3b0aeb223146b7cbdbb3fbd2e1b873fba21a0b17645195f"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/50.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/50.phh",
+      "sha256": "df54f920a95b9aecc97c99b6e6489503480c07ddda859e428a2ddaf075b160ab"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/51.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/51.phh",
+      "sha256": "3126ffdd793a091a02e2c9be4ac8fb7054b16d352186e62be226ea7e93b52a1b"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/52.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/52.phh",
+      "sha256": "5a4c3dafa96c89f0c95fd843ce84c8dbcbdd88c7d97ad9eb163b8ac1e27eab2b"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/53.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/53.phh",
+      "sha256": "9b7a30cf82da963d20196dd7a148adc832cd8468ef90372f296ab2ac71f89430"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/54.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/54.phh",
+      "sha256": "7a5e8080fb3f0a6c250a24cdb03d64ad240c6bfdca65371209b67833155b07f8"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/55.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/55.phh",
+      "sha256": "7d512298ea47a6d94edcf49479acd1a839340c9b28f34a9c8d3c6492907f8032"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/56.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/56.phh",
+      "sha256": "a22777d81e390eb151cdeeb3955ceb31705d933349b3969c1e1afe0bdde0d077"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/57.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/57.phh",
+      "sha256": "24b75782b104de6b9eb870de8f1ac898051d92edd937ab66ba7e8eac47cf60bb"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/58.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/58.phh",
+      "sha256": "a975cafa1905ff5a5f499cc1b6bf7435263554193beda49c21d581ffa6d5da03"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/59.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/59.phh",
+      "sha256": "6668c85d868ea0aeb34169d04979a37ebafa753c38b661c7716dce6f84ee7ef4"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/60.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/60.phh",
+      "sha256": "d82cee7f1f3736e98afa77ed09cdbc25385f1e303b010ff48deffd8551ee1239"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/61.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/61.phh",
+      "sha256": "7898d16aa2b039d1e5f911164a0cc0449aef68da1d78ed704cfd6e876cfdaddc"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/62.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/62.phh",
+      "sha256": "1c517f7aa84747d52364015417e392b727755c46b07d615274d4ef25352be0e4"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/63.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/63.phh",
+      "sha256": "1b2fbe6c00fa0122c06eb786df2913de85f81c016bcb4405f1c1ce7dcb40f570"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/64.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/64.phh",
+      "sha256": "11414b9be7b8fe37bd3af5c1ac42253841474733a38ac17e561650943200ae9e"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/65.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/65.phh",
+      "sha256": "65b8baced95831a14f92aef8528fac4c32009e4385e81bda816f87330e0c3845"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/66.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/66.phh",
+      "sha256": "8036c74b083475c5b360f5688fa5c5be927ab135297d08ac61835fb65a117f7a"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/67.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/67.phh",
+      "sha256": "178ec2e2b17b1d56b3da3faccb8f51cba55644299eb0d043c59f3c4aed5436f5"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/68.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/68.phh",
+      "sha256": "2d1b89b03d23a2a7eddeacc33d262dde68e40b3660193928c99c10b6b3868f40"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/69.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/69.phh",
+      "sha256": "6bf76a57d3118dccd8b54b3a892502e9a6419cd6c0aacc6bbf37fa774d46cd3c"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/70.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/70.phh",
+      "sha256": "49fe7fc5a80b480c04acf65f4a338ba955f8971783f5fde8764ee85300d0034c"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/71.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/71.phh",
+      "sha256": "1151d8e6c4fb48557ae15b6c8f11f9c5f4f140ed33babbf735693ff72893ba46"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/72.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/72.phh",
+      "sha256": "28802cdb529986b7ef0af8fa4b12f7631b14653944a53d2f278fc33f2a3afc37"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/73.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/73.phh",
+      "sha256": "7f821ec755fd9f308660e4b08dc8a669c3bad0809da0c1fbf7afa55d2ac97080"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/74.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/74.phh",
+      "sha256": "2dbe58a091addf977a4e8c515f1de9df95445bee35dfed600cc8cac0b91b7fce"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/75.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/75.phh",
+      "sha256": "ba32912bb2bf2a637b4978310521a94a30f90eec85479cea6a925d46c3ce5bae"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/76.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/76.phh",
+      "sha256": "0e2c96770ba33a587e961755441955fc71ce95cc8eaeede82075e8ef31078d02"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/77.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/77.phh",
+      "sha256": "e5fa612b21ec1874711cacdfcc4742b255d2d9ad13fbe7e1dee5f318283f874d"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/78.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/78.phh",
+      "sha256": "8892bc34b828858f17ab1db17506e725505ed0ac134ef39e43a0212d9f81c216"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/79.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/79.phh",
+      "sha256": "0603eb09242ef8546947a26b4745d90ac9df6418d18ac87cca6d7e9ad12833f0"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/80.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/80.phh",
+      "sha256": "6fbd51988e45ac5d557b107ca9f3577491a851e9ca64a45373f17accc4a03d33"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/81.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/81.phh",
+      "sha256": "35c255e9ea66c7d487de9536d15fc2a7c95b9ec775451979a2e6b7fbbe72512d"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/82.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/82.phh",
+      "sha256": "c4443ebe4fe23323dca35187380210e3c176fdc169ff90fed24bcc261c0e683c"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/83.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/83.phh",
+      "sha256": "9d3201b42328727cfe4a5a253a0f3d01b958b71fa03123fbadef5c8d71aed519"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/84.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/84.phh",
+      "sha256": "e7d6eecfedab501f824e4a23d5e1b4e76bf0b3e32d3b032d7a33826e4a5d29c7"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/85.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/85.phh",
+      "sha256": "630595c517a68d116b4b40c2e9fa7488c2679798115b5868f5234568af352aed"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/86.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/86.phh",
+      "sha256": "7506bded6b0f5c2ae772428a5c3c5d453728259593169589bf3ce842337223bc"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/87.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/87.phh",
+      "sha256": "cbff42efe5c4a4192338ae855e6a5e3719345148d1933f34bfbbec865096a229"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/88.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/88.phh",
+      "sha256": "2415cbf6a7bd8cec6232ecacc5587ece637998aa8969cccfe69e944b4742774a"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/89.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/89.phh",
+      "sha256": "4fe031dca6daf1d6c0cb0ee666b60a97c8c630f33e7f08218cca6ced4c0b0f27"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/90.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/90.phh",
+      "sha256": "19bb8d1d637984b544e3f0685b5a3513d54e4c1c062da4a872e49b72d1cbede4"
+    },
+    {
+      "split": "train-v2",
+      "name": "101/91.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/101/91.phh",
+      "sha256": "ce01a6a30dc8f0b6d9c05ef27e40880121ebc9886fca504e80f7e08aec46bc59"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/0.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/0.phh",
+      "sha256": "f1ef862aaced8a475461c9973c28d7020761f9fdbe32e3634da4c9219d55ff6c"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/1.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/1.phh",
+      "sha256": "e5979a436e25342402b6a92d9d9bec9e2f6103e37de0bf6a5dde6f495263de3a"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/2.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/2.phh",
+      "sha256": "a78efb1d473f3c574286c12dd24461859846c5b72d7cfdf96343f0294332c69b"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/3.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/3.phh",
+      "sha256": "6b5bf1876f8433a8528e9d91f0ac7d85429e7c686e17b6ceacca8ef4e65703b6"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/4.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/4.phh",
+      "sha256": "8d9119fa96e2ff5ddc825ae3eeb6eb2206274cec5021a80effd72c341e0c199e"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/5.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/5.phh",
+      "sha256": "1ee05faad688510248621b8e87f151988c06544a0c6d186e75c966a25d3ef93c"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/6.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/6.phh",
+      "sha256": "3b5d595945ec831e13f01c2d6ed9403728063969152d1f4aacb3482f16d44605"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/7.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/7.phh",
+      "sha256": "40e041abbfdad0bfc745ea6e9a9dbf02aeb6977b6d84ec923c0a8afdcea77f74"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/8.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/8.phh",
+      "sha256": "b5c98f3961b721d9801fdb486e620b46951f2c89661e4ca5b672646c5b39cb66"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/9.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/9.phh",
+      "sha256": "81ea1b1da18f4f86d66e6438958d4c337937057b94e18c2f18e51e349b9885ba"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/10.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/10.phh",
+      "sha256": "bf2e3a4848d8909c6eb2b2c2412e274a6c29daf20608120fcd5711b2a1781425"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/11.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/11.phh",
+      "sha256": "cbce004003c651e5eb2ce019c2f2dfcf6e08bc15b08f716fdd8aa8c9b6aabbd5"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/12.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/12.phh",
+      "sha256": "9bebc5ccfe124dd25c9c24454129eeb6648cd7ff9985938e65a5e342ccb29df7"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/13.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/13.phh",
+      "sha256": "f122898a57cf70fab2ae62cf035ecbe4517bbc583d2ef8a7c035577d2dd3ad30"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/14.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/14.phh",
+      "sha256": "c8fc426c8c6817f95c68da690fad746cd278e7fb9cf6d1b01b20fad452d5ec0a"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/15.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/15.phh",
+      "sha256": "bab42fc5328816d11c6a8d857c7d4a6aaed25314f6a8eb9fcf0f56229f9a3075"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/16.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/16.phh",
+      "sha256": "1025699a6bc8b11e99ba6177a6ddbfced21b6ada5cf3a95b7804b28e21d11549"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/17.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/17.phh",
+      "sha256": "46c6f0a0ea7679df6e0d7f5ca7fd4795d1f20fedd73e6f6379c0f9e8697fd527"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/18.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/18.phh",
+      "sha256": "67267ce9f55394a22d40a9106104e7dd20de3754e5a3db075c96e34f3157d6d0"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/19.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/19.phh",
+      "sha256": "683943f623aae2330ec849a0cfd26045e287b3f510934accd3dfa8f861625f57"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/20.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/20.phh",
+      "sha256": "ce4bf7032c20af49addbf77bcfa63d3b980ce478d567036e30eed254e1a45e87"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/21.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/21.phh",
+      "sha256": "ea860b4fc7314d11c01a97c3fbacad5ea389188305fc5e061e1c833a0b3fcaae"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/22.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/22.phh",
+      "sha256": "61cab871961c0dd85f65cb681b12ed51d4ad87fd96c2f53197e6ce1b108ebff8"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/23.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/23.phh",
+      "sha256": "4cb762d09e65fa0f108890a3ce028fefcd7e46472fe908470cd3b6945d875294"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/24.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/24.phh",
+      "sha256": "a0dc12976d4d085ed6a353d71ed8cc61b68a1b98be8f88c07d537538b7cf20dc"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/25.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/25.phh",
+      "sha256": "d47d211e24cdc571b5ba103e940568750c793ff957d6dfdcb5ef7e9dda48f6f6"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/26.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/26.phh",
+      "sha256": "a98a513347880deb809373bc4c3f80303cffe7207d787a8672ecaef13e157ee2"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/27.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/27.phh",
+      "sha256": "b0b846243f1311f88f93188212a14ab109dc76fdc88ed2e4ac8f23c1c812db3e"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/28.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/28.phh",
+      "sha256": "748ea5e89afcee36d98bfb033faaa0b9a04926f453f0884be1c23d32efa720fb"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/29.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/29.phh",
+      "sha256": "2626060f60e84a66597d6f531538bfd34bbaa50494f190137ce35afcb6e970c5"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/30.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/30.phh",
+      "sha256": "2c625c43635e161f27a91b680e03adbfb382369ab3c8f2b2254c002dce270526"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/31.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/31.phh",
+      "sha256": "041d7cebe794737a697dcf8cec64ee01ae973a45e4d7e5a8151519f603c43d56"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/32.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/32.phh",
+      "sha256": "9a87dac0d24d9440642aff218b9df139d88dbde4dc6c6ea5d0d1fbedd1cef232"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/33.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/33.phh",
+      "sha256": "5572f2d794b32741b2b77ffe40dff8b127bb495b964d571dd4da63821231d710"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/34.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/34.phh",
+      "sha256": "a2326131c060d4a59376d2d9bba0996ff9065e031d20de4edb0c35867560e5f7"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/35.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/35.phh",
+      "sha256": "7397f0115db633dbb21a8d57f8956a234606dc8939627870537b83be869cdcbe"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/36.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/36.phh",
+      "sha256": "c648394674acba18bf016ed25697603bc9fb541c31f0e9bea5316ac4c0c74005"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/37.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/37.phh",
+      "sha256": "33bbf31bffca6b236d0752a5d8e8b06177f9eb8770db0f99a2959d0e29e5ecf8"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/38.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/38.phh",
+      "sha256": "2f48ed97af36dde687377d3b0cd1545017148ef6bd9699d0c3f9690bb8ff7805"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/39.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/39.phh",
+      "sha256": "fbc3a91fa869f8fa83456de6b70817c9cbaa3829c4d11419ac9c73d96f05de9f"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/40.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/40.phh",
+      "sha256": "5847cd6eda5c41142fde65c566db87c53ee58779d5481830399ea76c4c2a156b"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/41.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/41.phh",
+      "sha256": "2531426ee76556b8edd6dbf7c90185256ed8835358c5122037178acfef129b2e"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/42.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/42.phh",
+      "sha256": "f4cc64a77d8c199e35d3482f225720d890d32e294fb43d677e96b5f2aa5ccd87"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/43.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/43.phh",
+      "sha256": "32cbe229509937a2b32642369564a1e22b3c96f33d7b10eb82b216a928510d2e"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/44.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/44.phh",
+      "sha256": "8fd327b87cbe4fc2efe114249b71be397b026442d0c3437b4f6ff9250bb01c2b"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/45.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/45.phh",
+      "sha256": "4ff6b43949ae42bf7518d10c3a8dfe15e50fdab883826726f64e8e38f8153a6b"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/46.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/46.phh",
+      "sha256": "83b6ecbe97aa776ae0a61f4791b48b204d4592890966dc593b8eacd206d8b1d8"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/47.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/47.phh",
+      "sha256": "9a8162226fe07ce601461e72bcbb049c849a5a2a77cd21eb1344e05bea58c12c"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/48.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/48.phh",
+      "sha256": "7ca351efd51e63a4e5dcaee043d5470b1000131793aa2b09fda9ec382b368726"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/49.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/49.phh",
+      "sha256": "77ca978fefd67902ff61e96430bfc186285a39e6b1623746f3b6a706c6c18410"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/50.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/50.phh",
+      "sha256": "50367f420b6f7ee239ce0f7eb8f408f09e0f8e40717d073c72e5c34d7fd13c0b"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/51.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/51.phh",
+      "sha256": "10ac75deef0d93211e99653e44f0529112a127cafaa2958cf1993a6ae27651ae"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/52.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/52.phh",
+      "sha256": "6e09f6a4dc5e5d0116fe89d51bc3d9e7554b6bf7b6a3a83a2ff4201d105c30af"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/53.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/53.phh",
+      "sha256": "2e915d4d1f681ef8024b650b9cb89a39db91ecee677d9b93be3f31c5370283b3"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/54.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/54.phh",
+      "sha256": "8b8bdb4ddb943767f9d43eceff1fc6bc0b9bf899f912a3cde12913f76eab3e75"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/55.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/55.phh",
+      "sha256": "23c5d479553053e5c0268cf109c917d29cd2216faf58c57cbf7c114d89b7528c"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/56.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/56.phh",
+      "sha256": "9bec5a506b40722e95713b09f87f857dc3070142320c0b5c2824e2f7bdc9d60d"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/57.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/57.phh",
+      "sha256": "f6a8975185c59c4fb578fbe2c06332e80e27dd2d775daa3bc59d39599f4f215f"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/58.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/58.phh",
+      "sha256": "b98cc275f9a5417c0a6e3c50434233762871cc225b3f7c37690bca52aaa55138"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/59.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/59.phh",
+      "sha256": "fc794607c864755695464d3ca9e7eceefca589d717a5078637960436d642dc1f"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/60.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/60.phh",
+      "sha256": "52dd1fe954baa76079fb4e7e2d78ec2c0e3e2f3488b736916c9ebd94988d8775"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/61.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/61.phh",
+      "sha256": "c86e6c5e88fe50c69bd1e2bccf2d2e21436d020dba325a2ead050f79ffc390cf"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/62.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/62.phh",
+      "sha256": "206845bae7a0a9241c97cd7af69d223037aa0e916ddbc2e34b6e19213e29ef03"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/63.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/63.phh",
+      "sha256": "7e37d3aae07394b9043a52fd67d2b7a15f79623908d18fd969754b3ab85c0078"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/64.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/64.phh",
+      "sha256": "b20db6db1a8087239f5ee1494d5c853d3746f1d4cdb4eb504cd64cc4a385c56d"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/65.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/65.phh",
+      "sha256": "0711456459366453368166c6fb3ffd6d35617706390af05d4c98fd56d3ff27e8"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/66.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/66.phh",
+      "sha256": "fdf9f476aa919ca81fc3061bad76150b071218ab3a5290fa73aa56611f230069"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/67.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/67.phh",
+      "sha256": "450d86beb7fc1179c522563071dce0a69fea2e588e8c542a52be1cfed755adbd"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/68.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/68.phh",
+      "sha256": "99e1d545aae71142124baa85479b74dfeea147214e4e417cf4180fc4037b0bbc"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/69.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/69.phh",
+      "sha256": "5199168a761218e9e640f324f4b431eff0eb3b7c0028d0e576b79c9368a9442f"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/70.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/70.phh",
+      "sha256": "15b9f4598eeeb7dd633d3c31ff3afc71c38acc7c49fb90b161fea94cd2d099f5"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/71.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/71.phh",
+      "sha256": "0ce50a80f6c508d0da2d23cac1bad5612b4fd51c127ba3a381c6fc0068112142"
+    },
+    {
+      "split": "test-v2",
+      "name": "102/72.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/102/72.phh",
+      "sha256": "2a916cab014edac4e20800a840535c88c68afa3db7cbfff30416a1ff7416d6a2"
+    }
+  ],
+  "sourceSha256": {
+    "sized_range.py": "9d28104075784d719a8fbb7028b70fa520d60c5fb97701e80778a4fff6afbf40",
+    "train_sized_range.py": "122c85a68ac2750bf702fa0d6f962a1832b3c71add7491773d2b0b1e884f3068",
+    "residual_range.py": "ba21cca20c3464407d9a792dbaa6e56b8ddd1b8bce2e72f2610a1183f13ac266",
+    "practical_replay.py": "65c2e992237674d8e72cdedd4d8c212edd3353dc58b4a41222bec692382fb6d8",
+    "practical_preview_server.py": "d85850750cfd8ac2d41a890d90b6082f411037445e7916799013cac6387d1902"
+  }
+}
