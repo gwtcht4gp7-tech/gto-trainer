@@ -1,0 +1,120 @@
+{
+  "scope": "Single-opponent range-prior density calibration; not policy value or joint-prior certification",
+  "sources": [
+    {
+      "name": "0.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/0.phh",
+      "sha256": "794cf64c4225a081ab80a07ac05865e9691eca67980b0f480ba6df6ee67e2487"
+    },
+    {
+      "name": "1.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/1.phh",
+      "sha256": "4e48de5a2031e038d4bbb4d2c6127bfbcf9a91f1a369c3eaa73eaec54f2be113"
+    },
+    {
+      "name": "2.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/2.phh",
+      "sha256": "17c0ffb386d7f2876e5fad8a341ba48063e078ccf9de494e9a48c10125cb8d11"
+    },
+    {
+      "name": "3.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/3.phh",
+      "sha256": "9265fadee55605b00c996dffee703abba3b466b2c9b1657648e5dd544ec7e142"
+    },
+    {
+      "name": "4.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/4.phh",
+      "sha256": "ff895ab284e0b7840425267f83cf12ef7b164a1302345c14a2edf4f8437eb124"
+    },
+    {
+      "name": "5.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/5.phh",
+      "sha256": "cdc76002e6bf4cfa9e5d41eebc65c056732fc9c3162e60fc7a127e6689d9e258"
+    },
+    {
+      "name": "6.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/6.phh",
+      "sha256": "f017e2b5a81d2eb5aa34af6ac526fcd854deb9c49bbe504ae5b609c0033ccd49"
+    },
+    {
+      "name": "7.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/7.phh",
+      "sha256": "b26ee370cd9141f1ae88c5e0ebd916837779cd7a69d51c80335c48f6e1c493ce"
+    },
+    {
+      "name": "8.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/8.phh",
+      "sha256": "89deffe5125965fb9a12c9553489a169427b84a96b648c02c4e30fdfe719181e"
+    },
+    {
+      "name": "9.phh",
+      "url": "https://raw.githubusercontent.com/uoftcprg/phh-dataset/main/data/pluribus/100/9.phh",
+      "sha256": "0c0279fb2ca78304f015ac130417b7486f05cfcb192e92aee451a6800b23863a"
+    }
+  ],
+  "summary": {
+    "labels": 235,
+    "handClusters": 10,
+    "meanHandGainNats": 0.3357806175806963,
+    "handClusterSE": 0.05045164019523668,
+    "approximate95Interval": [
+      0.2368954027980324,
+      0.43466583236336015
+    ]
+  },
+  "byStreet": {
+    "flop": {
+      "labels": 21,
+      "handClusters": 7,
+      "meanHandGainNats": 0.8219832012219126,
+      "handClusterSE": 0.15526699930539514,
+      "approximate95Interval": [
+        0.5176598825833381,
+        1.1263065198604871
+      ]
+    },
+    "preflop": {
+      "labels": 195,
+      "handClusters": 10,
+      "meanHandGainNats": 0.21879233125136138,
+      "handClusterSE": 0.04136853274057624,
+      "approximate95Interval": [
+        0.13771000707983194,
+        0.2998746554228908
+      ]
+    },
+    "river": {
+      "labels": 6,
+      "handClusters": 3,
+      "meanHandGainNats": 1.2266114323459418,
+      "handClusterSE": 0.1755630900074494,
+      "approximate95Interval": [
+        0.882507775931341,
+        1.5707150887605428
+      ]
+    },
+    "turn": {
+      "labels": 13,
+      "handClusters": 5,
+      "meanHandGainNats": 1.01896574031961,
+      "handClusterSE": 0.20676014926067643,
+      "approximate95Interval": [
+        0.6137158477686842,
+        1.4242156328705358
+      ]
+    }
+  },
+  "limits": [
+    "Ten hands are a small convenience cohort, not a representative poker population.",
+    "Positive log score rewards density on observed cards, not profitable decisions.",
+    "Repeated observations within a hand are clustered together.",
+    "Normal intervals with ten clusters are descriptive only; no deployment threshold.",
+    "The current model ignores bet amounts and check likelihoods. No coefficients were fitted."
+  ],
+  "sourceSha256": {
+    "range_calibration.py": "e76eef53aae6f452f01c94e8d80b43ce20b400aec318f0e37e98d554c9e4308a",
+    "opponent_model.py": "aeaf212ea264f72efabb89c9d6a9afbffa63914ec2e65b59830d43a9bf583f15",
+    "public_replay.py": "c0104a3655bea38e9c4e0ac4ae2b1888cf92f924d4599977f0eb0ee3f6a6177b",
+    "ranges.py": "4b03f49929e639639a06a90e92b4c40e6cd94ddd6b770587d5ed8060715dd00e"
+  }
+}
