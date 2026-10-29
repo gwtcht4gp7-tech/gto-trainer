@@ -40,6 +40,7 @@ const OPT = {
   fromStart: !!arg('from-start', false),
   quiet: !!arg('quiet', false),
   log: arg('log', null),
+  feedback: arg('feedback', null),
   solver: Number(arg('solver', 8891)),   // 0 = 关闭 GTO solver
   solverBudget: Number(arg('solver-budget', 0)),
   pace: Number(arg('pace', 0)),   // 回放限速（每行间隔 ms），便于观察 GTO
@@ -462,6 +463,7 @@ function askSolver(item) {
           receivedAt:new Date().toISOString(),
           endToEndMs: Date.now()-Date.parse(item.at) });
         S.gto = d;
+        item.analysis = d;
         ledger.analysis(d);
         if (!d.ok) S.stats.errors++;
         else S.stats.gto = (S.stats.gto || 0) + 1;
@@ -541,10 +543,35 @@ function broadcastGto(g) {
 
 const PAGE = fs.readFileSync(path.join(__dirname, 'pokerist-panel.html'), 'utf8');
 
+function recordFeedback(body) {
+  if (!body || !['reasonable','questionable','unreasonable'].includes(body.rating) ||
+      typeof body.decisionId!=='string' || typeof (body.comment||'')!=='string' || (body.comment||'').length>1000)
+    throw new Error('反馈格式不正确');
+  const item=S.advice.find(a=>a.decisionId===body.decisionId);
+  if(!item || !item.analysis) throw new Error('该决策已不在当前记录中，请刷新后选择最近决策');
+  const file=OPT.feedback || (OPT.log && path.join(path.dirname(OPT.log),'user-feedback.jsonl'));
+  if(!file) throw new Error('反馈文件尚未配置');
+  const {analysis,...request}=item;
+  const row={kind:'user_feedback',at:new Date().toISOString(),version:'20261029-practical-test-v1',
+    decisionId:item.decisionId,handId:item.handId,rating:body.rating,comment:body.comment||'',request,analysis};
+  fs.mkdirSync(path.dirname(file),{recursive:true});
+  fs.appendFileSync(file,JSON.stringify(row)+'\n');
+  return {ok:true,decisionId:item.decisionId,rating:body.rating};
+}
+
 function startServer() {
   if (!OPT.port) return;
   const srv = http.createServer((req, res) => {
-    if (req.url === '/' || req.url === '/index.html') {
+    if(req.url==='/feedback' && req.method==='POST') {
+      if(req.headers.origin && req.headers.origin!=='http://'+req.headers.host){res.writeHead(403);res.end();return;}
+      let body='';
+      req.setEncoding('utf8');
+      req.on('data',chunk=>{body+=chunk;if(body.length>8192)req.destroy();});
+      req.on('end',()=>{
+        try {const result=recordFeedback(JSON.parse(body));res.writeHead(200,{'Content-Type':'application/json; charset=utf-8'});res.end(JSON.stringify(result));}
+        catch(e){res.writeHead(400,{'Content-Type':'application/json; charset=utf-8'});res.end(JSON.stringify({ok:false,error:e.message}));}
+      });
+    } else if (req.url === '/' || req.url === '/index.html') {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(PAGE);
     } else if (req.url === '/events') {
@@ -577,11 +604,12 @@ function startServer() {
       res.end(JSON.stringify(Object.keys(profiles.db.players).map(id => profiles.summary(id))));
     } else if (req.url === '/state') {
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-      res.end(JSON.stringify({ stats: S.stats, heroSeat: S.heroSeat, table: S.table, hand: S.hand, decision: S.currentDecision, latest: S.advice[0], analysis: S.gto, profilesFile: profiles.file, observationTotals:ledger.totals, inputFile:S.inputFile, version: '20261027-policy-quality-v5' }, null, 2));
+      res.end(JSON.stringify({ stats: S.stats, heroSeat: S.heroSeat, table: S.table, hand: S.hand, decision: S.currentDecision, latest: S.advice[0], analysis: S.gto, profilesFile: profiles.file, observationTotals:ledger.totals, inputFile:S.inputFile, version: '20261029-practical-test-v1' }, null, 2));
     } else { res.writeHead(404); res.end('404'); }
   });
   srv.on('error', e => note('error', '面板端口不可用: ' + e.message));
   srv.listen(OPT.port, '127.0.0.1', () => note('ui', `实时面板 http://127.0.0.1:${OPT.port}`));
+  return srv;
 }
 
 /* ------------------------------------------------------------------ */
@@ -709,4 +737,4 @@ if (OPT.replay) {
 }
 
 }
-module.exports = { OPT, S, profiles, ledger, seatPositions, ingest, flushPending, PAGE, isCurrent, askSolver, departedWagers };
+module.exports = { OPT, S, profiles, ledger, seatPositions, ingest, flushPending, PAGE, isCurrent, askSolver, departedWagers, recordFeedback, startServer };

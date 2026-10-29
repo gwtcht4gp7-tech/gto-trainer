@@ -46,6 +46,12 @@ const legacy={...g};delete legacy.recommendationReady;delete legacy.recommendati
 send({gto:legacy});assert(el('main').innerHTML.includes('暂不提供行动建议'),'old fullstreet results fail closed');
 send({gto:{...g,frequencies:{raise100:1},evs:{},actionAmounts:{}}});
 assert(el('gto').innerHTML.includes('当前模型未提供可核对的下注金额'));
+send({gto:{...g,model:'practical_heuristic_v1',recommendation:'raise',frequencies:{},evs:{},
+ actionAmounts:{raise:{additionalBB:3,raiseToBB:5}},approx:['启发式测试']}});
+assert(el('main').innerHTML.includes('实用测试版'),'practical advice has an explicit test label');
+assert(!el('main').innerHTML.includes('混合策略主要动作'),'do not imply a solved mixed policy');
+assert(el('main').innerHTML.includes('500'),'show the exact raise-to amount');
+assert(el('feedback-target').textContent.includes('d'),'feedback has an explicit decision target');
 send({clear:true});const empty=el('main').innerHTML;send({gto:g});
 assert.equal(el('main').innerHTML,empty,'stale results cannot restore a recommendation');
 send({item:{...a,at:new Date(Date.now()-16000).toISOString()}});timers[0]();

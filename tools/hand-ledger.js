@@ -19,6 +19,12 @@ function compareAction(request, analysis, actual) {
   const top = Object.keys(frequencies).reduce((best,k) => best == null || frequencies[k] > frequencies[best] ? k : best, null);
   const evs = analysis && analysis.evs || {};
   const best = Object.keys(evs).length ? Math.max(...Object.values(evs)) : null;
+  if(analysis && analysis.ok && analysis.model==='practical_heuristic_v1' && analysis.recommendationReady) {
+    const same=matched===analysis.recommendation;
+    return {matchedAction:matched,recommendedAction:analysis.recommendation,
+      differsFromSuggestion:!same,status:same?'followed_test_suggestion':'different_test_action',
+      estimatedGapBB:null,note:'仅记录是否与测试版建议一致，不将自选行动或单手输赢判为错误。'};
+  }
   return {matchedAction:matched, topFrequencyAction:top, frequency:matched ? frequencies[matched] ?? null : null,
     differsFromTop:top && matched ? matched !== top : null,
     status:!analysis || !analysis.ok ? 'no_ready_analysis' : analysis.recommendationReady===false ? 'unvalidated_strategy' : !Object.keys(frequencies).length ? 'no_strategy_available' : !matched ? 'off_menu' :

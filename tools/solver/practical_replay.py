@@ -183,6 +183,9 @@ def guarded_preview(decision, endpoints, req, stack, side_pot, equity, error):
 
 def evaluate(req, seed, samples, range_model=None):
     pot, call, stack, opponents, factory = validate(req)
+    if factory is not None:
+        can_raise = any(a.label!='fold' and a.amount>min(call,stack)+1e-6 for a in factory.template.actions())
+        req = {**req,'canRaise':req.get('canRaise',True) and can_raise}
     from opponent_model import joint_equity
     from ranges import parse_card
     history = req.get('history') or []
@@ -321,7 +324,7 @@ def terminate_tree(process):
     process.wait(timeout=2)
 
 
-def run_case(req, seed, samples, budget_ms, range_model=None):
+def run_case(req, seed, samples, budget_ms, range_model=None, cancel=None):
     """Wall-clock deadline includes Python startup, validation, equity and Node."""
     t0 = time.perf_counter()
     cleanup_ms = 0.
@@ -331,8 +334,22 @@ def run_case(req, seed, samples, budget_ms, range_model=None):
                                 text=True, encoding='utf-8', start_new_session=os.name != 'nt',
                                 env={**os.environ, 'PYTHONIOENCODING': 'utf-8',
                                      'PYTHONDONTWRITEBYTECODE': '1', 'OPENBLAS_NUM_THREADS': '1'})
-        output, errors = proc.communicate(json.dumps(dict(request=req, seed=seed, samples=samples, rangeModel=range_model)),
-                                          timeout=budget_ms / 1000)
+        payload = json.dumps(dict(request=req, seed=seed, samples=samples, rangeModel=range_model))
+        while True:
+            if cancel is not None and cancel.is_set():
+                terminate_tree(proc)
+                proc.communicate(timeout=2)
+                return {'status':'cancelled','seed':seed,'wallMs':round((time.perf_counter()-t0)*1000,1)}
+            remaining = budget_ms/1000-(time.perf_counter()-t0)
+            if remaining <= 0:
+                raise subprocess.TimeoutExpired(proc.args, budget_ms/1000)
+            try:
+                output, errors = proc.communicate(payload, timeout=min(.05,remaining) if cancel is not None else remaining)
+                break
+            except subprocess.TimeoutExpired:
+                payload = None  # communicate() retains partially written input.
+                if cancel is None:
+                    raise
         if proc.returncode:
             result = {'status': 'error', 'error': errors[-1500:]}
         else:

@@ -14,6 +14,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from solve_api import analyze  # noqa: E402
+from practical_api import analyze_practical, VERSION as PRACTICAL_VERSION
+PRACTICAL = os.environ.get('POKER_SOLVER_MODE') == 'practical'
 
 PORT = int(os.environ.get('SOLVER_PORT', '8891'))
 STATS = {'solved': 0, 'errors': 0, 'lastMs': 0, 'slow': 0, 'busyRejected': 0}
@@ -60,7 +62,8 @@ class Handler(BaseHTTPRequestHandler):
         if self.path.startswith('/health'):
             self._send(200, {'ok': True, 'stats': STATS,
                              'busy': SOLVE_LOCK.locked(),
-                             'version': '20261027-policy-quality-v5',
+                             'version': PRACTICAL_VERSION if PRACTICAL else '20261027-policy-quality-v5',
+                             'mode': 'practical' if PRACTICAL else 'legacy',
                              'python': sys.version.split()[0]})
         else:
             self._send(404, {'ok': False, 'error': 'not found'})
@@ -98,7 +101,7 @@ class Handler(BaseHTTPRequestHandler):
         cancellation = threading.Event()
         ACTIVE.update(decision=req.get('decisionId'), cancel=cancellation)
         try:
-            out = analyze(req, cancel=cancellation) if req.get('fullStreet') else analyze(req)
+            out = analyze_practical(req,cancel=cancellation) if PRACTICAL else analyze(req, cancel=cancellation) if req.get('fullStreet') else analyze(req)
             counter = 'solved' if out.get('ok') else 'cancelled' if out.get('cancelled') else 'errors'
             STATS[counter] = STATS.get(counter, 0) + 1
         except Exception as e:

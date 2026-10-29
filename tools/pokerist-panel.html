@@ -16,16 +16,16 @@ button{font:inherit;color:inherit;cursor:pointer}button:focus-visible,summary:fo
 @media(max-width:520px){.wrap{padding:13px 12px 26px}.header{margin-bottom:14px}.mark{width:31px;height:36px;font-size:21px}h1{font-size:16px}.eyebrow{font-size:8px}.header-right{gap:7px}.connection{font-size:10px}button{font-size:11px;padding:7px 9px}.card-groups{gap:14px}.table-context{padding:13px}.position{font-size:15px}.context-stats{gap:16px}.context-stats strong{font-size:18px}.context-stats .small-label{display:block;margin:0 0 2px}.context-label{font-size:9px}.decision{padding:20px;min-height:240px}.decision-sub{font-size:12px}.decision-header{font-size:11px}.action-title{font-size:52px}.sidebar{grid-template-columns:1fr}.section{padding:15px}.board-cards .playing-card{width:26px;height:38px}.board-cards .playing-card b{font-size:17px}.cards{gap:4px}.card-groups .small-label{font-size:10px}.footer{display:block}.pill{font-size:9px}}
 </style></head>
 <body><div class="wrap">
-<header class="header"><div class="brand"><div class="mark" aria-hidden="true">♠</div><div><div class="eyebrow">TABLE COMPANION</div><h1>牌局助手</h1></div></div><div class="header-right"><span class="connection" id="connection">连接中</span><button id="focus" onclick="toggleFocus()" aria-pressed="false">专注模式</button></div></header>
+<header class="header"><div class="brand"><div class="mark" aria-hidden="true">♠</div><div><div class="eyebrow">TABLE COMPANION</div><h1>牌局助手 · 实用测试版</h1></div></div><div class="header-right"><span class="connection" id="connection">连接中</span><button id="focus" onclick="toggleFocus()" aria-pressed="false">专注模式</button></div></header>
 <section class="surface table-context" aria-label="牌局信息"><div class="context-top"><div class="card-groups"><div><div class="small-label">你的手牌</div><div class="cards" id="hand"><span class="empty-board">等待发牌</span></div></div><div><div class="small-label">公共牌</div><div class="cards board-cards" id="board"><span class="empty-board">尚未发出</span></div></div></div><div class="position" id="pos">—<small>等待位置</small></div></div><div class="context-stats"><div><span class="small-label">底池</span><strong id="pot">—</strong></div><div><span class="small-label">需跟</span><strong id="call">—</strong></div><span class="context-label" id="context-label">等待当前决策</span></div></section>
-<div class="layout"><div class="primary"><section id="main" aria-live="polite"><div class="decision waiting action-wait"><div class="decision-header">实时决策 <span class="pill">等待对局</span></div><div class="action-title">等待轮到你</div><div class="decision-sub">有新的行动机会时，建议会自动出现在这里。</div></div></section><section class="surface section secondary" aria-label="行动比较"><div class="section-title">候选行动 <span class="muted">混合占比 / 估计 EV</span></div><div id="gto" class="muted">等待当前决策分析…</div><div class="legend"><span class="action-fold">弃牌</span><span class="action-check">过牌</span><span class="action-call">跟注</span><span class="action-raise">下注 / 加注</span><span class="action-allin">全下</span></div></section></div>
-<aside class="sidebar secondary"><section class="surface section route-section"><div class="section-title">对手行动路线 <span class="pill" id="route-count">公开信息</span></div><div id="routes" class="muted">观察到行动后，按玩家和街道排列。</div><details><summary>这些路线怎样影响建议</summary><div class="muted" style="margin-top:8px">整手公开历史会输入搜索。下注、加注和跟注用于估计对手范围，结合位置与历史统计；过牌也保留在搜索历史中。范围模型仍较粗，不代表已经准确识别每个人的打法。</div></details><details><summary>玩家统计</summary><div id="profiles" class="muted">等待样本…</div></details></section><section class="surface section"><div class="section-title">最近决策 <span class="muted">历史参考</span></div><div id="hist" class="muted">尚无记录</div></section></aside></div>
-<details class="surface offline secondary"><summary>账本、牌后复盘与离线训练</summary><div class="offline-body"><div id="observations" class="muted">等待记录…</div><div id="training" class="muted" style="margin-top:12px">离线训练：等待状态</div></div></details>
+<div class="layout"><div class="primary"><section id="main" aria-live="polite"><div class="decision waiting action-wait"><div class="decision-header">实时决策 <span class="pill">等待对局</span></div><div class="action-title">等待轮到你</div><div class="decision-sub">有新的行动机会时，建议会自动出现在这里。</div></div></section><section class="surface section secondary" aria-label="行动比较"><div class="section-title">候选行动 <span class="muted"><span id="comparison-label">近似建议 / 计算依据</span></span></div><div id="gto" class="muted">等待当前决策分析…</div><div class="legend"><span class="action-fold">弃牌</span><span class="action-check">过牌</span><span class="action-call">跟注</span><span class="action-raise">下注 / 加注</span><span class="action-allin">全下</span></div></section></div>
+<aside class="sidebar secondary"><section class="surface section route-section"><div class="section-title">对手行动路线 <span class="pill" id="route-count">公开信息</span></div><div id="routes" class="muted">观察到行动后，按玩家和街道排列。</div><details><summary>这些路线怎样影响建议</summary><div class="muted" style="margin-top:8px">整手公开历史会保留。下注、加注和跟注用于估计对手范围，结合位置与历史统计；当前简单模型尚未按下注大小或过牌概率细分范围。范围模型仍较粗，不代表已经准确识别每个人的打法。</div></details><details><summary>玩家统计</summary><div id="profiles" class="muted">等待样本…</div></details></section><section class="surface section"><div class="section-title">最近决策 <span class="muted">历史参考</span></div><div id="hist" class="muted">尚无记录</div></section></aside></div>
+<section class="surface section" aria-label="测试反馈"><div class="section-title">你的测试反馈 <button onclick="reviewCurrent()">评价最近建议</button></div><div id="feedback-target" class="muted">收到建议后，可在这里或“最近决策”中选择评价目标。</div><textarea id="feedback-comment" maxlength="1000" placeholder="可选：哪里不合理，例如人数、路线或下注尺度" style="width:100%;margin:10px 0;padding:10px;background:#0d1523;color:#edf3ff;border:1px solid #253147;border-radius:8px;font:inherit" rows="2"></textarea><div style="display:flex;gap:8px;flex-wrap:wrap"><button onclick="submitFeedback('reasonable')">合理</button><button onclick="submitFeedback('questionable')">有疑问</button><button onclick="submitFeedback('unreasonable')">明显不合理</button></div><div id="feedback-status" class="sample">选择即保存到本机。建议、实际行动与结算可按决策 ID 对照。</div></section><details class="surface offline secondary"><summary>账本、牌后复盘与离线训练</summary><div class="offline-body"><div id="observations" class="muted">等待记录…</div><div id="training" class="muted" style="margin-top:12px">离线训练：等待状态</div></div></details>
 <footer class="footer"><span>基于可见信息的近似分析 · 不确定性随样本与局面变化</span><span id="meta">等待数据…</span></footer>
 </div><script>
 const CN={s:'♠',h:'♥',d:'♦',c:'♣'}, STREETS={preflop:'翻前',flop:'翻牌',turn:'转牌',river:'河牌'};
-const LABELS={check:'过牌',fold:'弃牌',call:'跟注',allin:'有效全下',bet50:'下注半池',bet100:'下注满池',raise50:'加注半池',raise100:'加注满池'};
-const hist=[];let currentDecision=null,currentItem=null,currentResult=null;
+const LABELS={raise:'加注',bet:'下注',check:'过牌',fold:'弃牌',call:'跟注',allin:'有效全下',bet50:'下注半池',bet100:'下注满池',raise50:'加注半池',raise100:'加注满池'};
+const hist=[];let currentDecision=null,currentItem=null,currentResult=null,feedbackTarget=null;
 const el=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function n(x,d=1){return Number.isFinite(Number(x))?Number(x).toLocaleString('zh-CN',{maximumFractionDigits:d}):'—';}
@@ -55,7 +55,18 @@ function sizing(k,g,a){
 function waiting(title='等待下一次行动',sub='行动与牌面更新后，旧建议立即失效。',busy=false){
  el('main').innerHTML='<div class="decision waiting action-wait"><div class="decision-header">实时决策 <span class="pill">'+(busy?'通常约 3 秒':'等待行动')+'</span></div><div class="action-title">'+esc(title)+'</div><div class="decision-sub">'+esc(sub)+'</div>'+(busy?'<div class="wait-line"><i></i></div>':'')+'</div>';
 }
-function renderHistory(){el('hist').innerHTML=hist.slice(0,6).map(h=>'<div class="history-row"><div>'+h.cards.map(pc).join('')+' <span class="muted">'+esc(STREETS[h.street]||h.street)+'</span></div><span class="history-action action-'+kind(h.action||'wait')+'">'+esc(h.action?label(h.action):'等待结果')+'</span></div>').join('');}
+function renderHistory(){el('hist').innerHTML=hist.slice(0,6).map(h=>'<div class="history-row"><div>'+h.cards.map(pc).join('')+' <span class="muted">'+esc(STREETS[h.street]||h.street)+'</span></div><span class="history-action action-'+kind(h.action||'wait')+'">'+esc(h.action?label(h.action):'等待结果')+'</span><button data-review="'+esc(h.id)+'" onclick="reviewDecision(this.dataset.review)">评价</button></div>').join('');}
+function reviewDecision(id){
+ const row=hist.find(h=>h.id===id);if(!row||!row.analysis){el('feedback-status').textContent='该局面尚无分析结果';return;}
+ feedbackTarget=id;el('feedback-target').textContent='评价目标 '+id+' · '+row.cards.join(' ')+' · '+(STREETS[row.street]||row.street)+' · '+(row.action?label(row.action):'本次未给建议');
+ el('feedback-status').textContent='请按这个目标评价；新局面不会自动改变已选目标。';
+}
+function reviewCurrent(){const row=hist.find(h=>h.analysis);if(row)reviewDecision(row.id);}
+async function submitFeedback(rating){
+ if(!feedbackTarget){el('feedback-status').textContent='请先选择一条已有结果的决策';return;}
+ const id=feedbackTarget;
+ try{const response=await fetch('/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({decisionId:id,rating,comment:el('feedback-comment').value||''})});const out=await response.json();if(!out.ok)throw Error(out.error||'保存失败');el('feedback-status').textContent='已保存 · '+id+' · '+({reasonable:'合理',questionable:'有疑问',unreasonable:'明显不合理'}[rating]);if(feedbackTarget===id)el('feedback-comment').value='';}catch(e){el('feedback-status').textContent='未保存：'+e.message;}
+}
 function renderRoutes(a){
  const history=a.history||[], visible=history.filter(x=>!['ante','blind'].includes(x.action));
  el('route-count').textContent=visible.filter(x=>String(x.playerId)!==String(a.heroId)).length+' 条对手行动';
@@ -78,6 +89,8 @@ function renderGto(g){
  if(g.decisionId!==currentDecision)return;
  currentResult=g;
  if(!g.ok){waiting('本次没有可用建议',g.error||'等待下一次有效计算。');el('gto').textContent=g.error||'分析失败';return;}
+ const practical=g.model==='practical_heuristic_v1';
+ el('comparison-label').textContent=practical?'启发式近似 · 无混合频率':'混合占比 / 估计 EV';
  const full=g.model==='multiplayer_fullstreet_mccfr_approx',hu=g.model==='heads_up_cfr_estimate';
  if(full&&g.recommendationReady!==true)g={...g,recommendationReady:false};
  const diagnostics=g.evDiagnosticOnly&&g.diagnostics||g;
@@ -88,7 +101,7 @@ function renderGto(g){
  if(selected){
   const type=kind(selected),size=sizing(selected,g,currentItem),hasEV=Number.isFinite(evs[selected]);
   const actionTitle={bet:'下注',raise:'加注',allin:'有效全下',call:'跟注',check:'过牌',fold:'弃牌'}[type]||label(selected);
-  el('main').innerHTML='<div class="decision action-'+type+'"><div class="decision-header"><span>'+(full?'混合策略主要动作':hasEV?'当前建议 · 较高估计 EV':'混合策略主要动作')+'</span><span class="pill'+(g.policyUnstable?' warning':'')+'">'+(g.policyUnstable?'策略未稳定':'近似估计')+'</span></div><div class="action-title">'+esc(actionTitle)+'</div>'+
+  el('main').innerHTML='<div class="decision action-'+type+'"><div class="decision-header"><span>'+(practical?'实用测试版 · 近似建议':full?'混合策略主要动作':hasEV?'当前建议 · 较高估计 EV':'混合策略主要动作')+'</span><span class="pill'+(g.policyUnstable?' warning':'')+'">'+(g.policyUnstable?'策略未稳定':'近似估计')+'</span></div><div class="action-title">'+esc(actionTitle)+'</div>'+
    (size.amount?'<div class="decision-amount">'+(size.prefix==='加至'?'<span style="font-size:16px;font-weight:400;color:#aebfd6;margin-right:9px">加至</span>':'')+size.amount+'<small>筹码</small></div>':'')+
    '<div class="decision-sub">'+esc(size.sub)+'</div><div class="decision-bottom">'+(hasEV?'<span>估计 EV <strong>'+n(evs[selected],2)+' bb</strong></span>':'')+
    (freq[selected]!=null?'<span>混合占比 <strong>'+pct(freq[selected])+'</strong></span>':'')+'<span>'+n((g.endToEndMs||g.totalMs||0)/1000,2)+' 秒</span></div>'+
@@ -99,19 +112,19 @@ function renderGto(g){
   const explanation=g.recommendationReady===false?((g.quality&&g.quality.reasons||[]).map(x=>reasons[x]||x).join(' ')||'该结果未通过策略质量核对。'):g.fallbackReason||'本次只完成权益估算，未得到可比较的候选行动。';
   el('main').innerHTML='<div class="decision waiting action-warning"><div class="decision-header">本次分析 <span class="pill warning">'+(g.recommendationReady===false?'估值未通过核对':'暂无行动策略')+'</span></div><div class="action-title">暂不提供行动建议</div><div class="decision-sub">'+esc(explanation)+'</div><div class="decision-bottom">'+(g.heroEquity!=null?'<span>权益估算 <strong>'+pct(g.heroEquity)+'</strong></span>':'')+(g.potOdds!=null?'<span>跟注门槛 <strong>'+pct(g.potOdds)+'</strong></span>':'')+'</div></div>';
  }
- const labels=[...new Set([...Object.keys(freq),...Object.keys(evs)])];
+ const labels=[...new Set([...(selected?[selected]:[]),...Object.keys(freq),...Object.keys(evs)])];
  labels.sort((a,b)=>{
   if(a===b)return 0;if(a===selected)return -1;if(b===selected)return 1;
   if(Number.isFinite(evs[a])&&Number.isFinite(evs[b]))return evs[b]-evs[a];
   if(Number.isFinite(evs[a]))return -1;if(Number.isFinite(evs[b]))return 1;
   return (freq[b]||0)-(freq[a]||0);
  });
- let detail=labels.map(k=>{const size=sizing(k,g,currentItem),v=freq[k];return '<div class="option action-'+kind(k)+(k===selected?' selected':'')+'"><div class="option-name">'+esc(label(k))+(k===selected?' <span class="pill">当前候选</span>':'')+'</div><div class="option-numbers">'+(Number.isFinite(evs[k])?n(evs[k],2)+' bb':'暂无 EV')+'</div><div class="option-secondary">'+(size.amount?(size.prefix||'投入')+' '+size.amount+' 筹码':esc(size.sub))+'</div><div class="option-secondary" style="text-align:right">'+(v==null?'占比样本不足':pct(v))+(Number.isFinite(se[k])?' · 标准误 '+n(se[k],2)+' bb':'')+'</div><div class="track"><i style="width:'+Math.round(Math.min(1,Math.max(0,v||0))*100)+'%"></i></div></div>';}).join('');
+ let detail=labels.map(k=>{const size=sizing(k,g,currentItem),v=freq[k];return '<div class="option action-'+kind(k)+(k===selected?' selected':'')+'"><div class="option-name">'+esc(label(k))+(k===selected?' <span class="pill">当前候选</span>':'')+'</div><div class="option-numbers">'+(Number.isFinite(evs[k])?n(evs[k],2)+' bb':'暂无 EV')+'</div><div class="option-secondary">'+(size.amount?(size.prefix||'投入')+' '+size.amount+' 筹码':esc(size.sub))+'</div><div class="option-secondary" style="text-align:right">'+(v==null?(practical?'无已求解的混合频率':'占比样本不足'):pct(v))+(Number.isFinite(se[k])?' · 标准误 '+n(se[k],2)+' bb':'')+'</div><div class="track"><i style="width:'+Math.round(Math.min(1,Math.max(0,v||0))*100)+'%"></i></div></div>';}).join('');
  if(!labels.length)detail='<div class="muted">'+(g.heroEquity!=null?'手牌权益 '+pct(g.heroEquity):'样本不足')+(g.standardError!=null?' · 标准误 '+pct(g.standardError):'')+'</div>';
- detail+='<details><summary>计算依据与不确定性</summary><div class="metrics"><span>'+(full?'全街抽样近似':hu?'当前街简化 CFR':'权益估算')+'</span><span>历史 '+(g.historyActions||0)+' 条</span>'+(full?'<span>每动作验证 '+g.evSamplesPerAction+' 次</span><span>本次根节点 '+g.rootLocalVisits+' 次</span><span>基础策略命中 '+g.warmStartInfoSets+'</span>':'')+'</div>'+
+ detail+='<details><summary>计算依据与不确定性</summary><div class="metrics"><span>'+(practical?'启发式 + 多人联合权益':full?'全街抽样近似':hu?'当前街简化 CFR':'权益估算')+'</span><span>历史 '+(g.historyActions||0)+' 条</span>'+(full?'<span>每动作验证 '+g.evSamplesPerAction+' 次</span><span>本次根节点 '+g.rootLocalVisits+' 次</span><span>基础策略命中 '+g.warmStartInfoSets+'</span>':'')+'</div>'+
   (g.callCheckdownEV!=null?'<div class="muted">后续均过牌假设下的跟注 EV：'+n(g.callCheckdownEV,2)+' bb</div>':'')+'<ul class="reasons">'+(g.approx||[]).map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></details>';
  el('gto').innerHTML=(g.evDiagnosticOnly?'<div class="caution">以下为诊断数值，不是可执行策略或已求解的最优 EV。</div>':'')+'<div class="option-list">'+detail+'</div>';
- const row=hist.find(h=>h.id===g.decisionId);if(row){row.action=selected;renderHistory();}
+ const row=hist.find(h=>h.id===g.decisionId);if(row){row.action=selected;row.analysis=g;renderHistory();if(!feedbackTarget)reviewDecision(row.id);}
 }
 function toggleFocus(){const on=document.body.classList.toggle('focus-mode');el('focus').textContent=on?'完整视图':'专注模式';el('focus').setAttribute('aria-pressed',String(on));}
 const src=new EventSource('/events');
@@ -128,7 +141,7 @@ src.onmessage=e=>{
  el('hand').innerHTML=(a.heroCards||[]).map(pc).join('');el('board').innerHTML=(a.board||[]).length?a.board.map(pc).join(''):'<span class="empty-board">翻前 · 等待发牌</span>';
  el('pos').innerHTML=esc(a.heroPos)+'<small>'+esc(STREETS[a.street]||a.street)+'</small>';
  el('pot').textContent=n(a.potChips,0);el('call').textContent=n(a.toCallChips,0);
- waiting('正在计算候选行动','正在比较当前局面的可选行动与后续续局。',true);renderRoutes(a);
+ waiting('正在计算候选行动','正在计算多人权益并检查候选动作；不展开随机全街续局。',true);renderRoutes(a);
  if(!hist.some(h=>h.id===a.decisionId)){hist.unshift({id:a.decisionId,cards:a.heroCards||[],street:a.street,action:null});hist.length=Math.min(hist.length,12);renderHistory();}
 };
 if(typeof setInterval==='function')setInterval(()=>{
@@ -140,7 +153,7 @@ if(typeof fetch==='function'){
   el('training').textContent='离线候选策略：'+state+' · 自我对弈 '+n(t.episodes||0,0)+' 次 · 已保存 '+n(t.storedInformationSets||0,0)+' 条 · 基础策略经评测后升级';
  }).catch(()=>{el('training').textContent='离线训练状态暂不可用';});
  const updateObservations=()=>fetch('/observations').then(r=>r.json()).then(o=>{
-  const t=o.totals||{},labels={in_mixed_strategy:'在混合策略内',not_in_reported_mix:'未在本次比例中',off_menu:'自选下注尺度',no_strategy_available:'本次仅有权益分析',no_ready_analysis:'未确认行动前已有分析',unvalidated_strategy:'分析未通过策略质量核对'};
+  const t=o.totals||{},labels={in_mixed_strategy:'在混合策略内',not_in_reported_mix:'未在本次比例中',off_menu:'自选下注尺度',no_strategy_available:'本次仅有权益分析',no_ready_analysis:'未确认行动前已有分析',unvalidated_strategy:'分析未通过策略质量核对',followed_test_suggestion:'与测试版建议一致',different_test_action:'与测试版建议不同（不代表错误）'};
   let s='<span class="stat-chip">已核对 '+(t.verifiedHeroHands||0)+' 手</span><span class="stat-chip">历史净 '+Number(t.heroNetBB||0).toFixed(2)+' bb</span><span class="stat-chip">待核对 '+(t.excludedHeroHands||0)+' 手</span>';
   if(o.lastObservedAt&&Date.now()-Date.parse(o.lastObservedAt)>15000)s+='<div class="caution">采集暂无新增 · 最后记录 '+esc(o.lastObservedAt)+'</div>';
   for(const a of(o.recentActions||[]).slice(0,3))s+='<div class="sample">'+esc(STREETS[a.request.street]||a.request.street)+' · 实际 '+esc(label(a.actual.action))+' · '+esc(labels[a.comparison.status]||a.comparison.status)+'</div>';
